@@ -11,7 +11,7 @@ const MainLayout = ({ children, title }: Props) => {
     <div className="w-full bg-primary h-screen relative overflow-hidden">
       <div className="fixed top-0 left-0 m-5">
         <Image
-          src="/assets/mknows_logo.png"
+          src="/assets/login/mknows_logo.png"
           alt="mknows-logo"
           width={100}
           height={100}
@@ -33,21 +33,21 @@ const MainLayout = ({ children, title }: Props) => {
         {/* Reactangle */}
         <div>
           <Image
-            src="/assets/reactangle.png"
+            src="/assets/login/reactangle.png"
             alt="reactangle1"
             width={350}
             height={350}
             className="absolute bottom-0 left-52"
           />
           <Image
-            src="/assets/reactangle.png"
+            src="/assets/login/reactangle.png"
             alt="reactangle2"
             width={200}
             height={200}
             className="absolute -top-28 right-0 rotate-180"
           />
           <Image
-            src="/assets/reactangle.png"
+            src="/assets/login/reactangle.png"
             alt="reactangle3"
             width={200}
             height={200}

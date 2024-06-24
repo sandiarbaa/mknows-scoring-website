@@ -10,7 +10,7 @@ const page = () => {
         Cek Email Anda
       </h1>
       <Image
-        src="/assets/email_sent.png"
+        src="/assets/login/email_sent.png"
         alt="email_sent"
         width={75}
         height={75}
