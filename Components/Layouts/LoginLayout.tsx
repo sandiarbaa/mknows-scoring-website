@@ -6,7 +6,7 @@ interface Props {
   title: string;
 }
 
-const MainLayout = ({ children, title }: Props) => {
+const LoginLayout = ({ children, title }: Props) => {
   return (
     <div className="w-full bg-primary h-screen relative overflow-hidden">
       <div className="fixed top-0 left-0 m-5">
@@ -59,4 +59,4 @@ const MainLayout = ({ children, title }: Props) => {
   );
 };
 
-export default MainLayout;
+export default LoginLayout;

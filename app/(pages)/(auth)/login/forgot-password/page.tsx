@@ -1,12 +1,12 @@
 "use client";
 import InputForm from "@/Components/Elements/Input";
 import FormShell from "@/Components/Fragments/FormShell";
-import MainLayout from "@/Components/Layouts/MainLayout";
+import LoginLayout from "@/Components/Layouts/LoginLayout";
 import React from "react";
 
 const forgot = () => {
   return (
-    <MainLayout title="LUPA KATA SANDI">
+    <LoginLayout title="LUPA KATA SANDI">
       <FormShell>
         <InputForm type="email" textLabel="Email" placeholder="Masukan Email" />
         <button
@@ -16,7 +16,7 @@ const forgot = () => {
           Kirim
         </button>
       </FormShell>
-    </MainLayout>
+    </LoginLayout>
   );
 };
 

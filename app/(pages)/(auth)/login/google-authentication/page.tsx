@@ -1,11 +1,11 @@
-import MainLayout from "@/Components/Layouts/MainLayout";
+import LoginLayout from "@/Components/Layouts/LoginLayout";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const page = () => {
   return (
-    <MainLayout title="Google Authentication">
+    <LoginLayout title="Google Authentication">
       <h1 className="text-ijoToska text-center font-bold text-2xl -mt-5">
         Cek Email Anda
       </h1>
@@ -25,7 +25,7 @@ const page = () => {
           Email Lain
         </Link>
       </p>
-    </MainLayout>
+    </LoginLayout>
   );
 };
 

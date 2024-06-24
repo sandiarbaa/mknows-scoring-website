@@ -1,6 +1,6 @@
 "use client";
 import FormShell from "@/Components/Fragments/FormShell";
-import MainLayout from "@/Components/Layouts/MainLayout";
+import LoginLayout from "@/Components/Layouts/LoginLayout";
 import Image from "next/image";
 import React, { useState } from "react";
 import { PiExclamationMarkFill } from "react-icons/pi";
@@ -21,7 +21,7 @@ const LoginPage = () => {
     }
   };
   return (
-    <MainLayout title="MASUK">
+    <LoginLayout title="MASUK">
       <FormShell onSubmit={handleSubmit}>
         {/* input-label */}
         <div className="flex flex-col mb-3">
@@ -93,7 +93,7 @@ const LoginPage = () => {
           </button>
         </div>
       </FormShell>
-    </MainLayout>
+    </LoginLayout>
   );
 };
 
