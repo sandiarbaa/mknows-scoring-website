@@ -1,9 +1,5 @@
 "use client";
-import SidebarLink from "@/Components/Fragments/SidebarLink";
-import UserPhoto from "@/Components/Fragments/UserPhoto";
-import DashboardLayout from "@/Components/Layouts/DashboardLayout";
-import Image from "next/image";
-import Link from "next/link";
+import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import { usePathname } from "next/navigation";
 import React from "react";
 

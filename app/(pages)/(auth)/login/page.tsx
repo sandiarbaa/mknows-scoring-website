@@ -1,6 +1,6 @@
 "use client";
-import FormShell from "@/Components/Fragments/FormShell";
-import LoginLayout from "@/Components/Layouts/LoginLayout";
+import FormShell from "@/app/components/Fragments/FormShell";
+import LoginLayout from "@/app/components/Layouts/LoginLayout";
 import Image from "next/image";
 import React, { useState } from "react";
 import { PiExclamationMarkFill } from "react-icons/pi";

@@ -1,5 +1,5 @@
 "use client";
-import DashboardLayout from "@/Components/Layouts/DashboardLayout";
+import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import { usePathname } from "next/navigation";
 import React from "react";
 
