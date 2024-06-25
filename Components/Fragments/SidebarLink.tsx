@@ -12,7 +12,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
         href="/dashboard"
         className={`${
           hover === "/dashboard" ? "bg-ijoToska text-white" : ""
-        } w-full px-5 py-2 rounded-md flex items-center`}
+        } w-full px-5 py-2.5 mb-3 rounded-md flex items-center`}
       >
         {hover === "/dashboard" ? (
           <Image
@@ -37,7 +37,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
         href="/permintaan"
         className={`${
           hover === "/permintaan" ? "bg-ijoToska text-white" : ""
-        } w-full px-5 py-2 rounded-md flex items-center`}
+        } w-full px-5 py-2.5 mb-3 rounded-md flex items-center`}
       >
         {hover === "/permintaan" ? (
           <Image
@@ -62,7 +62,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
         href="/laporan"
         className={`${
           hover === "/laporan" ? "bg-ijoToska text-white" : ""
-        } w-full px-5 py-2 rounded-md flex items-center`}
+        } w-full px-5 py-2.5 mb-3 rounded-md flex items-center`}
       >
         {hover === "/laporan" ? (
           <Image
@@ -70,7 +70,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
             alt="dashboard-link-icon"
             width={23}
             height={23}
-            className="mr-3"
+            className="mr-3 -ml-1"
           />
         ) : (
           <Image
@@ -78,7 +78,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
             alt="dashboard-link-icon"
             width={23}
             height={23}
-            className="mr-3"
+            className="mr-3 -ml-1"
           />
         )}
         Laporan
@@ -87,7 +87,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
         href="/kuota"
         className={`${
           hover === "/kuota" ? "bg-ijoToska text-white" : ""
-        } w-full px-5 py-2 rounded-md flex items-center`}
+        } w-full px-5 py-2.5 mb-3 rounded-md flex items-center`}
       >
         {hover === "/kuota" ? (
           <Image
@@ -95,7 +95,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
             alt="dashboard-link-icon"
             width={26}
             height={26}
-            className="mr-3"
+            className="mr-3 -ml-1"
           />
         ) : (
           <Image
@@ -103,7 +103,7 @@ const SidebarLink = ({ hover }: { hover: string }) => {
             alt="dashboard-link-icon"
             width={26}
             height={26}
-            className="mr-3"
+            className="mr-3 -ml-1"
           />
         )}
         Kuota
