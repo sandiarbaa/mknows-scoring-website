@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .title-dashboard-card-first {
+    margin-bottom: 20px;
+  }
+
+  .carousel-item {
+    margin-right: 20px;
+  }
+}
