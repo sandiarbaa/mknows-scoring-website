@@ -9,7 +9,7 @@ import React, { useState } from "react";
 
 const PermintaanPage = () => {
   const pathname = usePathname();
-  const [linkStatus, setLinkStatus] = useState("/permintaan");
+  const [linkStatus, setLinkStatus] = useState<string>("/permintaan");
 
   function toLinkPermintaan() {
     setLinkStatus("/permintaan");

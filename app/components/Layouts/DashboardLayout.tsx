@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import UserPhoto from "../Fragments/UserPhoto";
@@ -7,12 +8,12 @@ import Link from "next/link";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  hover: string;
+  hover?: string;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
-  hover,
+  hover = "",
 }) => {
   const [nav, setNav] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
@@ -39,15 +40,23 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   }, [nav]);
 
   return (
-    <main className="w-full h-screen bg-primary">
+    <main className="relative w-full h-screen bg-primary">
       <div className="container flex justify-between h-full mx-auto border">
+        {/* Overlay */}
+        {nav && (
+          <div
+            className="fixed inset-0 z-20 bg-black opacity-50"
+            onClick={closeNavHandler}
+          ></div>
+        )}
+
         {/* Navbar Mobile */}
         <nav
           ref={navRef}
           id="navbarMobile"
           className={`md:hidden absolute ${
             nav ? "translate-x-0" : "translate-x-[-100%]"
-          } bg-white w-full max-w-[250px] h-full top-0 left-0 px-8 py-5 shadow-md transition-all duration-300`}
+          } bg-white z-30 w-full max-w-[250px] h-full top-0 left-0 px-8 py-5 shadow-lg transition-all duration-300 shadow-white`}
         >
           {/* Logo */}
           <Image
@@ -76,22 +85,25 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         {/* Hamburger Icon to Open Nav */}
         {!nav && (
-          <Bars3Icon
-            onClick={openNavHandler}
-            className="w-[1.8rem] absolute top-5 right-5 text-ijoToska md:hidden"
-          />
+          <div className="fixed top-0 left-0 z-50 flex items-center justify-end w-full h-12 py-3 bg-white shadow sm:px-16 px-11 shadow-ijoToska md:hidden">
+            <Bars3Icon
+              onClick={openNavHandler}
+              // className="w-[2rem] absolute top-0 right-12 sm:right-20 text-ijoToska md:hidden cursor-pointer z-50"
+              className="w-[2rem] text-ijoToska md:hidden cursor-pointer z-50"
+            />
+          </div>
         )}
 
         {/* X Icon to Close Nav */}
         {nav && (
           <XMarkIcon
             onClick={closeNavHandler}
-            className="w-[2rem] absolute top-5 right-5 text-ijoToska md:hidden"
+            className="w-[2rem] absolute top-5 right-12 sm:top-6 sm:right-14 text-white md:hidden cursor-pointer z-40"
           />
         )}
 
         {/* Sidebar Desktop*/}
-        <nav className="w-full max-w-[280px] bg-white p-5 shadow hidden md:block relative">
+        <nav className="w-full md:max-w-[220px] lg:max-w-[250px] bg-white p-5 shadow hidden md:block relative">
           {/* Logo */}
           <Image
             src="/assets/login/mknows_logo.png"
@@ -119,7 +131,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         </nav>
 
         {/* Content */}
-        <section className="w-full max-w-3xl p-5 xl:max-w-6xl overflow-y-scroll">
+        <section className="w-full max-w-3xl p-5 overflow-y-scroll xl:max-w-6xl">
           <div
             // className={`w-full bg-white border rounded-md`}
             className={`w-full bg-white border rounded-md ${

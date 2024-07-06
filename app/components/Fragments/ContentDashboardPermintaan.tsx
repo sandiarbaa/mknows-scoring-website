@@ -165,11 +165,11 @@ const ContentDashboardPermintaan = () => {
   );
 
   return (
-    <div className="w-full my-5 py-5 px-3">
+    <div className="w-full px-3 py-5 my-5">
       {/* Add Data */}
-      <h1 className="font-bold text-base mb-2">Tambah Data Baru</h1>
-      <Link href="#">
-        <div className="w-full shadow-md hover:shadow-lg transition-all duration-300 rounded p-5 flex space-x-3 mb-5 items-center">
+      <h1 className="mb-2 text-base font-bold">Tambah Data Baru</h1>
+      <Link href="/permintaan/tambahData">
+        <div className="flex items-center w-full p-5 mb-5 space-x-3 transition-all duration-300 rounded shadow-md hover:shadow-lg">
           <div className="py-2 px-3 rounded bg-[#ECEAF5] inline-block">
             <Image
               src="/assets/dashboard/dashboard/automationAi.png"
@@ -180,7 +180,7 @@ const ContentDashboardPermintaan = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold text-sm">
+            <h3 className="text-sm font-semibold">
               AI Automation (Tambah Data Baru)
             </h3>
             <p className="text-xs text-tulisan">Data Masuk (500)</p>
@@ -189,39 +189,45 @@ const ContentDashboardPermintaan = () => {
       </Link>
 
       {/* Pilih Fitur AI Scoring */}
-      <h1 className="font-bold text-base mb-5">Pilih Fitur AI Skoring</h1>
-      <div className="flex justify-between space-x-2 flex-wrap gap-y-5">
+      <h1 className="mb-5 text-base font-bold">Pilih Fitur AI Skoring</h1>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-0 md:flex md:justify-between md:space-x-2 md:flex-wrap md:gap-y-5 ">
         {/* Card */}
         {cardsToShow.map((card, index) => (
-          <div
+          <Link
             key={index}
-            className="flex space-x-3 items-center shadow px-5 py-6 w-full max-w-[200px] rounded-md relative transition-all duration-300 hover:shadow-lg"
+            href="#"
+            className="flex space-x-3 px-4 py-2 sm:px-5 sm:py-4 text-xs items-center shadow md:px-5 md:py-5 w-full sm:max-w-[250px] md:max-w-[200px] rounded-md relative transition-all duration-300 hover:shadow-lg"
           >
             <div className={`py-2 px-3 rounded ${card.bgIcon} inline-block`}>
               <Image src={card.image} alt={card.title} width={25} height={0} />
             </div>
             <div>
-              <h3 className="font-semibold text-xs">{card.title}</h3>
+              <h3 className="text-xs font-semibold">{card.title}</h3>
               <p className="text-xs text-tulisan">Data Masuk (500)</p>
             </div>
-            <div className="absolute top-2 right-2 bg-[#F5F5F5] text-xs font-bold p-1 rounded-full">
+            <div className="absolute z-10 top-2 right-2 bg-[#F5F5F5] text-xs font-bold p-1 rounded-full">
               {card.score}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
       {/* Button Show All */}
-      <div className="flex justify-end mt-4">
-        <button className="text-ijoToska" onClick={() => setShowAll(!showAll)}>
-          {showAll ? "Tutup" : "Tampilkan Semua"}
-        </button>
+      <div className="relative">
+        <div className="flex justify-end mt-4 text-sm">
+          <button
+            className="text-ijoToska hover:text-tulisan"
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? "Tutup" : "Tampilkan Semua"}
+          </button>
+        </div>
       </div>
 
       {/* Pilih nama untuk cek skor */}
-      <h1 className="font-bold text-base my-5">Pilih Nama Untuk Cek Skor</h1>
+      <h1 className="my-5 text-base font-bold">Pilih Nama Untuk Cek Skor</h1>
       {/* Table */}
-      <table className="table-auto w-full text-sm text-start bg-white">
+      <table className="w-full text-xs bg-white table-auto text-start">
         <thead className="bg-[#F5F8FF] text-tulisan">
           <tr>
             <th className="p-2">No</th>
@@ -273,9 +279,9 @@ const ContentDashboardPermintaan = () => {
             <tr key={index} className="border-t border-b">
               <td className="p-2 text-center">{data.no}</td>
               <td className="text-center text-tulisan">{data.nik}</td>
-              <td className="font-medium pl-8">{data.nama}</td>
-              <td className="text-tulisan text-center">{data.tanggalInput}</td>
-              <td className="text-blue-800 font-medium text-center">
+              <td className="pl-5 font-medium">{data.nama}</td>
+              <td className="text-center text-tulisan">{data.tanggalInput}</td>
+              <td className="font-medium text-center text-blue-800">
                 Lihat Detail
                 <Image
                   src="/assets/dashboard/permintaan/ceklis.png"
@@ -310,15 +316,15 @@ const ContentDashboardPermintaan = () => {
       </table>
 
       {/* Pagination */}
-      <div className="w-full px-3 pt-5 justify-between flex">
-        <div className="text-tulisan font-medium text-sm flex items-center">
+      <div className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
+        <div className="flex items-center mb-3 text-sm font-medium text-tulisan">
           Menampilkan {noAwal} - {noAkhir} dari {totalData} hasil
         </div>
 
-        <div className="flex w-full max-w-xs justify-end">
+        <div className="flex justify-center w-full max-w-xs pb-5 md:self-end md:justify-end">
           <div
             onClick={prevButton}
-            className="cursor-pointer flex items-center border p-1 group rounded hover:bg-ijoToska transition-all duration-300"
+            className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
           >
             <BiChevronLeft className="text-2xl text-ijoToska group-hover:text-white" />
           </div>
@@ -337,7 +343,7 @@ const ContentDashboardPermintaan = () => {
           </ul>
           <div
             onClick={nextButton}
-            className="cursor-pointer flex items-center border p-1 group rounded hover:bg-ijoToska transition-all duration-300"
+            className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
           >
             <BiChevronRight className="text-2xl text-ijoToska group-hover:text-white" />
           </div>
@@ -345,7 +351,7 @@ const ContentDashboardPermintaan = () => {
       </div>
 
       {/* Button Cek Skoring */}
-      <div className="w-full flex justify-end pt-5">
+      <div className="flex justify-center w-full md:justify-end">
         <Link
           href="#"
           className="w-full max-w-[300px] bg-ijoToska text-center text-white p-3 rounded-md font-semibold shadow active:bg-tulisan transition-all duration-300"

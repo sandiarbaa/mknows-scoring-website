@@ -17,7 +17,7 @@ const DashboardPermintaanLayouts = ({
   hasil,
 }: Props) => {
   return (
-    <div className="p-5">
+    <div className="px-5 pt-12 md:pt-5">
       <Link
         href="/permintaan"
         className={` font-medium mr-5 relative ${
@@ -31,14 +31,14 @@ const DashboardPermintaanLayouts = ({
       </Link>
       <Link
         href="/permintaan"
-        className="text-tulisan font-medium mr-5"
+        className="mr-5 font-medium text-tulisan"
         onClick={proses}
       >
         Proses
       </Link>
       <Link
         href="/permintaan"
-        className="text-tulisan font-medium mr-5"
+        className="mr-5 font-medium text-tulisan"
         onClick={hasil}
       >
         Hasil
