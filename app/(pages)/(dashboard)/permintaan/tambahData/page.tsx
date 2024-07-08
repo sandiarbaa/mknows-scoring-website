@@ -1,6 +1,6 @@
 "use client";
 import Pagination from "@/app/components/Fragments/Pagination";
-import Table from "@/app/components/Fragments/Table";
+import TablePermintaan from "@/app/components/Fragments/TablePermintaan";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
@@ -183,7 +183,7 @@ const AddDataPage = () => {
         </div>
 
         {/* Table */}
-        <Table userData={userData} />
+        <TablePermintaan userData={userData} />
 
         {/* Pagination */}
         <Pagination

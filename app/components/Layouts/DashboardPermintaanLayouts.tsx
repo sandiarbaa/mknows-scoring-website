@@ -31,14 +31,22 @@ const DashboardPermintaanLayouts = ({
       </Link>
       <Link
         href="/permintaan"
-        className="mr-5 font-medium text-tulisan"
+        className={` font-medium mr-5 relative ${
+          linkStatus === "/proses"
+            ? "text-ijoToska after:w-full after:h-[2px] after:bg-ijoToska after:absolute after:left-0 after:-bottom-5"
+            : "text-tulisan"
+        }`}
         onClick={proses}
       >
         Proses
       </Link>
       <Link
         href="/permintaan"
-        className="mr-5 font-medium text-tulisan"
+        className={` font-medium mr-5 relative ${
+          linkStatus === "/hasil"
+            ? "text-ijoToska after:w-full after:h-[2px] after:bg-ijoToska after:absolute after:left-0 after:-bottom-5"
+            : "text-tulisan"
+        }`}
         onClick={hasil}
       >
         Hasil

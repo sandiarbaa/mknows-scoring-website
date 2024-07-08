@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import TablePermintaan from "./TablePermintaan";
 
 const fiturCards = [
   {
@@ -227,7 +228,7 @@ const ContentDashboardPermintaan = () => {
       {/* Pilih nama untuk cek skor */}
       <h1 className="my-5 text-base font-bold">Pilih Nama Untuk Cek Skor</h1>
       {/* Table */}
-      <table className="w-full text-xs bg-white table-auto text-start">
+      {/* <table className="w-full text-xs bg-white table-auto text-start">
         <thead className="bg-[#F5F8FF] text-tulisan">
           <tr>
             <th className="p-2">No</th>
@@ -313,7 +314,8 @@ const ContentDashboardPermintaan = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
+      <TablePermintaan userData={userData} />
 
       {/* Pagination */}
       <div className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
