@@ -76,7 +76,13 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
                 height={imageSize}
                 className="mr-3"
               />
-              {item.linkName}
+              <p
+                className={`font-medium ${
+                  isActive ? "text-white" : "text-tulisan"
+                }`}
+              >
+                {item.linkName}
+              </p>
             </Link>
           );
         })}

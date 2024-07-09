@@ -61,7 +61,6 @@ const ContentDashboardProses = () => {
             className="border text-sm w-[295px] -mr-2 lg:mr-0 lg:w-[300px] py-2.5 rounded-md px-3 pl-10" // Tambahkan padding kiri untuk ikon
             placeholder="Search NIK, Nama, No Permintaan"
           />
-          {/* <BiSearch className="absolute text-lg left-3 top-1/2 transform -translate-y-1/2 text-gray-400" /> */}
           <Image
             src="/assets/dashboard/permintaan/search.png"
             alt="search"
