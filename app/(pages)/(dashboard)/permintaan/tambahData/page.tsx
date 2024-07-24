@@ -1,6 +1,8 @@
 "use client";
+import DatePicker from "@/app/components/Elements/DatePicker";
 import Pagination from "@/app/components/Fragments/Pagination";
-import TablePermintaan from "@/app/components/Fragments/TablePermintaan";
+import TablePermintaan from "@/app/components/Fragments/permintaan/TablePermintaan";
+
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,8 +19,6 @@ const AddDataPage = () => {
   const [totalData, setTotalData] = useState<number>(0);
 
   const pathname: string = usePathname();
-  const dateInputRef = useRef<HTMLInputElement>(null);
-  const placeholderRef = useRef<HTMLDivElement>(null);
 
   // Prev Button Pagination
   const prevButton = () => {
@@ -50,24 +50,6 @@ const AddDataPage = () => {
   useEffect(() => {
     fetchData();
   }, [page, fetchData, noAwal]);
-
-  const handleFocus = () => {
-    if (dateInputRef.current) {
-      dateInputRef.current.type = "date";
-    }
-    if (placeholderRef.current) {
-      placeholderRef.current.style.display = "none";
-    }
-  };
-
-  const handleBlur = () => {
-    if (dateInputRef.current && !dateInputRef.current.value) {
-      dateInputRef.current.type = "text";
-      if (placeholderRef.current) {
-        placeholderRef.current.style.display = "flex";
-      }
-    }
-  };
 
   // Generate numberPage array based on lastVisiblePage
   const numberPage = Array.from(
@@ -102,48 +84,12 @@ const AddDataPage = () => {
         </div>
 
         {/* Date, Search, Button Tambah Data */}
-        <div className="">
+        <div>
           {/* Date */}
           <form action="">
             <div className="flex flex-col items-center mt-10 mb-5 md:flex-row md:justify-between gap-y-3">
               {/* Date */}
-              <div className="relative">
-                <div
-                  ref={placeholderRef}
-                  className="absolute text-sm left-3 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center space-x-2 pointer-events-none"
-                >
-                  <span>Dari</span>
-                  <Image
-                    src="/assets/dashboard/permintaan/calendar-search.png"
-                    alt="arrow-down-date"
-                    width={20}
-                    height={0}
-                  />
-                  <span>Sampai</span>
-                  <Image
-                    src="/assets/dashboard/permintaan/calendar-search.png"
-                    alt="arrow-down-date"
-                    width={20}
-                    height={0}
-                  />
-                  <span>tt/bb/tahun</span>
-                  <Image
-                    src="/assets/dashboard/permintaan/arrow-down-date.png"
-                    alt="arrow-down-date"
-                    width={10}
-                    height={0}
-                  />
-                </div>
-                <input
-                  type="text"
-                  name="date"
-                  id="date"
-                  className="border w-[290px] lg:w-[270px] py-2 rounded-md px-3"
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  ref={dateInputRef}
-                />
-              </div>
+              <DatePicker />
 
               <div className="flex flex-col lg:flex-row">
                 {/* Search & Button Tambah */}

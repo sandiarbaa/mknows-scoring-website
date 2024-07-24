@@ -15,10 +15,22 @@ import AreaChart from "./chart/AreaChart";
 
 // Data
 import { dashboardCardData } from "@/app/utils/dashboardCardData";
+import SingleVerticalBarChart from "./chart/SingleVerticalBarChart";
 
-const responsive = {
+interface Breakpoint {
+  max: number;
+  min: number;
+}
+
+interface ResponsiveType {
+  [key: string]: {
+    breakpoint: Breakpoint;
+    items: number;
+  };
+}
+
+const responsive: ResponsiveType = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 5,
   },
@@ -42,16 +54,16 @@ const DashboardPage = () => {
   return (
     <DashboardLayout hover={pathname}>
       {/* Dashboard Card */}
-      <section className="relative hidden md:block w-full">
+      <section className="relative md:block w-full">
         <h1 className="pt-2 pl-5 font-bold">RIWAYAT PERMINTAAN</h1>
         {/* Card */}
-        <Carousel responsive={responsive} className="ml-5">
+        <Carousel responsive={responsive} className="mx-5">
           {dashboardCardData.map((dataCard, index) => (
             <div
               key={index}
-              className="w-[220px] border p-3 bg-white rounded-md shadow mt-3 carousel-item"
+              className="w-[100%] lg:w-[220px] border p-3 bg-white flex flex-col rounded-md shadow mt-3 carousel-item"
             >
-              <div className="flex justify-between w-full">
+              <div className="flex justify-start space-x-3 mb-3 lg:space-x-0">
                 <div className={`${dataCard.bgIcon} p-1.5 rounded-md mr-3`}>
                   <Image
                     src={dataCard.image}
@@ -71,24 +83,26 @@ const DashboardPage = () => {
                   </p>
                 </div>
               </div>
-              <div
-                className={`${dataCard.bgButton} hover:opacity-70 transition-all duration-300 mb-1 mt-4 text-center py-1 rounded-md`}
+              {/* Button Lihat Detail */}
+              <Link
+                href="#"
+                className={`${dataCard.bgButton} text-center text-white font-semibold py-1.5 rounded-md transition-all duration-300 hover:opacity-75`}
               >
-                <Link href="#" className="font-semibold text-white">
-                  Lihat Detail
-                </Link>
-              </div>
+                Lihat Detail
+              </Link>
             </div>
           ))}
         </Carousel>
       </section>
 
       {/* Dashboard Stats ** */}
-      <section className="hidden mt-5 md:block mr-5 pb-5">
-        <div className="flex justify-between mb-7 pr-5">
-          <h1 className="pt-1 pl-5 font-bold">Grafik Penggunaan</h1>
+      <section className="mt-5 mr-5 pb-5">
+        <div className="flex flex-col lg:flex-row justify-between lg:items-center mb-7 pr-5 pt-5 lg:pt-0">
+          <h1 className="text-xl pt-1 pl-5 font-bold mb-3 lg:mb-0">
+            Grafik Penggunaan
+          </h1>
           {/* Dropdown */}
-          <div className="w-48">
+          <div className="w-48 px-5 lg:px-0">
             <select
               id="fruits"
               name="fruits"
@@ -103,7 +117,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Dashboard Content */}
-        <div className="flex space-x-5 justify-between px-5 mb-5">
+        <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center lg:flex-row">
           <DashboardStatsContentLayout title="RIWAYAT PERMINTAAN">
             <AreaChart />
           </DashboardStatsContentLayout>
@@ -112,13 +126,20 @@ const DashboardPage = () => {
             <DoughnutChart />
           </DashboardStatsContentLayout>
         </div>
-        <div className="flex space-x-5 justify-between px-5 mb-5">
-          <DashboardStatsContentLayout title="TRACK USIA">
+
+        <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center justify-center lg:flex-row">
+          <DashboardStatsContentLayout title="RIWAYAT PERMINTAAN">
             <VerticalBarChart />
           </DashboardStatsContentLayout>
 
-          <DashboardStatsContentLayout title="TRACK LOKASI">
+          <DashboardStatsContentLayout title="RIWAYAT NILAI SKOR">
             <VerticalBarChart />
+          </DashboardStatsContentLayout>
+        </div>
+
+        <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center lg:flex-row">
+          <DashboardStatsContentLayout title="TRACK PENDAPATAN">
+            <SingleVerticalBarChart />
           </DashboardStatsContentLayout>
         </div>
       </section>

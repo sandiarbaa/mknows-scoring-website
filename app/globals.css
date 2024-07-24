@@ -11,3 +11,19 @@
     margin-right: 20px;
   }
 }
+
+/* Tailwind CSS */
+@media (max-width: 640px) {
+  .table-auto th,
+  .table-auto td {
+    padding: 0.5rem; /* Mengurangi padding untuk memberikan ruang lebih */
+  }
+
+  .table-auto th {
+    font-size: 0.75rem; /* Mengurangi ukuran font untuk th */
+  }
+
+  .table-auto td {
+    font-size: 0.75rem; /* Mengurangi ukuran font untuk td */
+  }
+}

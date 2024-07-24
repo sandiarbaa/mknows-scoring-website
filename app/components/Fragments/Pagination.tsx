@@ -12,7 +12,7 @@ interface PaginationProps {
   numberPage: number[];
 }
 
-const Pagination = ({
+const Pagination: React.FC<PaginationProps> = ({
   noAwal,
   noAkhir,
   totalData,
@@ -21,7 +21,7 @@ const Pagination = ({
   prevButton,
   nextButton,
   numberPage,
-}: PaginationProps) => {
+}) => {
   return (
     <div className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
       <div className="flex items-center mb-3 text-sm font-medium text-tulisan">

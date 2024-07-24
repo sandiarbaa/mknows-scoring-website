@@ -9,8 +9,8 @@ const DashboardStatsContentLayout = ({
   title: string;
 }) => {
   return (
-    <div className="w-full max-w-[500px] shadow p-5 rounded-md">
-      <div className="flex justify-between items-center">
+    <div className="w-full max-w-[400px] lg:max-w-[440px] shadow p-5 rounded-md">
+      <div className="flex flex-col lg:flex-row justify-between lg:items-center">
         <div className="pl-3">
           <h1 className="font-bold mb-1.5">{title}</h1>
           {/* Button Tahun, Bulan, Minggu */}
@@ -30,7 +30,7 @@ const DashboardStatsContentLayout = ({
           </div>
         </div>
         {/* Dropdown */}
-        <div className="w-28">
+        <div className="w-28 ml-3 lg:ml-0 mt-3 lg:mt-0">
           <select
             id="fruits"
             name="fruits"

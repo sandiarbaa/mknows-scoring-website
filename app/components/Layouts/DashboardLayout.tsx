@@ -5,6 +5,7 @@ import UserPhoto from "../Fragments/UserPhoto";
 import SidebarLink from "../Fragments/SidebarLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const [nav, setNav] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   const openNavHandler = () => setNav(true);
   const closeNavHandler = () => setNav(false);
@@ -56,7 +58,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           id="navbarMobile"
           className={`md:hidden absolute ${
             nav ? "translate-x-0" : "translate-x-[-100%]"
-          } bg-white z-30 w-full max-w-[250px] h-full top-0 left-0 px-8 py-5 shadow-lg transition-all duration-300 shadow-white`}
+          } bg-white z-[99999] w-full max-w-[250px] h-full top-0 left-0 px-8 py-5 shadow-lg transition-all duration-300 shadow-white`}
         >
           {/* Logo */}
           <Image
@@ -79,7 +81,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               height={0}
               className="scale-90"
             />
-            <span>Keluar</span>
+            <span onClick={() => router.push("/login")}>Keluar</span>
           </div>
         </nav>
 
@@ -126,7 +128,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               height={0}
               className="scale-75"
             />
-            <span>Keluar</span>
+            <span onClick={() => router.push("/login")}>Keluar</span>
           </Link>
         </nav>
 

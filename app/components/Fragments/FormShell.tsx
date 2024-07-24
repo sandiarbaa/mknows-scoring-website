@@ -4,7 +4,7 @@ interface FormProps {
   children: React.ReactNode;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
 }
-const FormShell = ({ children, onSubmit }: FormProps) => {
+const FormShell: React.FC<FormProps> = ({ children, onSubmit }) => {
   return (
     <form action="" onSubmit={onSubmit}>
       {children}

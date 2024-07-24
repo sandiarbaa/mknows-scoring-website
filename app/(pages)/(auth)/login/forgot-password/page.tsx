@@ -2,12 +2,18 @@
 import InputForm from "@/app/components/Elements/Input";
 import FormShell from "@/app/components/Fragments/FormShell";
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const forgot = () => {
+  const router = useRouter();
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    router.push("/login/authentication");
+  };
   return (
     <LoginLayout title="LUPA KATA SANDI">
-      <FormShell>
+      <FormShell onSubmit={handleSubmit}>
         <InputForm type="email" textLabel="Email" placeholder="Masukan Email" />
         <button
           type="submit"

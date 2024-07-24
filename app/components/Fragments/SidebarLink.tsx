@@ -29,12 +29,12 @@ const dataSidebarLink: SidebarItem[] = [
     imageFalse: "/assets/dashboard/sidebarNavbar/laporan.png",
     linkName: "Laporan",
   },
-  {
-    href: "/kuota",
-    imageTrue: "/assets/dashboard/sidebarNavbar/network-add-active.png",
-    imageFalse: "/assets/dashboard/sidebarNavbar/network-add.png",
-    linkName: "Kuota",
-  },
+  // {
+  //   href: "/kuota",
+  //   imageTrue: "/assets/dashboard/sidebarNavbar/network-add-active.png",
+  //   imageFalse: "/assets/dashboard/sidebarNavbar/network-add.png",
+  //   linkName: "Kuota",
+  // },
 ];
 
 interface SidebarLinkProps {

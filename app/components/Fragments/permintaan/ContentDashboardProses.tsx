@@ -4,7 +4,7 @@ import TablePermintaanProses from "./TablePermintaanProses";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import Link from "next/link";
 
-const ContentDashboardProses = () => {
+const ContentDashboardProses: React.FC = () => {
   const [userData, setUserData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
@@ -51,7 +51,7 @@ const ContentDashboardProses = () => {
     <section className="w-full px-3 py-5 my-5">
       {/* Title */}
       <div className="flex flex-col lg:flex-row items-center justify-between">
-        <h1 className="text-xl font-bold">Permintaan hari ini</h1>
+        <h1 className="text-xl font-bold mb-3 lg:mb-0">Permintaan Hari Ini</h1>
         {/* Search & Button Tambah */}
         <div className="relative inline-block mr-2">
           <input

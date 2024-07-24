@@ -2,12 +2,19 @@
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 const TambahDataDanInputTemplate = () => {
   const pathname: string = usePathname();
+  const router = useRouter();
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    router.push("/permintaan");
+  };
+
   return (
     <DashboardLayout hover={pathname}>
       <div className="px-5 py-10 md:py-5">
@@ -67,7 +74,7 @@ const TambahDataDanInputTemplate = () => {
 
         <hr className="my-5 border-b-2 bg-tulisan" />
 
-        <form action="">
+        <form onSubmit={handleFormSubmit}>
           <div className="w-full grid grid-cols-1 lg:grid-cols-2">
             {/* Foto KTP */}
             <UploadCard
@@ -100,7 +107,10 @@ const TambahDataDanInputTemplate = () => {
               *Kolom tidak boleh kosong!
             </p>
           </div>
-          <button className="text-sm font-semibold text-white bg-ijoToska w-full lg:w-1/2 mt-5 py-3 lg:py-4 rounded-md active:bg-tulisan">
+          <button
+            type="submit"
+            className="text-sm font-semibold text-white bg-ijoToska w-full lg:w-1/2 mt-5 py-3 lg:py-4 rounded-md active:bg-tulisan"
+          >
             Tambah Data Baru
           </button>
         </form>

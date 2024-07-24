@@ -1,9 +1,11 @@
-import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import TablePermintaanHasil from "./TablePermintaanHasil";
+import Dropdown from "../../Elements/Dropdown";
+import SearchBox from "../../Elements/SearchBox";
+import BarChart from "@/app/(pages)/(dashboard)/laporan/chart/BarChart";
+import TableLaporanFitur from "./TableLaporanFitur";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
-const ContentDashboardHasil = () => {
+const ContentDashboardLaporanFitur: React.FC = () => {
   const [userData, setUserData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
@@ -13,7 +15,7 @@ const ContentDashboardHasil = () => {
 
   const fetchData = useCallback(async () => {
     const res = await fetch(
-      `http://localhost:3000/api/permintaanHasil?page=${page}`
+      `http://localhost:3000/api/laporanFitur?page=${page}`
     ).then((res) => res.json());
 
     setUserData(res.data);
@@ -48,57 +50,58 @@ const ContentDashboardHasil = () => {
 
   return (
     <section className="w-full px-3 py-5 my-5">
-      {/* Title */}
-      <section className="flex flex-col lg:flex-row items-center justify-between">
-        <h1 className="text-xl font-bold">Permintaan hari ini</h1>
-        {/* Search & Dropdown */}
-        <div className="flex flex-col lg:flex-row mt-5 lg:mt-0 space-y-3 lg:space-y-0 items-center space-x-3">
-          {/* Dropdown */}
-          <div className="w-48">
+      {/* Grafik */}
+      <Dropdown title="Automation" />
+      <section className="mt-2 border p-2 rounded">
+        <div className="flex justify-between flex-col items-center lg:flex-row lg:space-y-0">
+          <div>
+            <h1 className="font-bold">
+              Grafik Pemakaian Kuota Per-Cabang Tahun 2023
+            </h1>
+            <p className="text-xs text-tulisan">Data Periode Tahun 2023</p>
+          </div>
+          <div className="mt-5 lg:mt-0 flex flex-col items-center gap-y-2">
             <select
-              id="fruits"
-              name="fruits"
-              className="block text-sm w-full rounded-md border-gray-300 bg-[#F5F5F5] p-2 border shadow focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              name="dropdownTahunLaporanFitur"
+              id="dropdownTahunLaporanFitur"
+              className="border rounded px-2 py-1 text-sm shadow"
             >
-              <option value="semua">Semua</option>
               <option value="tahun">Tahun</option>
-              <option value="bulan">Bulan</option>
-              <option value="minggu">Minggu</option>
+              <option value="tahun">Tahun</option>
+              <option value="tahun">Tahun</option>
             </select>
+            <p className="text-sm text-tulisan italic">1 Tahun Terakhir</p>
           </div>
+        </div>
+        {/* Grafik */}
+        <div className="w-full mt-5">
+          <BarChart />
+        </div>
+      </section>
 
-          {/* Search */}
-          <div className="relative inline-block mr-2">
-            <input
-              type="text"
-              name="search"
-              id="search"
-              className="border text-sm w-[295px] -mr-2 lg:mr-0 lg:w-[300px] py-2.5 rounded-md px-3 pl-10" // Tambahkan padding kiri untuk ikon
-              placeholder="Search NIK, Nama, No Permintaan"
-            />
-            <Image
-              src="/assets/dashboard/permintaan/search.png"
-              alt="search"
-              width={20}
-              height={0}
-              className="absolute text-lg left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            />
-          </div>
+      {/* Dokumen Gagal OCR */}
+      <section className="mt-10 flex flex-col justify-center">
+        <h1 className="font-bold">
+          Jumlah Dokumen gagal di OCR (Quality of Document Source)
+        </h1>
+        <div className="flex flex-col items-center lg:flex-row lg:items-center mt-5 space-y-3 lg:space-y-0 lg:space-x-5">
+          <Dropdown title="Dokumen Gagal di OCR" />
+          <SearchBox />
         </div>
       </section>
 
       {/* Table */}
       <section className="mt-5">
-        <TablePermintaanHasil userData={userData} />
+        <TableLaporanFitur userData={userData} />
       </section>
 
       {/* Pagination */}
-      <div className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
-        <div className="flex items-center mb-3 text-sm font-medium text-tulisan">
+      <div className="flex flex-col items-start justify-center w-full px-3 pt-5">
+        <div className="flex items-center self-center lg:self-start mb-3 text-sm font-medium text-tulisan">
           Menampilkan {noAwal} - {noAkhir} dari {totalData} hasil
         </div>
 
-        <div className="flex justify-center w-full max-w-xs pb-5 md:self-end md:justify-end">
+        <div className="flex justify-center w-full max-w-xs pb-5 self-center">
           <div
             onClick={prevButton}
             className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
@@ -130,4 +133,4 @@ const ContentDashboardHasil = () => {
   );
 };
 
-export default ContentDashboardHasil;
+export default ContentDashboardLaporanFitur;

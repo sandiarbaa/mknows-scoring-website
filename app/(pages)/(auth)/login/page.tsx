@@ -2,28 +2,30 @@
 import FormShell from "@/app/components/Fragments/FormShell";
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { PiExclamationMarkFill } from "react-icons/pi";
 
 const LoginPage = () => {
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const passwordInput = event.target.password.value;
 
-    if (passwordInput !== "correct_password") {
-      // Ganti dengan logika validasi password Anda
+    if (passwordInput !== "password") {
       setIsPasswordInvalid(true);
     } else {
       setIsPasswordInvalid(false);
-      // Lakukan sesuatu jika login berhasil, misalnya mengarahkan pengguna ke halaman lain
+      router.push("/dashboard");
     }
   };
+
   return (
     <LoginLayout title="MASUK">
       <FormShell onSubmit={handleSubmit}>
-        {/* input-label */}
+        {/* input-label Email */}
         <div className="flex flex-col mb-3">
           <label htmlFor="email" className="mb-2 text-[16px] font-semibold">
             Email <span className="text-red-500">*</span>
@@ -35,9 +37,11 @@ const LoginPage = () => {
             className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
             required
             autoComplete="off"
+            autoFocus
           />
         </div>
-        {/* input-label */}
+
+        {/* input-label Password*/}
         <div className="flex flex-col mb-2">
           <label htmlFor="password" className="mb-2 text-[16px] font-semibold">
             Password <span className="text-red-500">*</span>
@@ -65,13 +69,18 @@ const LoginPage = () => {
             </span>
           )}
         </div>
+
         <div className="flex items-center ml-2 mt-5">
           <input type="checkbox" id="remember" className="w-4 h-4 mr-3" />
           <label htmlFor="remember" className="text-sm text-tulisan">
             Ingatkan Saya
           </label>
         </div>
-        <h1 className="text-ijoToska text-sm my-5">Lupa Kata Sandi?</h1>
+
+        <Link href="/login/forgot-password">
+          <h1 className="text-ijoToska text-sm my-5">Lupa Kata Sandi?</h1>
+        </Link>
+
         <div>
           <button
             type="submit"

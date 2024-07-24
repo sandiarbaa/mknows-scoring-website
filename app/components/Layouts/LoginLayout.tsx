@@ -19,7 +19,7 @@ const LoginLayout = ({ children, title }: Props) => {
       </div>
       <div className="container flex flex-col justify-center items-center h-full z-10">
         <div className="w-full max-w-xs md:max-w-md bg-white shadow px-7 py-6 z-20 border-2 rounded-md">
-          <h1 className="text-center text-[24px] md:text-[30px] font-bold text-ijoToska mb-10">
+          <h1 className="text-center text-[24px] md:text-[30px] font-semibold text-ijoToska mb-10">
             {title}
           </h1>
           {children}
