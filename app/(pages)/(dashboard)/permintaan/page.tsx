@@ -1,11 +1,13 @@
 "use client";
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
+
+// Component
 import ContentDashboardHasil from "@/app/components/Fragments/permintaan/ContentDashboardHasil";
 import ContentDashboardPermintaan from "@/app/components/Fragments/permintaan/ContentDashboardPermintaan";
 import ContentDashboardProses from "@/app/components/Fragments/permintaan/ContentDashboardProses";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import DashboardPermintaanLayouts from "@/app/components/Layouts/DashboardPermintaanLayouts";
-import { usePathname } from "next/navigation";
-import React, { useState } from "react";
 
 const PermintaanPage = () => {
   const pathname = usePathname();

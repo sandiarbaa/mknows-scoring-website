@@ -48,7 +48,7 @@ const responsive: ResponsiveType = {
   },
 };
 
-const DashboardPage = () => {
+const DashboardPage: React.FC = () => {
   const pathname: string = usePathname();
 
   return (

@@ -2,13 +2,11 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 interface userDataProps {
-  no: number;
-  tanggalInput: string;
-  jenisPermintaan: string;
-  jumlahCustomer: string;
-  noPermintaan: string;
-  tanggalPermintaan: string;
-  tanggalSelesai: string;
+  no: string;
+  jenis_permintaan: string;
+  jumlah_customer: string;
+  createdAt: string;
+  finishedAt: string;
 }
 
 interface expandedRowsDataProps {
@@ -180,7 +178,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
             <React.Fragment key={index}>
               <tr
                 className="border-t border-b cursor-pointer"
-                onClick={() => toggleRow(data.no)}
+                onClick={() => toggleRow(index)}
               >
                 <td className="p-2 text-center">
                   <Image
@@ -188,30 +186,22 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                     alt="play-dropdown"
                     width={20}
                     height={20}
-                    className={
-                      expandedRows.includes(data.no) ? "rotate-90" : ""
-                    }
+                    className={expandedRows.includes(index) ? "rotate-90" : ""}
                   />
                 </td>
-                <td className="p-2 text-center">{data.no}</td>
+                <td className="p-2 text-center">{index + 1}</td>
+                <td className="text-center text-tulisan">{data.createdAt}</td>
                 <td className="text-center text-tulisan">
-                  {data.tanggalInput}
-                </td>
-                <td className="text-center text-tulisan">
-                  {data.jenisPermintaan}
+                  {data.jenis_permintaan}
                 </td>
                 <td className="pl-5 font-medium text-center">
-                  {data.jumlahCustomer}
+                  {data.jumlah_customer}
                 </td>
-                <td className="text-center text-tulisan">
-                  {data.noPermintaan}
-                </td>
-                <td className="text-center text-tulisan">
-                  {data.tanggalPermintaan}
-                </td>
-                <td className="text-center">{data.tanggalSelesai}</td>
+                <td className="text-center text-tulisan">{data.no}</td>
+                <td className="text-center text-tulisan">{data.createdAt}</td>
+                <td className="text-center text-tulisan">{data.finishedAt}</td>
               </tr>
-              {expandedRows.includes(data.no) && (
+              {expandedRows.includes(index) && (
                 <>
                   <tr className="text-ijoToska">
                     <th className="p-2"></th>

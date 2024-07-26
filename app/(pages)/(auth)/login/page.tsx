@@ -1,19 +1,30 @@
 "use client";
-import FormShell from "@/app/components/Fragments/FormShell";
-import LoginLayout from "@/app/components/Layouts/LoginLayout";
+import { useRouter } from "next/navigation";
+import React, { useState, FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 
-const LoginPage = () => {
-  const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+// Component
+import Button from "@/app/components/Elements/Button";
+import InputCheckbox from "@/app/components/Elements/InputCheckbox";
+import FormShell from "@/app/components/Fragments/FormShell";
+import LoginLayout from "@/app/components/Layouts/LoginLayout";
+import Label from "@/app/components/Elements/InputForm/Label";
+import Input from "@/app/components/Elements/InputForm/Input";
+import InputForm from "@/app/components/Elements/InputForm";
+
+const LoginPage: React.FC = () => {
+  const [isPasswordInvalid, setIsPasswordInvalid] = useState<boolean>(false);
+  const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleSubmit = (event: any) => {
+  // handleSubmit
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const passwordInput = event.target.password.value;
+    // event.target di-cast sebagai HTMLFormElement untuk memastikan TypeScript tahu properti password ada di elemen tersebut.
+    const passwordInput = (event.target as HTMLFormElement).password.value;
 
+    // ini untuk menampilkan pesan error kalau state isPasswordInvalid bernilai true
     if (passwordInput !== "password") {
       setIsPasswordInvalid(true);
     } else {
@@ -25,39 +36,34 @@ const LoginPage = () => {
   return (
     <LoginLayout title="MASUK">
       <FormShell onSubmit={handleSubmit}>
-        {/* input-label Email */}
+        {/* Email */}
         <div className="flex flex-col mb-3">
-          <label htmlFor="email" className="mb-2 text-[16px] font-semibold">
-            Email <span className="text-red-500">*</span>
-          </label>
-          <input
+          <InputForm
             type="email"
-            id="email"
+            textLabel="Email"
+            htmlForId="email"
             placeholder="Masukan Email"
-            className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-            required
-            autoComplete="off"
-            autoFocus
+            classStyleLabel="font-semibold mb-2 text-[16px]"
+            classStyleInput="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
           />
         </div>
 
-        {/* input-label Password*/}
+        {/* Password*/}
         <div className="flex flex-col mb-2">
-          <label htmlFor="password" className="mb-2 text-[16px] font-semibold">
-            Password <span className="text-red-500">*</span>
-          </label>
-          <input
+          <InputForm
             type="password"
-            id="password"
-            placeholder="Masukan Password"
-            className={`px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan ${
-              isPasswordInvalid ? "border-red-500" : ""
-            }`}
-            required
+            textLabel="Password"
+            htmlForId="password"
+            placeholder="Masukan Kata Sandi"
+            classStyleLabel="font-semibold mb-2 text-[16px]"
+            classStyleInput="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
+            inputState={isPasswordInvalid}
+            classStyleInputTrue="focus:border-red-500"
           />
+
+          {/* Pesan error ketika password salah */}
           {isPasswordInvalid && (
             <span className="text-red-500 mt-2 text-sm ml-3">
-              {/* <PiExclamationMarkFill className="inline mr-1" /> */}
               <Image
                 src="/assets/login/password-wrong-icon.png"
                 alt="error"
@@ -70,28 +76,32 @@ const LoginPage = () => {
           )}
         </div>
 
+        {/* Checkbox Remember Me */}
         <div className="flex items-center ml-2 mt-5">
-          <input type="checkbox" id="remember" className="w-4 h-4 mr-3" />
-          <label htmlFor="remember" className="text-sm text-tulisan">
+          <InputCheckbox
+            checkboxValue={checkboxValue}
+            setCheckboxValue={setCheckboxValue}
+          />
+          <span
+            className="text-tulisan text-sm ml-1 cursor-pointer"
+            onClick={() => setCheckboxValue(!checkboxValue)}
+          >
             Ingatkan Saya
-          </label>
+          </span>
         </div>
 
+        {/* Link Forgot Password */}
         <Link href="/login/forgot-password">
           <h1 className="text-ijoToska text-sm my-5">Lupa Kata Sandi?</h1>
         </Link>
 
+        {/* Button Masuk dan Sign with Google */}
         <div>
-          <button
-            type="submit"
-            className="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]"
-          >
+          <Button classStyle="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]">
             Masuk
-          </button>
-          <button
-            type="button"
-            className="w-full flex justify-center space-x-5 bg-white text-tulisan font-medium py-2 rounded-md shadow-md active:bg-[#E5E5E5] active:text-[#A3A3A3]"
-          >
+          </Button>
+
+          <Button classStyle="w-full flex justify-center space-x-5 bg-white text-tulisan font-medium py-2 rounded-md shadow-md active:bg-[#E5E5E5] active:text-[#A3A3A3]">
             <Image
               src="/assets/login/google-login.png"
               alt="google-logo"
@@ -99,7 +109,7 @@ const LoginPage = () => {
               height={25}
             />
             <span>Sign in with Google</span>
-          </button>
+          </Button>
         </div>
       </FormShell>
     </LoginLayout>

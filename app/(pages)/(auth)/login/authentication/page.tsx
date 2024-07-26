@@ -1,5 +1,4 @@
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
-import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment } from "react";
 

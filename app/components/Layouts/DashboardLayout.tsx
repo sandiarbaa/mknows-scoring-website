@@ -18,7 +18,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const [nav, setNav] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
 
   const openNavHandler = () => setNav(true);
   const closeNavHandler = () => setNav(false);
@@ -47,7 +46,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {/* Overlay */}
         {nav && (
           <div
-            className="fixed inset-0 z-20 bg-black opacity-50"
+            className="fixed inset-0 z-[99999] bg-black opacity-50"
             onClick={closeNavHandler}
           ></div>
         )}
@@ -58,7 +57,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           id="navbarMobile"
           className={`md:hidden absolute ${
             nav ? "translate-x-0" : "translate-x-[-100%]"
-          } bg-white z-[99999] w-full max-w-[250px] h-full top-0 left-0 px-8 py-5 shadow-lg transition-all duration-300 shadow-white`}
+          } bg-white z-[999999] w-full max-w-[250px] h-full top-0 left-0 px-8 py-5 shadow-lg transition-all duration-300 shadow-white`}
         >
           {/* Logo */}
           <Image
@@ -73,7 +72,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* Sidebar Link */}
           <SidebarLink hover={hover} />
-          <div className="absolute flex space-x-3 bottom-5 left-10">
+          <Link
+            href="/login"
+            className="absolute flex space-x-3 bottom-5 left-10"
+          >
             <Image
               src="/assets/dashboard/sidebarNavbar/logout-1.png"
               alt="exit-icon"
@@ -81,16 +83,15 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               height={0}
               className="scale-90"
             />
-            <span onClick={() => router.push("/login")}>Keluar</span>
-          </div>
+            <span>Keluar</span>
+          </Link>
         </nav>
 
         {/* Hamburger Icon to Open Nav */}
         {!nav && (
-          <div className="fixed top-0 left-0 z-50 flex items-center justify-end w-full h-12 py-3 bg-white shadow sm:px-16 px-11 shadow-ijoToska md:hidden">
+          <div className="fixed top-0 left-0 z-[9999] flex items-center justify-end w-full h-12 py-3 bg-white shadow sm:px-16 px-11 shadow-ijoToska md:hidden">
             <Bars3Icon
               onClick={openNavHandler}
-              // className="w-[2rem] absolute top-0 right-12 sm:right-20 text-ijoToska md:hidden cursor-pointer z-50"
               className="w-[2rem] text-ijoToska md:hidden cursor-pointer z-50"
             />
           </div>
@@ -100,7 +101,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {nav && (
           <XMarkIcon
             onClick={closeNavHandler}
-            className="w-[2rem] absolute top-5 right-12 sm:top-6 sm:right-14 text-white md:hidden cursor-pointer z-40"
+            className="w-[2rem] absolute top-5 right-12 sm:top-6 sm:right-14 text-white md:hidden cursor-pointer z-[9999999]"
           />
         )}
 
@@ -120,7 +121,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* Sidebar Link */}
           <SidebarLink hover={hover} />
-          <Link href="#" className="absolute flex space-x-3 bottom-5 left-10">
+          <Link
+            href="/login"
+            className="absolute flex space-x-3 bottom-5 left-10"
+          >
             <Image
               src="/assets/dashboard/sidebarNavbar/logout-1.png"
               alt="exit-icon"
@@ -128,7 +132,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               height={0}
               className="scale-75"
             />
-            <span onClick={() => router.push("/login")}>Keluar</span>
+            <span>Keluar</span>
           </Link>
         </nav>
 

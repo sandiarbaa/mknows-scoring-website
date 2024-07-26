@@ -44,7 +44,7 @@ const options: ChartOptions<"doughnut"> = {
   maintainAspectRatio: false,
 };
 
-const DoughnutChart = () => {
+const DoughnutChart: React.FC = () => {
   return <Doughnut data={data} options={options} width={130} height={130} />;
 };
 

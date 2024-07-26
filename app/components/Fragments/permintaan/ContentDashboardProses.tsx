@@ -13,19 +13,23 @@ const ContentDashboardProses: React.FC = () => {
   const [totalData, setTotalData] = useState<number>(0);
 
   const fetchData = useCallback(async () => {
+    const size = 2;
     const res = await fetch(
-      `http://localhost:3000/api/permintaanProses?page=${page}`
+      // `http://localhost:3000/api/permintaanProses?page=${page}`
+      `http://localhost:3001/reports?size=${size}&current=${page}`
     ).then((res) => res.json());
 
-    setUserData(res.data);
-    setLastVisiblePage(res.pagination.last_visible_page);
-    setNoAwal(res.data[0].no);
+    // console.log(res);
+    setUserData(res.data.reports);
+    setLastVisiblePage(res.page.totalPages);
+    setNoAwal((page - 1) * size + 1);
     setNoAkhir(
-      res.data.length > 0 ? res.data[res.data.length - 1].no : noAkhir
+      res.data.reports.length > 0
+        ? (page - 1) * size + res.data.reports.length
+        : (page - 1) * size
     );
-
-    setTotalData(res.data_length);
-  }, [page, noAkhir]);
+    setTotalData(res.page.total);
+  }, [page]);
 
   useEffect(() => {
     fetchData();

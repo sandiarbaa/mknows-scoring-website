@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-interface Props {
+interface dashboardPermintaanLayoutsProps {
   children: React.ReactNode;
   linkStatus: string;
   permintaan: () => void;
@@ -9,13 +9,13 @@ interface Props {
   hasil: () => void;
 }
 
-const DashboardPermintaanLayouts = ({
+const DashboardPermintaanLayouts: React.FC<dashboardPermintaanLayoutsProps> = ({
   children,
   linkStatus,
   permintaan,
   proses,
   hasil,
-}: Props) => {
+}) => {
   return (
     <div className="px-5 pt-12 md:pt-5">
       <Link

@@ -23,12 +23,12 @@ const ContentDashboardPermintaan: React.FC = () => {
 
   const cardsToShow = showAll ? fiturCards : fiturCards.slice(-4);
 
-  const prevButton = () => {
+  const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
-  const nextButton = () => {
+  const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
@@ -50,7 +50,6 @@ const ContentDashboardPermintaan: React.FC = () => {
         ? (page - 1) * size + res.data.persons.length
         : (page - 1) * size
     );
-
     setTotalData(res.page.total);
   }, [page]);
 

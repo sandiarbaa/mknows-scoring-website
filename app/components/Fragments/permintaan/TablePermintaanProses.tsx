@@ -3,13 +3,12 @@ import React from "react";
 
 interface userDataProps {
   no: number;
-  tanggalInput: string;
   nik: string;
   nama: string;
-  noPermintaan: string;
-  tanggalPermintaan: string;
-  kendalaProses: string;
-  hasil: string;
+  no_permintaan: string;
+  createdAt: string;
+  kendala_proses: string;
+  status: string;
 }
 
 const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
@@ -76,22 +75,21 @@ const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
         <tbody>
           {userData.map((data: userDataProps, index: number) => (
             <tr key={index} className="border-t border-b">
-              <td className="p-2 text-center">{data.no}</td>
-              <td className="text-center text-tulisan">{data.tanggalInput}</td>
+              <td className="p-2 text-center">{index + 1}</td>
+              <td className="text-center text-tulisan">{data.createdAt}</td>
               <td className="text-center text-tulisan">{data.nik}</td>
               <td className="pl-5 font-medium">{data.nama}</td>
-              <td className="text-center text-tulisan">{data.noPermintaan}</td>
-              <td className="text-center text-tulisan">
-                {data.tanggalPermintaan}
-              </td>
-              <td className="text-center">{data.kendalaProses}</td>
+              <td className="text-center text-tulisan">{data.no_permintaan}</td>
+              <td className="text-center text-tulisan">{data.createdAt}</td>
+              <td className="text-center">{data.kendala_proses}</td>
               <td className="text-center">
                 <div
                   className={`${
-                    data.hasil === "Menunggu" ? "bg-[#F59E0B]" : "bg-[#EE2D24]"
+                    // data.status === "Menunggu" ? "bg-[#F59E0B]" : "bg-[#EE2D24]"
+                    data.status === "Selesai" ? "bg-ijoToska" : "bg-[#EE2D24]"
                   } text-white font-medium rounded py-1 px-2`}
                 >
-                  {data.hasil}
+                  {data.status}
                 </div>
               </td>
             </tr>
