@@ -128,12 +128,14 @@ const DashboardPage: React.FC = () => {
         </div>
 
         <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center justify-center lg:flex-row">
-          <DashboardStatsContentLayout title="RIWAYAT PERMINTAAN">
+          <DashboardStatsContentLayout title="TRACK USIA">
             <VerticalBarChart />
           </DashboardStatsContentLayout>
 
-          <DashboardStatsContentLayout title="RIWAYAT NILAI SKOR">
-            <VerticalBarChart />
+          <DashboardStatsContentLayout title="TRACK LOKASI">
+            <div className="italic font-medium text-xl h-full flex justify-center items-center text-tulisan">
+              <span>Coming Soon...</span>
+            </div>
           </DashboardStatsContentLayout>
         </div>
 

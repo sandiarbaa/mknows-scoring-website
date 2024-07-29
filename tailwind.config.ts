@@ -17,7 +17,6 @@ const config: Config = {
         primary: "#F7FCFB",
         ijoToska: "#4AC1A2",
         tulisan: "#9E9E9E",
-        // primary: "#ef4444",
       },
       container: {
         center: true,

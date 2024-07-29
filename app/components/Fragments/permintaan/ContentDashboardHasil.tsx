@@ -3,49 +3,43 @@ import TablePermintaanHasil from "./TablePermintaanHasil";
 import Dropdown from "../../Elements/Dropdown";
 import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
+import { useQueryRequests } from "@/app/utils/hooks/useQuery";
 
 const ContentDashboardHasil: React.FC = () => {
-  const [userData, setUserData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
-  const [noAwal, setNoAwal] = useState<number>(1);
-  const [noAkhir, setNoAkhir] = useState<number>(10);
-  const [totalData, setTotalData] = useState<number>(0);
+  const [size] = useState<number>(1);
 
-  const fetchData = useCallback(async () => {
-    const size = 2;
-    const res = await fetch(
-      // `http://localhost:3000/api/permintaanHasil?page=${page}`
-      `http://localhost:3001/requests?size=${size}&current=${page}`
-    ).then((res) => res.json());
-
-    // console.log(res.data.requests);
-    setUserData(res.data.requests);
-    setLastVisiblePage(res.page.totalPages);
-    setNoAwal((page - 1) * size + 1);
-    setNoAkhir(
-      res.data.requests.length > 0
-        ? (page - 1) * size + res.data.requests.length
-        : (page - 1) * size
-    );
-    setTotalData(res.page.total);
-  }, [page]);
-
-  useEffect(() => {
-    fetchData();
-  }, [page, fetchData, noAwal]);
-
-  const prevButton = () => {
+  const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
-  const nextButton = () => {
+  const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
 
-  // Generate numberPage array based on lastVisiblePage
+  const { data, isLoading, error } = useQueryRequests(page, size);
+
+  // console.log(data);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const userData = data.data.requests ?? [];
+  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const noAwal = (page - 1) * size + 1;
+  const noAkhir =
+    userData.length > 0
+      ? (page - 1) * size + userData.length
+      : (page - 1) * size;
+  const totalData = data?.page?.total ?? 0;
+
   const numberPage = Array.from(
     { length: lastVisiblePage },
     (_, index) => index + 1

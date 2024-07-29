@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // Component
 import TablePermintaan from "./TablePermintaan";
@@ -9,19 +9,17 @@ import TablePermintaan from "./TablePermintaan";
 import { fiturCards } from "@/app/utils/fiturCard";
 import Pagination from "../Pagination";
 import { useRouter } from "next/navigation";
+import { useQueryPersons } from "@/app/utils/hooks/useQuery";
 
 const ContentDashboardPermintaan: React.FC = () => {
-  const [page, setPage] = useState<number>(1);
-  const [userData, setUserData] = useState<any[]>([]);
-  const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
-  const [noAwal, setNoAwal] = useState<number>(1);
-  const [noAkhir, setNoAkhir] = useState<number>(1);
-  const [totalData, setTotalData] = useState<number>(0);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [activeCardIndices, setActiveCardIndices] = useState<number[]>([]);
   const router = useRouter();
 
   const cardsToShow = showAll ? fiturCards : fiturCards.slice(-4);
+
+  const [page, setPage] = useState<number>(1);
+  const [size] = useState<number>(1);
 
   const prevButton = (): void => {
     if (page <= 1) return;
@@ -33,31 +31,27 @@ const ContentDashboardPermintaan: React.FC = () => {
     setPage(page + 1);
   };
 
-  const fetchData = useCallback(async () => {
-    const size = 1; // jumlah data per halaman
-    const res = await fetch(
-      `http://localhost:3001/persons?size=${size}&current=${page}`
-      // `http://localhost:3001/persons?size=2&current=1`
-    ).then((res) => res.json());
+  const { data, isLoading, error } = useQueryPersons(page, size);
 
-    // console.log(res.data.persons);
+  // console.log(data);
 
-    setUserData(res.data.persons);
-    setLastVisiblePage(res.page.totalPages);
-    setNoAwal((page - 1) * size + 1);
-    setNoAkhir(
-      res.data.persons.length > 0
-        ? (page - 1) * size + res.data.persons.length
-        : (page - 1) * size
-    );
-    setTotalData(res.page.total);
-  }, [page]);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData, page]);
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
-  // Generate numberPage array based on lastVisiblePage
+  const userData = data.data.persons ?? [];
+  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const noAwal = (page - 1) * size + 1;
+  const noAkhir =
+    userData.length > 0
+      ? (page - 1) * size + userData.length
+      : (page - 1) * size;
+  const totalData = data?.page?.total ?? 0;
+
   const numberPage = Array.from(
     { length: lastVisiblePage },
     (_, index) => index + 1
