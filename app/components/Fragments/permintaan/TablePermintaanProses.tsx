@@ -4,9 +4,11 @@ import React from "react";
 interface userDataProps {
   no: number;
   nik: string;
-  nama: string;
-  no_permintaan: string;
-  createdAt: string;
+  person: {
+    nama: string;
+  };
+  id_permintaan: string;
+  created_at: string;
   kendala_proses: string;
   status: string;
 }
@@ -76,11 +78,11 @@ const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
           {userData.map((data: userDataProps, index: number) => (
             <tr key={index} className="border-t border-b">
               <td className="p-2 text-center">{index + 1}</td>
-              <td className="text-center text-tulisan">{data.createdAt}</td>
+              <td className="text-center text-tulisan">{data.created_at}</td>
               <td className="text-center text-tulisan">{data.nik}</td>
-              <td className="pl-5 font-medium">{data.nama}</td>
-              <td className="text-center text-tulisan">{data.no_permintaan}</td>
-              <td className="text-center text-tulisan">{data.createdAt}</td>
+              <td className="pl-5 font-medium">{data.person.nama}</td>
+              <td className="text-center text-tulisan">{data.id_permintaan}</td>
+              <td className="text-center text-tulisan">{data.created_at}</td>
               <td className="text-center">{data.kendala_proses}</td>
               <td className="text-center">
                 <div

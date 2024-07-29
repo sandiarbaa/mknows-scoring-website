@@ -2,11 +2,11 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 interface userDataProps {
-  no: string;
+  id: string;
   jenis_permintaan: string;
   jumlah_customer: string;
-  createdAt: string;
-  finishedAt: string;
+  created_at: string;
+  finished_at: string;
 }
 
 interface expandedRowsDataProps {
@@ -108,10 +108,10 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
       <table className="w-full text-xs bg-white table-auto text-start">
         <thead className="bg-[#F5F8FF] text-tulisan">
           <tr>
-            <th className="p-2 text-end" colSpan={2}>
+            <th className="p-2 text-end border-b-[1.8px]" colSpan={2}>
               No
             </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[120px] border-b-[1.8px]">
               Tanggal Input
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -121,7 +121,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[125px] border-b-[1.8px]">
               Jenis Permintaan
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -131,7 +131,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[125px] border-b-[1.8px]">
               Jumlah Customer
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -141,7 +141,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[110px] border-b-[1.8px]">
               No. Permintaan
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -151,7 +151,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[120px] border-b-[1.8px]">
               Tanggal Permintaan
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -161,7 +161,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[120px] border-b-[1.8px]">
               Tanggal Selesai
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -180,7 +180,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="border-t border-b cursor-pointer"
                 onClick={() => toggleRow(index)}
               >
-                <td className="p-2 text-center">
+                <td className="p-2 text-center border-b-[1.8px]">
                   <Image
                     src="/assets/dashboard/permintaan/play.png"
                     alt="play-dropdown"
@@ -189,17 +189,27 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                     className={expandedRows.includes(index) ? "rotate-90" : ""}
                   />
                 </td>
-                <td className="p-2 text-center">{index + 1}</td>
-                <td className="text-center text-tulisan">{data.createdAt}</td>
-                <td className="text-center text-tulisan">
+                <td className="p-2 text-center border-b-[1.8px]">
+                  {index + 1}
+                </td>
+                <td className="text-center border-b-[1.8px] text-tulisan">
+                  {data.created_at}
+                </td>
+                <td className="text-center border-b-[1.8px] text-tulisan">
                   {data.jenis_permintaan}
                 </td>
-                <td className="pl-5 font-medium text-center">
+                <td className="pl-5 font-medium text-center border-b-[1.8px]">
                   {data.jumlah_customer}
                 </td>
-                <td className="text-center text-tulisan">{data.no}</td>
-                <td className="text-center text-tulisan">{data.createdAt}</td>
-                <td className="text-center text-tulisan">{data.finishedAt}</td>
+                <td className="text-center border-b-[1.8px] text-tulisan">
+                  {data.id}
+                </td>
+                <td className="text-center border-b-[1.8px] text-tulisan">
+                  {data.created_at}
+                </td>
+                <td className="text-center border-b-[1.8px] text-tulisan">
+                  {data.finished_at}
+                </td>
               </tr>
               {expandedRows.includes(index) && (
                 <>

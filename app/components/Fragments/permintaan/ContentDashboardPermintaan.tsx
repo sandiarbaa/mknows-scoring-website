@@ -34,7 +34,7 @@ const ContentDashboardPermintaan: React.FC = () => {
   };
 
   const fetchData = useCallback(async () => {
-    const size = 1; // Number of data per page
+    const size = 1; // jumlah data per halaman
     const res = await fetch(
       `http://localhost:3001/persons?size=${size}&current=${page}`
       // `http://localhost:3001/persons?size=2&current=1`

@@ -13,13 +13,13 @@ const ContentDashboardHasil: React.FC = () => {
   const [totalData, setTotalData] = useState<number>(0);
 
   const fetchData = useCallback(async () => {
-    const size = 1;
+    const size = 2;
     const res = await fetch(
       // `http://localhost:3000/api/permintaanHasil?page=${page}`
       `http://localhost:3001/requests?size=${size}&current=${page}`
     ).then((res) => res.json());
 
-    console.log(res.data.requests);
+    // console.log(res.data.requests);
     setUserData(res.data.requests);
     setLastVisiblePage(res.page.totalPages);
     setNoAwal((page - 1) * size + 1);

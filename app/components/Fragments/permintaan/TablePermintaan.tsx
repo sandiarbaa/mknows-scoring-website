@@ -5,7 +5,7 @@ interface userDataProps {
   no: number;
   nik: string;
   nama: string;
-  createdAt: string;
+  created_at: string;
 }
 
 const TablePermintaan = ({ userData }: { userData: userDataProps[] }) => {
@@ -100,7 +100,7 @@ const TablePermintaan = ({ userData }: { userData: userDataProps[] }) => {
               <td className="p-2 text-center">{index + 1}</td>
               <td className="text-center text-tulisan">{data.nik}</td>
               <td className="pl-5 font-medium">{data.nama}</td>
-              <td className="text-center text-tulisan">{data.createdAt}</td>
+              <td className="text-center text-tulisan">{data.created_at}</td>
               <td className="font-medium text-center text-blue-800">
                 Lihat Detail
                 <Image
