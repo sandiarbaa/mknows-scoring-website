@@ -24,7 +24,11 @@ const KuotaPage = () => {
         alokasiKuota={toLinkAlokasiKuota}
         riwayatAlokasiKuota={toLinkRiwayatAlokasiKuota}
       >
-        {linkStatus === "/AlokasiKuota" && <ContentDashboardAlokasiKuota />}
+        {linkStatus === "/AlokasiKuota" && (
+          <ContentDashboardAlokasiKuota
+            riwayatAlokasiKuota={toLinkRiwayatAlokasiKuota}
+          />
+        )}
         {linkStatus === "/RiwayatAlokasiKuota" && (
           <ContentDashboardRiwayatKuota />
         )}

@@ -142,7 +142,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             // className={`w-full bg-white border rounded-md`}
             className={`w-full bg-white border rounded-md ${
               hover === "/dashboard" ? "max-w-5xl" : ""
-            }`}
+            } ${hover === "/kuota" ? "max-w-xl" : ""}`}
           >
             {children}
           </div>
