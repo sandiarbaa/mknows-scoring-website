@@ -10,15 +10,15 @@ const KuotaPage = () => {
   const pathname = usePathname();
   const [linkStatus, setLinkStatus] = useState<string>("/AlokasiKuota");
 
-  function toLinkAlokasiKuota() {
+  const toLinkAlokasiKuota = () => {
     setLinkStatus("/AlokasiKuota");
-  }
+  };
   function toLinkRiwayatAlokasiKuota() {
     setLinkStatus("/RiwayatAlokasiKuota");
   }
 
   return (
-    <DashboardLayout hover={pathname}>
+    <DashboardLayout alokasiKuota={linkStatus} hover={pathname}>
       <DashboardAlokasiKuota
         linkStatus={linkStatus}
         alokasiKuota={toLinkAlokasiKuota}

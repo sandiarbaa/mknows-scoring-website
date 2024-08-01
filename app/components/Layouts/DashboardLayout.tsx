@@ -5,16 +5,17 @@ import UserPhoto from "../Fragments/UserPhoto";
 import SidebarLink from "../Fragments/SidebarLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   hover?: string;
+  alokasiKuota?: string;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
   hover = "",
+  alokasiKuota,
 }) => {
   const [nav, setNav] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
@@ -142,7 +143,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             // className={`w-full bg-white border rounded-md`}
             className={`w-full bg-white border rounded-md ${
               hover === "/dashboard" ? "max-w-5xl" : ""
-            } ${hover === "/kuota" ? "max-w-xl" : ""}`}
+            } ${alokasiKuota === "/AlokasiKuota" ? "max-w-xl" : ""}`}
           >
             {children}
           </div>
