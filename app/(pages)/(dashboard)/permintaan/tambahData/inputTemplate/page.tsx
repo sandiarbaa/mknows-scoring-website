@@ -1,18 +1,74 @@
 "use client";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 const TambahDataDanInputTemplate = () => {
   const pathname: string = usePathname();
   const router = useRouter();
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [ktp, setKtp] = useState<File | null>(null);
+  const [selfie, setSelfie] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [ktpFileName, setKtpFileName] = useState<string>("");
+  const [selfieFileName, setSelfieFileName] = useState<string>("");
+  const [hideErrorNotif, setHideErrorNotif] = useState<boolean>(true);
+
+  const handleHideErrorNotif = (): void => {
+    setHideErrorNotif(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (e.target.id === "ktp") {
+        setKtp(file);
+        setKtpFileName(file.name);
+      } else if (e.target.id === "selfie") {
+        setSelfie(file);
+        setSelfieFileName(file.name);
+      }
+    }
+  };
+
+  const HandleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.push("/permintaan");
+    setIsLoading(true);
+    setIsError(false);
+    setError("");
+
+    const formData = new FormData();
+    formData.append("ktp", ktp!);
+    formData.append("selfie", selfie!);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/persons",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      // console.log(response.data.message);
+      localStorage.setItem("uploadMessage", response.data.message);
+      router.push("/permintaan");
+    } catch (error: any) {
+      // console.log(error);
+      setIsError(true);
+      setError(error.response.data.message);
+      setHideErrorNotif(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -74,7 +130,7 @@ const TambahDataDanInputTemplate = () => {
 
         <hr className="my-5 border-b-2 bg-tulisan" />
 
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={HandleUpload}>
           <div className="w-full grid grid-cols-1 lg:grid-cols-2">
             {/* Foto KTP */}
             <UploadCard
@@ -84,6 +140,10 @@ const TambahDataDanInputTemplate = () => {
               bgColor="bg-[#B4FFD7]"
               borderColor="border-ijoToska"
               ceklisStatus={true}
+              htmlForId="ktp"
+              ktpFileName={ktpFileName}
+              fileNameKTPUploadIcon={ktpFileName}
+              onChange={handleFileChange}
             />
             {/* Foto Selfie Diri */}
             <UploadCard
@@ -93,26 +153,43 @@ const TambahDataDanInputTemplate = () => {
               bgColor="bg-[#B4FFD7]"
               borderColor="border-ijoToska"
               ceklisStatus={true}
+              htmlForId="selfie"
+              selfieFileName={selfieFileName}
+              fileNameSelfieUploadIcon={selfieFileName}
+              onChange={handleFileChange}
             />
-            {/* Selfie Dengan KTP */}
-            <UploadCard
-              title1="Selfie Dengan KTP"
-              title2="Foto Selfie Diri Unggah Selfie / Swafoto"
-              text="*Selfie dengan memegang KTP dengan jarak tidak kurang dari 30cm"
-              bgColor="bg-[#F8F8F8]"
-              borderColor="border-slate-500"
-              ceklisStatus={false}
-            />
-            <p className="text-xs font-medium text-red-500">
-              *Kolom tidak boleh kosong!
-            </p>
           </div>
-          <button
-            type="submit"
-            className="text-sm font-semibold text-white bg-ijoToska w-full lg:w-1/2 mt-5 py-3 lg:py-4 rounded-md active:bg-tulisan"
-          >
-            Tambah Data Baru
-          </button>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 place-items-center lg:place-items-end">
+            {/* Button Submit Form */}
+            <button
+              type="submit"
+              className={`text-sm mb-1 font-medium text-white w-full py-3 lg:py-4 rounded-md inline-block active:bg-tulisan ${
+                isLoading ? "bg-tulisan" : "bg-ijoToska"
+              }`}
+              disabled={isLoading}
+            >
+              {isLoading ? "Mengunggah Data..." : "Tambah Data Baru"}
+            </button>
+            {/* Pesan Error */}
+            {isError && (
+              <div
+                className={`h-full w-full mt-5 lg:w-8/12 bg-red-500 rounded-md p-0.5 ${
+                  hideErrorNotif ? "" : "hidden"
+                }`}
+              >
+                <div className="bg-white w-[95%] float-right h-full rounded flex items-center justify-between pl-5 pr-2">
+                  <p className="text-red-500 font-semibold text-sm mr-3">
+                    {error ? error : "Terjadi kesalahan saat mengunggah data"}
+                  </p>
+                  <XMarkIcon
+                    className={`w-6 cursor-pointer`}
+                    onClick={handleHideErrorNotif}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </form>
       </div>
     </DashboardLayout>
@@ -121,27 +198,41 @@ const TambahDataDanInputTemplate = () => {
 
 export default TambahDataDanInputTemplate;
 
-const UploadCard = ({
-  title1,
-  title2,
-  text,
-  bgColor,
-  borderColor,
-  ceklisStatus,
-}: {
+interface UploadCardProps {
   title1: string;
   title2: string;
   text: string;
   bgColor: string;
   borderColor: string;
   ceklisStatus: boolean;
+  htmlForId: string;
+  ktpFileName?: string;
+  selfieFileName?: string;
+  fileNameKTPUploadIcon?: string;
+  fileNameSelfieUploadIcon?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const UploadCard: React.FC<UploadCardProps> = ({
+  title1,
+  title2,
+  text,
+  bgColor,
+  borderColor,
+  ceklisStatus,
+  htmlForId,
+  ktpFileName,
+  selfieFileName,
+  fileNameKTPUploadIcon,
+  fileNameSelfieUploadIcon,
+  onChange,
 }) => {
   return (
     <>
       {/* Upload KTP */}
       <div className="mb-5">
         <label
-          htmlFor="ktp"
+          htmlFor={htmlForId}
           className={`${bgColor} active:bg-tulisan px-5 cursor-pointer w-full inline-block py-5 border-dashed border-2 ${borderColor} rounded-md`}
         >
           <div className="flex space-x-3">
@@ -160,7 +251,13 @@ const UploadCard = ({
             </div>
           </div>
         </label>
-        <input type="file" name="ktp" id="ktp" className="hidden" />
+        <input
+          type="file"
+          name={htmlForId}
+          id={htmlForId}
+          className="hidden"
+          onChange={onChange}
+        />
         <p
           className={`text-blue-400 text-xs mt-2 ${
             ceklisStatus ? "" : "hidden"
@@ -174,31 +271,32 @@ const UploadCard = ({
       </div>
       {/* Image Status Upload */}
       <div className="flex lg:px-5 h-5 items-center space-x-2 -mt-3 mb-8 lg:mt-0">
-        <div className={`${ceklisStatus ? "" : "hidden"}`}>
-          <Image
-            src="/assets/dashboard/permintaan/ceklis.png"
-            alt="ceklis-upload"
-            width={25}
-            height={0}
-          />
+        {/* KTP Upload Notif */}
+        <div className="flex space-x-2 items-center">
+          {fileNameKTPUploadIcon && (
+            <Image
+              src="/assets/dashboard/permintaan/ceklis.png"
+              alt="ktp-filename"
+              width={20}
+              height={0}
+            />
+          )}
+          <h1 className="text-xs">{ktpFileName ? ktpFileName : ""}</h1>
         </div>
-        <p className={`text-xs ${ceklisStatus ? "" : "hidden"}`}>
-          11IMG-20190724-WA0009.Jpg
-        </p>
 
-        <div>
-          <p
-            className={`text-blue-400 text-xs mt-7 ${
-              ceklisStatus ? "hidden" : ""
-            }`}
-          >
-            {text}
-          </p>
-          <p
-            className={`text-blue-400 text-xs ${ceklisStatus ? "hidden" : ""}`}
-          >
-            *Format file (.Jpg, .Png)
-          </p>
+        {/* Selfie Upload Notif */}
+        <div className="flex space-x-2 items-center">
+          {fileNameSelfieUploadIcon && (
+            <Image
+              src="/assets/dashboard/permintaan/ceklis.png"
+              alt="ktp-filename"
+              width={20}
+              height={0}
+            />
+          )}
+          <h1 className="text-xs lg:text-sm">
+            {selfieFileName ? selfieFileName : ""}
+          </h1>
         </div>
       </div>
     </>

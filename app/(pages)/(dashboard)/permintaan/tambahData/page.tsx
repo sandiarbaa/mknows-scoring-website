@@ -4,54 +4,47 @@ import Pagination from "@/app/components/Fragments/Pagination";
 import TablePermintaan from "@/app/components/Fragments/permintaan/TablePermintaan";
 
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
+import { useQueryPersons } from "@/app/utils/hooks/useQuery";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { BiChevronRight } from "react-icons/bi"; // Tambahkan BiCalendar dan BiSearch
 
 const AddDataPage = () => {
   const [page, setPage] = useState<number>(1);
-  const [userData, setUserData] = useState<any[]>([]);
-  const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
-  const [noAwal, setNoAwal] = useState<number>(1);
-  const [noAkhir, setNoAkhir] = useState<number>(10);
-  const [totalData, setTotalData] = useState<number>(0);
-
+  const [size] = useState<number>(1);
   const pathname: string = usePathname();
 
-  // Prev Button Pagination
-  const prevButton = () => {
+  const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
-  // Next Button Pagination
-  const nextButton = () => {
+  const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
 
-  // Fetch Data API for table
-  const fetchData = useCallback(async () => {
-    const res = await fetch(
-      `http://localhost:3000/api/permintaan?page=${page}`
-    ).then((res) => res.json());
+  const { data, isLoading, error } = useQueryPersons(page, size);
 
-    setUserData(res.data);
-    setLastVisiblePage(res.pagination.last_visible_page);
-    setNoAwal(res.data[0].no);
-    setNoAkhir(
-      res.data.length > 0 ? res.data[res.data.length - 1].no : noAkhir
-    );
-    setTotalData(res.data_length);
-  }, [page, noAkhir]);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    fetchData();
-  }, [page, fetchData, noAwal]);
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
-  // Generate numberPage array based on lastVisiblePage
+  const userData = data.data.persons ?? [];
+  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const noAwal = (page - 1) * size + 1;
+  const noAkhir =
+    userData.length > 0
+      ? (page - 1) * size + userData.length
+      : (page - 1) * size;
+  const totalData = data?.page?.total ?? 0;
+
   const numberPage = Array.from(
     { length: lastVisiblePage },
     (_, index) => index + 1

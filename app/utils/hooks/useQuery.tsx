@@ -1,5 +1,5 @@
 import { axiosInstance } from "../lib/axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Fetchin Person
 const fetchPersons = async ({ queryKey }: { queryKey: string[] }) => {
@@ -54,3 +54,44 @@ export const useQueryRequests = (page: number, size: number) => {
     refetchOnWindowFocus: false,
   });
 };
+
+// Post Person
+// const postPerson = async (formData: FormData) => {
+//   const { data } = await axiosInstance.post("/persons", formData, {
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//     },
+//   });
+//   return data;
+// };
+
+// export const usePostPerson = () => {
+//   const queryClient = useQueryClient();
+
+//   return useMutation(postPerson, {
+//     onSuccess: () => {
+//       // Invalidasi dan refetch data persons setelah berhasil menambahkan data baru
+//       queryClient.invalidateQueries(["persons"]);
+//     },
+//   });
+// };
+
+// const postPerson = async (formData: FormData) => {
+//   const { data } = await axiosInstance.post("/persons", formData, {
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//     },
+//   });
+//   return data;
+// };
+
+// export const usePostPerson = () => {
+//   const queryClient = useQueryClient();
+
+//   return useMutation(postPerson, {
+//     onSuccess: () => {
+//       // Invalidasi dan refetch data persons setelah berhasil menambahkan data baru
+//       queryClient.invalidateQueries(["persons"]);
+//     },
+//   });
+// };

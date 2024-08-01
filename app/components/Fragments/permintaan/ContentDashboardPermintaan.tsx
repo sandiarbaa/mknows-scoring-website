@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Component
 import TablePermintaan from "./TablePermintaan";
@@ -10,11 +10,28 @@ import { fiturCards } from "@/app/utils/fiturCard";
 import Pagination from "../Pagination";
 import { useRouter } from "next/navigation";
 import { useQueryPersons } from "@/app/utils/hooks/useQuery";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 const ContentDashboardPermintaan: React.FC = () => {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [activeCardIndices, setActiveCardIndices] = useState<number[]>([]);
   const router = useRouter();
+
+  const [message, setMessage] = useState<string | null>(null);
+
+  const [hideErrorNotif, setHideErrorNotif] = useState<boolean>(true);
+
+  const handleHideErrorNotif = (): void => {
+    setHideErrorNotif(false);
+  };
+
+  useEffect(() => {
+    const uploadMessage = localStorage.getItem("uploadMessage");
+    if (uploadMessage) {
+      setMessage(uploadMessage);
+      localStorage.removeItem("uploadMessage"); // Hapus pesan dari localStorage setelah diambil
+    }
+  }, []);
 
   const cardsToShow = showAll ? fiturCards : fiturCards.slice(-4);
 
@@ -151,10 +168,30 @@ const ContentDashboardPermintaan: React.FC = () => {
       />
 
       {/* Button Cek Skoring */}
-      <div className="flex justify-center w-full md:justify-end">
+      <div className="flex flex-col lg:flex-row justify-center items-center w-full lg:justify-between">
+        <div className="order-2 lg:order-1">
+          {message && (
+            <div
+              // className={`h-full w-full mt-5 lg:w-8/12 bg-red-500 rounded-md p-0.5 ${
+              className={`h-10 w-72 mt-5 lg:mt-0 lg:w-72 bg-green-500 rounded-md p-0.5 ${
+                hideErrorNotif ? "" : "hidden"
+              }`}
+            >
+              <div className="bg-white w-[95%] float-left h-full rounded flex items-center justify-between pl-2 pr-2">
+                <XMarkIcon
+                  className={`w-6 cursor-pointer`}
+                  onClick={handleHideErrorNotif}
+                />
+                <p className="text-green-500 font-medium text-sm mr-5">
+                  {message}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
         <button
           onClick={() => router.push("/laporan")}
-          className="w-full max-w-[300px] bg-ijoToska text-center text-white p-3 rounded-md font-semibold shadow active:bg-tulisan transition-all duration-300"
+          className="w-full max-w-[300px] order-1 lg:order-2 bg-ijoToska text-center text-white p-3 rounded-md font-semibold shadow active:bg-tulisan transition-all duration-300"
         >
           Cek Skoring
         </button>

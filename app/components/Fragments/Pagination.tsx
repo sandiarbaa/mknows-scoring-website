@@ -23,12 +23,12 @@ const Pagination: React.FC<PaginationProps> = ({
   numberPage,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
+    <div className="flex flex-col items-center justify-center w-full px-3 pt-5 lg:flex-row lg:justify-between">
       <div className="flex items-center mb-3 text-sm font-medium text-tulisan">
         Menampilkan {noAwal} - {noAkhir} dari {totalData} hasil
       </div>
 
-      <div className="flex justify-center w-full max-w-xs pb-5 md:self-end md:justify-end">
+      <div className="flex justify-center w-full max-w-xs pb-5 ">
         <div
           onClick={prevButton}
           className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
