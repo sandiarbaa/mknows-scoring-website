@@ -66,16 +66,18 @@ const ContentDashboardHasil: React.FC = () => {
       </section>
 
       {/* Pagination */}
-      <Pagination
-        noAwal={noAwal}
-        noAkhir={noAkhir}
-        totalData={totalData}
-        page={page}
-        setPage={setPage}
-        prevButton={prevButton}
-        nextButton={nextButton}
-        numberPage={numberPage}
-      />
+      {userData.length > 0 && (
+        <Pagination
+          noAwal={noAwal}
+          noAkhir={noAkhir}
+          totalData={totalData}
+          page={page}
+          setPage={setPage}
+          prevButton={prevButton}
+          nextButton={nextButton}
+          numberPage={numberPage}
+        />
+      )}
     </section>
   );
 };

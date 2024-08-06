@@ -75,27 +75,40 @@ const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: userDataProps, index: number) => (
-            <tr key={index} className="border-t border-b">
-              <td className="p-2 text-center">{index + 1}</td>
-              <td className="text-center text-tulisan">{data.created_at}</td>
-              <td className="text-center text-tulisan">{data.nik}</td>
-              <td className="pl-5 font-medium">{data.person.nama}</td>
-              <td className="text-center text-tulisan">{data.id_permintaan}</td>
-              <td className="text-center text-tulisan">{data.created_at}</td>
-              <td className="text-center">{data.kendala_proses}</td>
-              <td className="text-center">
-                <div
-                  className={`${
-                    // data.status === "Menunggu" ? "bg-[#F59E0B]" : "bg-[#EE2D24]"
-                    data.status === "Selesai" ? "bg-ijoToska" : "bg-[#EE2D24]"
-                  } text-white font-medium rounded py-1 px-2`}
-                >
-                  {data.status}
-                </div>
+          {userData.length > 0 ? (
+            userData.map((data: userDataProps, index: number) => (
+              <tr key={index} className="border-t border-b">
+                <td className="p-2 text-center">{index + 1}</td>
+                <td className="text-center text-tulisan">{data.created_at}</td>
+                <td className="text-center text-tulisan">{data.nik}</td>
+                <td className="pl-5 font-medium">{data.person.nama}</td>
+                <td className="text-center text-tulisan">
+                  {data.id_permintaan}
+                </td>
+                <td className="text-center text-tulisan">{data.created_at}</td>
+                <td className="text-center">{data.kendala_proses}</td>
+                <td className="text-center">
+                  <div
+                    className={`${
+                      // data.status === "Menunggu" ? "bg-[#F59E0B]" : "bg-[#EE2D24]"
+                      data.status === "Selesai" ? "bg-ijoToska" : "bg-[#EE2D24]"
+                    } text-white font-medium rounded py-1 px-2`}
+                  >
+                    {data.status}
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={8}
+                className="text-center py-2 text-sm text-tulisan border-y"
+              >
+                Data Masih Kosong!
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

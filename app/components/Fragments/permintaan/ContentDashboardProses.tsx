@@ -75,48 +75,52 @@ const ContentDashboardProses: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <section className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
-        <div className="flex items-center mb-3 text-sm font-medium text-tulisan">
-          Menampilkan {noAwal} - {noAkhir} dari {totalData} hasil
-        </div>
+      {userData.length > 0 && (
+        <>
+          <section className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
+            <div className="flex items-center mb-3 text-sm font-medium text-tulisan">
+              Menampilkan {noAwal} - {noAkhir} dari {totalData} hasil
+            </div>
 
-        <p className="text-sm text-tulisan font-medium text-center">
-          Untuk melihat riwayat permintaan sebelumnya{" "}
-          <Link href="#" className="text-blue-400 hover:underline">
-            klik disini
-          </Link>
-        </p>
-      </section>
+            <p className="text-sm text-tulisan font-medium text-center">
+              Untuk melihat riwayat permintaan sebelumnya{" "}
+              <Link href="#" className="text-blue-400 hover:underline">
+                klik disini
+              </Link>
+            </p>
+          </section>
 
-      <section className="flex justify-center mt-5">
-        <div className="flex justify-center w-full max-w-xs">
-          <div
-            onClick={prevButton}
-            className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
-          >
-            <BiChevronLeft className="text-2xl text-ijoToska group-hover:text-white" />
-          </div>
-          <ul className="flex mx-5 space-x-2">
-            {numberPage.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => setPage(item)}
-                className={`cursor-pointer px-3.5 text-sm py-0.5 rounded flex items-center border ${
-                  item === page ? "bg-ijoToska text-white" : "text-gray-400"
-                }`}
+          <section className="flex justify-center mt-5">
+            <div className="flex justify-center w-full max-w-xs">
+              <div
+                onClick={prevButton}
+                className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
               >
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div
-            onClick={nextButton}
-            className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
-          >
-            <BiChevronRight className="text-2xl text-ijoToska group-hover:text-white" />
-          </div>
-        </div>
-      </section>
+                <BiChevronLeft className="text-2xl text-ijoToska group-hover:text-white" />
+              </div>
+              <ul className="flex mx-5 space-x-2">
+                {numberPage.map((item, index) => (
+                  <li
+                    key={index}
+                    onClick={() => setPage(item)}
+                    className={`cursor-pointer px-3.5 text-sm py-0.5 rounded flex items-center border ${
+                      item === page ? "bg-ijoToska text-white" : "text-gray-400"
+                    }`}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div
+                onClick={nextButton}
+                className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"
+              >
+                <BiChevronRight className="text-2xl text-ijoToska group-hover:text-white" />
+              </div>
+            </div>
+          </section>
+        </>
+      )}
     </section>
   );
 };

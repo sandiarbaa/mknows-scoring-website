@@ -141,7 +141,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <section className="w-full max-w-3xl p-5 overflow-y-scroll xl:max-w-6xl">
           <div
             // className={`w-full bg-white border rounded-md`}
-            className={`w-full bg-white border rounded-md ${
+            className={`w-full bg-white min-h-screen border rounded-md ${
               hover === "/dashboard" ? "max-w-5xl" : ""
             } ${alokasiKuota === "/AlokasiKuota" ? "max-w-xl" : ""}`}
           >

@@ -118,7 +118,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: userDataProps, index: number) => (
+          {userData.map((data: any, index: number) => (
             <React.Fragment key={index}>
               <tr
                 className="border-t border-b cursor-pointer"
@@ -135,9 +135,9 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                     }
                   />
                 </td>
-                <td className="p-2 text-center">{data.no}</td>
+                <td className="p-2 text-center">{index + 1}</td>
                 <td className="text-center text-tulisan">{data.nik}</td>
-                <td className="text-center text-tulisan">{data.nama}</td>
+                <td className="text-center text-tulisan">{data.person.nama}</td>
                 <td className="text-center">
                   <div className="bg-[#54B435] mx-auto font-medium text-white w-24 py-1 rounded">
                     Sangat Baik

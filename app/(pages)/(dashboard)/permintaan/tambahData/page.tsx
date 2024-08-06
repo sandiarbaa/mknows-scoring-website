@@ -13,7 +13,8 @@ import { BiChevronRight } from "react-icons/bi"; // Tambahkan BiCalendar dan BiS
 
 const AddDataPage = () => {
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(1);
+  const [size] = useState<number>(2);
+  const [nik, setNik] = useState<string[]>([]); // Menyimpan NIK yang dipilih.
   const pathname: string = usePathname();
 
   const prevButton = (): void => {
@@ -49,6 +50,19 @@ const AddDataPage = () => {
     { length: lastVisiblePage },
     (_, index) => index + 1
   );
+
+  const checkboxPerson = (nikPerson: string) => {
+    setNik((prevNik) => {
+      // Jika sudah ada, fungsi akan menghapus NIK yg baru tersebut dari daftar.
+      if (prevNik.includes(nikPerson)) {
+        return prevNik.filter((item) => item !== nikPerson);
+      }
+      // Jika belum ada, fungsi akan menambahkan NIK tersebut ke dalam daftar.
+      else {
+        return [...prevNik, nikPerson];
+      }
+    });
+  };
 
   return (
     <DashboardLayout hover={pathname}>
@@ -122,19 +136,22 @@ const AddDataPage = () => {
         </div>
 
         {/* Table */}
-        <TablePermintaan userData={userData} />
+        {/* <TablePermintaan userData={userData} /> */}
+        <TablePermintaan userData={userData} checkboxPerson={checkboxPerson} />
 
         {/* Pagination */}
-        <Pagination
-          noAwal={noAwal}
-          noAkhir={noAkhir}
-          totalData={totalData}
-          page={page}
-          numberPage={numberPage}
-          setPage={setPage}
-          prevButton={prevButton}
-          nextButton={nextButton}
-        />
+        {userData.length > 0 && (
+          <Pagination
+            noAwal={noAwal}
+            noAkhir={noAkhir}
+            totalData={totalData}
+            page={page}
+            numberPage={numberPage}
+            setPage={setPage}
+            prevButton={prevButton}
+            nextButton={nextButton}
+          />
+        )}
       </div>
     </DashboardLayout>
   );

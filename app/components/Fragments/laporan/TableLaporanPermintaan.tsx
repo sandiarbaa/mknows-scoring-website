@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface userDataProps {
   no: number;
@@ -85,6 +85,9 @@ const TableLaporanPermintaan = ({
     }
   };
 
+  useEffect(() => {
+    console.log(userData);
+  });
   return (
     <div className="bg-blue-500 overflow-x-auto">
       <table className="w-full text-xs bg-white table-auto text-start">
@@ -156,7 +159,7 @@ const TableLaporanPermintaan = ({
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: userDataProps, index: number) => (
+          {userData.map((data: any, index: number) => (
             <React.Fragment key={index}>
               <tr
                 className="border-t border-b cursor-pointer"
@@ -173,25 +176,17 @@ const TableLaporanPermintaan = ({
                     }
                   />
                 </td>
-                <td className="p-2 text-center">{data.no}</td>
+                <td className="p-2 text-center">{index + 1}</td>
+                <td className="text-center text-tulisan">{data.created_at}</td>
                 <td className="text-center text-tulisan">
-                  {data.tanggalInput}
+                  {data.jenis_permintaan}
                 </td>
                 <td className="text-center text-tulisan">
-                  {data.jenisPermintaan}
+                  {data.jumlah_customer}
                 </td>
-                <td className="text-center text-tulisan">
-                  {data.jumlahCustomer}
-                </td>
-                <td className="text-center text-tulisan">
-                  {data.noPermintaan}
-                </td>
-                <td className="text-center text-tulisan">
-                  {data.tanggalPermintaan}
-                </td>
-                <td className="text-center text-tulisan">
-                  {data.tanggalSelesai}
-                </td>
+                <td className="text-center text-tulisan">{data.id}</td>
+                <td className="text-center text-tulisan">{data.created_at}</td>
+                <td className="text-center text-tulisan">{data.finished_at}</td>
               </tr>
               {expandedRows.includes(data.no) && (
                 <tr>
