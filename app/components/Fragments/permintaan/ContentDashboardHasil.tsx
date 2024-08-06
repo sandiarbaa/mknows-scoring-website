@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import TablePermintaanHasil from "./TablePermintaanHasil";
 import Dropdown from "../../Elements/Dropdown";
 import SearchBox from "../../Elements/SearchBox";
@@ -7,7 +7,7 @@ import { useQueryRequests } from "@/app/utils/hooks/useQuery";
 
 const ContentDashboardHasil: React.FC = () => {
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(1);
+  const [size] = useState<number>(2);
 
   const prevButton = (): void => {
     if (page <= 1) return;

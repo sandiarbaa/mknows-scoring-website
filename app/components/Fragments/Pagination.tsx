@@ -28,7 +28,7 @@ const Pagination: React.FC<PaginationProps> = ({
         Menampilkan {noAwal} - {noAkhir} dari {totalData} hasil
       </div>
 
-      <div className="flex justify-center w-full max-w-xs pb-5 ">
+      <div className="flex justify-center lg:justify-end w-full max-w-xs pb-5">
         <div
           onClick={prevButton}
           className="flex items-center p-1 transition-all duration-300 border rounded cursor-pointer group hover:bg-ijoToska"

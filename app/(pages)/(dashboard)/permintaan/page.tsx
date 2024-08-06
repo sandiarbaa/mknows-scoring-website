@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // Component
 import ContentDashboardHasil from "@/app/components/Fragments/permintaan/ContentDashboardHasil";
@@ -8,7 +8,6 @@ import ContentDashboardPermintaan from "@/app/components/Fragments/permintaan/Co
 import ContentDashboardProses from "@/app/components/Fragments/permintaan/ContentDashboardProses";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import DashboardPermintaanLayouts from "@/app/components/Layouts/DashboardPermintaanLayouts";
-import { XMarkIcon } from "@heroicons/react/24/solid";
 
 const PermintaanPage = () => {
   const pathname = usePathname();
@@ -28,7 +27,6 @@ const PermintaanPage = () => {
 
   return (
     <DashboardLayout hover={pathname}>
-      
       <DashboardPermintaanLayouts
         linkStatus={linkStatus}
         permintaan={toLinkPermintaan}

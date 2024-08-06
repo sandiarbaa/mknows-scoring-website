@@ -4,7 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 

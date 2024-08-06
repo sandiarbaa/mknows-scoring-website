@@ -131,7 +131,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px] border-b-[1.8px]">
+            <th className="min-w-[140px] border-b-[1.8px]">
               Jumlah Customer
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -141,7 +141,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px] border-b-[1.8px]">
+            <th className="min-w-[140px] border-b-[1.8px]">
               No. Permintaan
               <Image
                 src="/assets/dashboard/permintaan/arrowTable.png"
@@ -201,7 +201,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                   <td className="text-center border-b-[1.8px] text-tulisan">
                     {data.jenis_permintaan}
                   </td>
-                  <td className="pl-5 font-medium text-center border-b-[1.8px]">
+                  <td className="font-medium text-center border-b-[1.8px]">
                     {data.jumlah_customer}
                   </td>
                   <td className="text-center border-b-[1.8px] text-tulisan">
