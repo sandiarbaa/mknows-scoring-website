@@ -17,7 +17,7 @@ const DashboardAlokasiKuota = ({
   return (
     <>
       <div className="px-5 pt-12 md:pt-5">
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex w-full flex-row md:text-base text-sm">
           <Link
             href="/kuota"
             className={` font-medium mr-5 relative ${
@@ -29,7 +29,6 @@ const DashboardAlokasiKuota = ({
           >
             Alokasi Kuota
           </Link>
-
           <Link
             href="/kuota"
             className={` font-medium mr-5 relative ${

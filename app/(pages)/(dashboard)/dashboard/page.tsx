@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import "react-multi-carousel/lib/styles.css";
 import Carousel from "react-multi-carousel";
+import EmpetyData from "@/app/components/Elements/EmpetyData";
 
 // Component
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
@@ -119,17 +120,20 @@ const DashboardPage: React.FC = () => {
         {/* Dashboard Content */}
         <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center lg:flex-row">
           <DashboardStatsContentLayout title="RIWAYAT PERMINTAAN">
-            <AreaChart />
+            {/* <AreaChart /> */}
+            <EmpetyData props={false} />
           </DashboardStatsContentLayout>
 
           <DashboardStatsContentLayout title="RIWAYAT NILAI SKOR">
-            <DoughnutChart />
+            {/* <DoughnutChart /> */}
+            <EmpetyData props={false} />
           </DashboardStatsContentLayout>
         </div>
 
         <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center justify-center lg:flex-row">
           <DashboardStatsContentLayout title="TRACK USIA">
-            <VerticalBarChart />
+            {/* <VerticalBarChart /> */}
+            <EmpetyData props={false} />
           </DashboardStatsContentLayout>
 
           <DashboardStatsContentLayout title="TRACK LOKASI">
@@ -141,7 +145,8 @@ const DashboardPage: React.FC = () => {
 
         <div className="flex space-y-5 lg:space-y-0 lg:space-x-5 lg:justify-between lg:px-5 mb-5 flex-col items-center lg:flex-row">
           <DashboardStatsContentLayout title="TRACK PENDAPATAN">
-            <SingleVerticalBarChart />
+            {/* <SingleVerticalBarChart /> */}
+            <EmpetyData props={false} />
           </DashboardStatsContentLayout>
         </div>
       </section>

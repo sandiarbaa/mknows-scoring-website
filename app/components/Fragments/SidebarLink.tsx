@@ -35,6 +35,12 @@ const dataSidebarLink: SidebarItem[] = [
     imageFalse: "/assets/dashboard/sidebarNavbar/network-add.png",
     linkName: "Kuota",
   },
+  {
+    href: "/inbox",
+    imageTrue: "/assets/dashboard/sidebarNavbar/inbox-active.png",
+    imageFalse: "/assets/dashboard/sidebarNavbar/inbox.png",
+    linkName: "Inbox",
+  },
 ];
 
 interface SidebarLinkProps {

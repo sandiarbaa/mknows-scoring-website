@@ -43,7 +43,7 @@ const DashboardStatsContentLayout = ({
           </select>
         </div>
       </div>
-      <div className="w-full mt-10 h-40 relative">{children}</div>
+      <div className="w-full h-40 mt-10 relative">{children}</div>
     </div>
   );
 };

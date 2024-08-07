@@ -12,7 +12,7 @@ type alokasiprops = {
 const ContentDashboardAlokasiKuota = ({
   riwayatAlokasiKuota,
 }: alokasiprops) => {
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const cardsToShow = fiturCards.slice(-4);
 
   const handleOpenModal = (): void => {

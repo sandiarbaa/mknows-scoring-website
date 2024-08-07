@@ -1,3 +1,5 @@
+// import RiwayatAlokasiKuota from "./RiwayatAlokasiKuota";
+import EmpetyData from "../../Elements/EmpetyData";
 import React, { useCallback, useEffect, useState } from "react";
 import DatePicker from "../../Elements/DatePicker";
 import Dropdown from "../../Elements/Dropdown";
@@ -5,6 +7,7 @@ import SearchBox from "../../Elements/SearchBox";
 import TableRiwayatAlokasiKuota from "./TableRiwayatAlokasiKuota";
 
 const ContentDashboardRiwayatKuota: React.FC = () => {
+  const [inActive, setInActive] = useState<string | null>(null);
   const [userData, setUserData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
@@ -41,7 +44,6 @@ const ContentDashboardRiwayatKuota: React.FC = () => {
     setPage(page + 1);
   };
 
-  // Generate numberPage array based on lastVisiblePage
   const numberPage = Array.from(
     { length: lastVisiblePage },
     (_, index) => index + 1
@@ -62,7 +64,15 @@ const ContentDashboardRiwayatKuota: React.FC = () => {
             </div>
           </div>
           <div>
-            <TableRiwayatAlokasiKuota userData={userData} />
+            {inActive === "" ? (
+              <EmpetyData
+                props={true}
+                href="/dashboard"
+                label="+ Request Kuota"
+              />
+            ) : (
+              <TableRiwayatAlokasiKuota userData={userData} />
+            )}
           </div>
         </div>
       </section>
