@@ -21,6 +21,8 @@ const TambahDataDanInputTemplate = () => {
   const [selfieFileName, setSelfieFileName] = useState<string>("");
   const [hideErrorNotif, setHideErrorNotif] = useState<boolean>(true);
 
+  const accessToken = localStorage.getItem("accessToken");
+
   const handleHideErrorNotif = (): void => {
     setHideErrorNotif(false);
   };
@@ -50,19 +52,25 @@ const TambahDataDanInputTemplate = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/persons",
+        "http://13.210.185.89/persons",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      // console.log(response.data.message);
+
       localStorage.setItem("uploadMessage", response.data.message);
       router.push("/permintaan");
     } catch (error: any) {
       // console.log(error);
+      const statusCode = error.response;
+
+      if (statusCode === 401) {
+      }
+      console.log(statusCode);
       setIsError(true);
       setError(error.response.data.message);
       setHideErrorNotif(true);

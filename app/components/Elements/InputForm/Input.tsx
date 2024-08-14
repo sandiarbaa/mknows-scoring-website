@@ -1,6 +1,7 @@
 import React from "react";
 
 interface Props {
+  value: string;
   type: string;
   htmlForId: string;
   placeholder: string;
@@ -9,6 +10,7 @@ interface Props {
   classStyleInputTrue?: string;
 }
 const Input = ({
+  value,
   type,
   htmlForId,
   placeholder,
@@ -18,6 +20,7 @@ const Input = ({
 }: Props) => {
   return (
     <input
+      value={value}
       type={type}
       id={htmlForId}
       placeholder={placeholder}

@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import UserPhoto from "../Fragments/UserPhoto";
 import SidebarLink from "../Fragments/SidebarLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
+import logout from "@/app/(pages)/(auth)/login/logout";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -22,6 +22,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const openNavHandler = () => setNav(true);
   const closeNavHandler = () => setNav(false);
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -73,8 +77,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* Sidebar Link */}
           <SidebarLink hover={hover} />
-          <Link
-            href="/login"
+          <button
+            onClick={handleLogout}
             className="absolute flex space-x-3 bottom-5 left-10"
           >
             <Image
@@ -85,7 +89,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               className="scale-90"
             />
             <span>Keluar</span>
-          </Link>
+          </button>
         </nav>
 
         {/* Hamburger Icon to Open Nav */}
@@ -122,8 +126,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* Sidebar Link */}
           <SidebarLink hover={hover} />
-          <Link
-            href="/login"
+          <button
+            onClick={handleLogout}
             className="absolute flex space-x-3 bottom-5 left-10"
           >
             <Image
@@ -134,7 +138,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               className="scale-75"
             />
             <span>Keluar</span>
-          </Link>
+          </button>
         </nav>
 
         {/* Content */}
