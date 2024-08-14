@@ -7,69 +7,26 @@ import Pagination from "../Pagination";
 import { useQueryRequests } from "@/app/utils/hooks/useQuery";
 
 const ContentDashboardLaporanPermintaan: React.FC = () => {
-  // const [userData, setUserData] = useState<any[]>([]);
-  // const [page, setPage] = useState<number>(1);
-  // const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
-  // const [noAwal, setNoAwal] = useState<number>(1);
-  // const [noAkhir, setNoAkhir] = useState<number>(10);
-  // const [totalData, setTotalData] = useState<number>(0);
-
-  // const fetchData = useCallback(async () => {
-  //   const res = await fetch(
-  //     `http://localhost:3000/api/laporanPermintaan?page=${page}`
-  //   ).then((res) => res.json());
-
-  //   setUserData(res.data);
-  //   setLastVisiblePage(res.pagination.last_visible_page);
-  //   setNoAwal(res.data[0].no);
-  //   setNoAkhir(
-  //     res.data.length > 0 ? res.data[res.data.length - 1].no : noAkhir
-  //   );
-
-  //   setTotalData(res.data_length);
-  // }, [page, noAkhir]);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [page, fetchData, noAwal]);
-
-  // const prevButton = () => {
-  //   if (page <= 1) return;
-  //   setPage(page - 1);
-  // };
-
-  // const nextButton = () => {
-  //   if (page >= lastVisiblePage) return;
-  //   setPage(page + 1);
-  // };
-
-  // // Generate numberPage array based on lastVisiblePage
-  // const numberPage = Array.from(
-  //   { length: lastVisiblePage },
-  //   (_, index) => index + 1
-  // );
-
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(1);
+  const [size] = useState<number>(2);
 
+  // button prev - pagination
   const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
+  // button next - pagination
   const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
 
+  // react query - request
   const { data, isLoading, error } = useQueryRequests(page, size);
-
-  // console.log(data);
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="mt-5">Loading...</div>;
   }
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -109,16 +66,18 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
       </section>
 
       {/* Pagination */}
-      <Pagination
-        noAwal={noAwal}
-        noAkhir={noAkhir}
-        totalData={totalData}
-        page={page}
-        setPage={setPage}
-        prevButton={prevButton}
-        nextButton={nextButton}
-        numberPage={numberPage}
-      />
+      {userData.length > 0 && (
+        <Pagination
+          noAwal={noAwal}
+          noAkhir={noAkhir}
+          totalData={totalData}
+          page={page}
+          setPage={setPage}
+          prevButton={prevButton}
+          nextButton={nextButton}
+          numberPage={numberPage}
+        />
+      )}
     </section>
   );
 };

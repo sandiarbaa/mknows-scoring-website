@@ -9,24 +9,23 @@ const ContentDashboardHasil: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(2);
 
+  // button prev - pagination
   const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
+  // button next - pagination
   const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
 
+  // react query request
   const { data, isLoading, error } = useQueryRequests(page, size);
-
-  // console.log(data);
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="mt-5">Loading...</div>;
   }
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }

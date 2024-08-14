@@ -11,39 +11,84 @@ interface userDataProps {
 interface tablePermintaanProps {
   userData: userDataProps[];
   checkboxPerson: (nik: string) => void;
+  setPersonsProses: any;
+  setUsersProsesData: any;
 }
 
 const TablePermintaan: React.FC<tablePermintaanProps> = ({
   userData,
   checkboxPerson,
+  setPersonsProses,
+  setUsersProsesData,
 }) => {
   const [checkboxListPermintaan, setCheckboxListPermintaan] = useState<
     boolean[]
-  >(new Array(userData.length).fill(false));
-  const [selectAll, setSelectAll] = useState<boolean>(false);
+  >(new Array(userData.length).fill(false)); // Array boolean yang menyimpan status checkbox untuk setiap baris data pengguna. Misalnya, true berarti checkbox dicentang.
+  const [selectAll, setSelectAll] = useState<boolean>(false); // Boolean yang menyimpan status checkbox "Select All". Jika true, berarti semua checkbox dipilih.
 
+  // Mengatur ulang checkboxListPermintaan ketika data pengguna (userData) berubah. (selalu ter-update)
   useEffect(() => {
     setCheckboxListPermintaan(new Array(userData.length).fill(false));
   }, [userData]);
 
+  // Jika selectAll dicentang (true), semua user data akan ditambahkan ke dalam personsProses dan usersProsesData.
   const handleSelectAll = () => {
-    const newSelectAll = !selectAll;
+    const newSelectAll = !selectAll; // state selectAll di isi dengan kebalikan nya
     setSelectAll(newSelectAll);
     const updatedCheckboxes = new Array(userData.length).fill(newSelectAll);
-    setCheckboxListPermintaan(updatedCheckboxes);
+    setCheckboxListPermintaan(updatedCheckboxes); // mengisi state array checkboxListPermintaan dengan array updatedCheckboxes yg semua elemen nya bernilai sesuai newSelectAll
+
     if (newSelectAll) {
-      userData.forEach((data) => checkboxPerson(data.nik));
+      // Jika semua checkbox dicentang, tambahkan semua user data ke personsProses dan usersProsesData
+      const allSelectedUsers = userData.map(({ nik, nama, created_at }) => ({
+        nik,
+        nama,
+        tanggalInput: created_at,
+      }));
+
+      setPersonsProses(allSelectedUsers);
+      setUsersProsesData(allSelectedUsers);
+      userData.forEach((data) => checkboxPerson(data.nik)); // Pastikan memanggil checkboxPerson untuk setiap NIK
     } else {
-      userData.forEach((data) => checkboxPerson(data.nik));
+      // Jika checkbox dicentang ulang untuk membatalkan select all, kosongkan personsProses dan usersProsesData
+      setPersonsProses([]);
+      setUsersProsesData([]);
+      userData.forEach((data) => checkboxPerson(data.nik)); // Pastikan memanggil checkboxPerson untuk setiap NIK
     }
   };
 
-  const handleCheckboxChange = (index: number, nikPerson: string) => {
+  const handleCheckboxChange = (
+    index: number,
+    nikPerson: string,
+    nama: string,
+    tanggalInput: string
+  ) => {
     const updatedCheckboxes = [...checkboxListPermintaan];
     updatedCheckboxes[index] = !updatedCheckboxes[index];
     setCheckboxListPermintaan(updatedCheckboxes);
+
+    const selected = updatedCheckboxes[index];
+    if (selected) {
+      setPersonsProses((prev: any) => [
+        ...prev,
+        { nik: nikPerson, nama, tanggalInput },
+      ]);
+      setUsersProsesData((prev: any) => [
+        ...prev,
+        { nik: nikPerson, nama, tanggalInput },
+      ]);
+    } else {
+      setPersonsProses((prev: any) =>
+        prev.filter((person: any) => person.nik !== nikPerson)
+      );
+      setUsersProsesData((prev: any) =>
+        prev.filter((person: any) => person.nik !== nikPerson)
+      );
+    }
+
+    // kalau ada salah 1 checkbox yg di ubah maka selectAll akan false, tapi kalau semua checkbox di centang, selectAll akan bernilai true
     setSelectAll(updatedCheckboxes.every((checkbox) => checkbox));
-    checkboxPerson(nikPerson);
+    checkboxPerson(nikPerson); // kirim nik checkbox yg di centang atau di un-centang ke fungsi checkboxPerson
   };
 
   return (
@@ -102,7 +147,6 @@ const TablePermintaan: React.FC<tablePermintaanProps> = ({
                         }`}
                       />
                     </label>
-
                     <input
                       type="checkbox"
                       name="allButton"
@@ -172,7 +216,14 @@ const TablePermintaan: React.FC<tablePermintaanProps> = ({
                     name={`checkboxList${index}`}
                     id={`checkboxList${index}`}
                     checked={checkboxListPermintaan[index]}
-                    onChange={() => handleCheckboxChange(index, data.nik)}
+                    onChange={() =>
+                      handleCheckboxChange(
+                        index,
+                        data.nik,
+                        data.nama,
+                        data.created_at
+                      )
+                    }
                     className="hidden"
                   />
                 </td>
@@ -182,9 +233,9 @@ const TablePermintaan: React.FC<tablePermintaanProps> = ({
             <tr>
               <td
                 colSpan={7}
-                className="text-center py-2 text-sm text-tulisan border-y"
+                className="text-center py-2 text-sm text-tulisan border-y italic"
               >
-                Data Masih Kosong!
+                Data masih kosong!
               </td>
             </tr>
           )}

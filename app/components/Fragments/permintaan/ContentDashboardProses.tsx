@@ -5,7 +5,18 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import Link from "next/link";
 import { useQueryReports } from "@/app/utils/hooks/useQuery";
 
-const ContentDashboardProses: React.FC = () => {
+interface UsersProsesDataProps {
+  nik: string;
+  nama: string;
+  tanggalInput: string;
+}
+
+interface ContentDashboardProsesProps {
+  usersProsesData: UsersProsesDataProps[];
+}
+const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
+  usersProsesData,
+}) => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(2);
 
@@ -24,14 +35,14 @@ const ContentDashboardProses: React.FC = () => {
   // console.log(data);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="mt-5">Loading...</div>;
   }
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  const userData = data.data.reports ?? [];
+  const userData = data ?? [];
   const lastVisiblePage = data?.page?.totalPages ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
@@ -71,11 +82,14 @@ const ContentDashboardProses: React.FC = () => {
 
       {/* Table */}
       <div className="mt-5">
-        <TablePermintaanProses userData={userData} />
+        <TablePermintaanProses
+          // userData={userData}
+          usersProsesData={usersProsesData}
+        />
       </div>
 
       {/* Pagination */}
-      {userData.length > 0 && (
+      {usersProsesData.length > 0 && (
         <>
           <section className="flex flex-col items-center justify-center w-full px-3 pt-5 md:flex-row md:justify-between">
             <div className="flex items-center mb-3 text-sm font-medium text-tulisan">

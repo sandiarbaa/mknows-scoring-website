@@ -9,8 +9,6 @@ import Button from "@/app/components/Elements/Button";
 import InputCheckbox from "@/app/components/Elements/InputCheckbox";
 import FormShell from "@/app/components/Fragments/FormShell";
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
-import Label from "@/app/components/Elements/InputForm/Label";
-import Input from "@/app/components/Elements/InputForm/Input";
 import InputForm from "@/app/components/Elements/InputForm";
 
 const LoginPage: React.FC = () => {

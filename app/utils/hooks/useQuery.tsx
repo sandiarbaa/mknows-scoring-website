@@ -21,17 +21,20 @@ export const useQueryPersons = (page: number, size: number) => {
 
 // Fetching Report
 const fetchReports = async ({ queryKey }: { queryKey: string[] }) => {
+  // const fetchReports = async () => {
   const [_, page, size] = queryKey;
   const { data } = await axiosInstance.get(
     `/reports?size=${size}&current=${page}`
+    // `/persons`
   );
   // console.log(data);
-  return data;
+  return data.data.reports;
 };
 
 export const useQueryReports = (page: number, size: number) => {
+  // export const useQueryReports = () => {
   return useQuery({
-    queryKey: ["reports", page.toString(), size.toString()],
+    queryKey: ["reports"],
     queryFn: fetchReports,
     refetchOnWindowFocus: false,
   });
@@ -43,7 +46,6 @@ const fetchRequests = async ({ queryKey }: { queryKey: string[] }) => {
   const { data } = await axiosInstance.get(
     `/requests?size=${size}&current=${page}`
   );
-  // console.log(data);
   return data;
 };
 
@@ -55,45 +57,11 @@ export const useQueryRequests = (page: number, size: number) => {
   });
 };
 
-// Post Person
-// const postPerson = async (formData: FormData) => {
-//   const { data } = await axiosInstance.post("/persons", formData, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-//   return data;
-// };
-
-// export const usePostPerson = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation(postPerson, {
-//     onSuccess: () => {
-//       // Invalidasi dan refetch data persons setelah berhasil menambahkan data baru
-//       queryClient.invalidateQueries(["persons"]);
-//     },
-//   });
-// };
-
-// const postPerson = async (formData: FormData) => {
-//   const { data } = await axiosInstance.post("/persons", formData, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-//   return data;
-// };
-
-// export const usePostPerson = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation(postPerson, {
-//     onSuccess: () => {
-//       // Invalidasi dan refetch data persons setelah berhasil menambahkan data baru
-//       queryClient.invalidateQueries(["persons"]);
-//     },
-//   });
-// };
-
-
+// untuk di halaman laporan tab user
+export const useQueryReportsLaporan = () => {
+  return useQuery({
+    queryKey: ["reports"],
+    queryFn: fetchReports,
+    refetchOnWindowFocus: false,
+  });
+};

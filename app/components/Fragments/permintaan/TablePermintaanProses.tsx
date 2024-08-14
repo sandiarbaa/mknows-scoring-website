@@ -13,7 +13,19 @@ interface userDataProps {
   status: string;
 }
 
-const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
+interface usersProsesDataProps {
+  nik: string;
+  nama: string;
+  tanggalInput: string;
+}
+
+const TablePermintaanProses = ({
+  userData,
+  usersProsesData,
+}: {
+  userData?: userDataProps[];
+  usersProsesData: usersProsesDataProps[];
+}) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs bg-white table-auto text-start">
@@ -50,51 +62,23 @@ const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
                 className="inline-block ml-2"
               />
             </th>
-            <th className="min-w-[150px]">
-              No. Permintaan
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
-            <th className="min-w-[150px]">
-              Tanggal Permintaan
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
-            <th className="min-w-[150px]">Kendala Proses</th>
             <th className="min-w-[150px]">Hasil</th>
           </tr>
         </thead>
         <tbody>
-          {userData.length > 0 ? (
-            userData.map((data: userDataProps, index: number) => (
+          {usersProsesData.length > 0 ? (
+            usersProsesData.map((data: usersProsesDataProps, index: number) => (
               <tr key={index} className="border-t border-b">
                 <td className="p-2 text-center">{index + 1}</td>
-                <td className="text-center text-tulisan">{data.created_at}</td>
-                <td className="text-center text-tulisan">{data.nik}</td>
-                <td className="pl-5 font-medium">{data.person.nama}</td>
                 <td className="text-center text-tulisan">
-                  {data.id_permintaan}
+                  {data.tanggalInput}
                 </td>
-                <td className="text-center text-tulisan">{data.created_at}</td>
-                <td className="text-center">{data.kendala_proses}</td>
-                <td className="text-center">
-                  <div
-                    className={`${
-                      // data.status === "Menunggu" ? "bg-[#F59E0B]" : "bg-[#EE2D24]"
-                      data.status === "Selesai" ? "bg-ijoToska" : "bg-[#EE2D24]"
-                    } text-white font-medium rounded py-1 px-2`}
-                  >
-                    {data.status}
+                <td className="text-center text-tulisan">{data.nik}</td>
+                <td className="pl-5 font-medium">{data.nama}</td>
+                <td className="pl-5 font-medium">
+                  <div className="bg-[#F59E0B] px-2 py-1.5 w-28 rounded-md flex items-center justify-center">
+                    <span className="text-white">Menunggu</span>
+                    <div className="loader mx-auto"></div>
                   </div>
                 </td>
               </tr>
@@ -102,10 +86,10 @@ const TablePermintaanProses = ({ userData }: { userData: userDataProps[] }) => {
           ) : (
             <tr>
               <td
-                colSpan={8}
-                className="text-center py-2 text-sm text-tulisan border-y"
+                colSpan={5}
+                className="text-center py-2 text-sm text-tulisan border-y italic"
               >
-                Data Masih Kosong!
+                Belum ada permintaan yang sedang di proses!
               </td>
             </tr>
           )}

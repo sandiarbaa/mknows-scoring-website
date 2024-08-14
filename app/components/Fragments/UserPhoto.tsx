@@ -11,7 +11,11 @@ const UserPhoto = () => {
         height={30}
         className="mr-3 border-2 rounded-full border-ijoToska"
       />
-      <h4>Fatwa Nasution</h4>
+      <div>
+        <h4 className="font-semibold text-sm italic">Fatwa Nasution</h4>
+        {/* Fikri */}
+        <p className="text-xs italic">User</p>
+      </div>
     </div>
   );
 };
