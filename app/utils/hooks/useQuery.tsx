@@ -1,5 +1,5 @@
 import { axiosInstance } from "../lib/axios";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 // Fetchin Person
 const fetchPersons = async ({ queryKey }: { queryKey: string[] }) => {

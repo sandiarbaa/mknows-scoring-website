@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "../../Elements/DatePicker";
 import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
 import TableLaporanUser from "./TableLaporanUser";
 import { useQueryReportsLaporan } from "@/app/utils/hooks/useQuery";
+import { axiosInstance } from "@/app/utils/lib/axios";
 
 const ContentDashboardLaporanUser = () => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(2);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [data, setData] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState();
+  const [total, setTotal] = useState();
 
   // button prev - pagination
   const prevButton = (): void => {
@@ -21,23 +27,46 @@ const ContentDashboardLaporanUser = () => {
     setPage(page + 1);
   };
 
+  const fetchRequests = async () => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await axiosInstance.get(
+        `/reports?size=${size}&current=${page}`
+      );
+      // console.log("Fetched data:", response.data);
+      setData(response.data.data.reports);
+      setTotalPage(response.data.page.totalPage);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, [page, size]);
+
   // react query - person in report page to query request
-  const { data, isLoading, error } = useQueryReportsLaporan();
+  // const {  error } = useQueryReportsLaporan();
   if (isLoading) {
     return <div className="mt-5">Loading...</div>;
   }
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
   const userData = data ?? [];
-  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
       ? (page - 1) * size + userData.length
       : (page - 1) * size;
-  const totalData = data?.page?.total ?? 0;
+  const totalData = total ?? 0;
 
   const numberPage = Array.from(
     { length: lastVisiblePage },

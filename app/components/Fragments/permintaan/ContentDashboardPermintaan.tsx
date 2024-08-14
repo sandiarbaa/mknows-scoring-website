@@ -7,6 +7,7 @@ import Pagination from "../Pagination";
 import { useQueryPersons } from "@/app/utils/hooks/useQuery";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
+import { axiosInstance } from "@/app/utils/lib/axios";
 
 interface PersonsProsesProps {
   nik: string;
@@ -34,6 +35,11 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   const [size] = useState<number>(3); // menampilkan mau berapa data dalam 1 page
   const [loadingSkoring, setLoadingSkoring] = useState<boolean>(false); // untuk menampilkan teks loading saat cek skoring
   const [personsProses, setPersonsProses] = useState<PersonsProsesProps[]>([]); // menyimpan data person yg di pilih, lalu meng-overwrite isi array usersProsesData
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [totalPage, setTotalPage] = useState();
+  const [total, setTotal] = useState();
 
   // cardsToShow ber isi array fiturCards/fiturCards.slice(-4) tergantung dari state showAll
   const cardsToShow = showAll ? fiturCards : fiturCards.slice(-4);
@@ -71,14 +77,54 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     setUsersProsesData(personsProses);
   }, [personsProses, setUsersProsesData]);
 
+  // const fetchPersons = async () => {
+  //   setIsLoading(true);
+  //   setIsError(false);
+  //   const response = await axiosInstance.get(
+  //     `/persons?size=${size}&current=${page}`
+  //   );
+  //   console.log(response);
+  //   // setData(res.data);
+  //   setIsLoading(false);
+  //   setIsError(false);
+  // };
+  // useEffect(() => {
+  //   fetchPersons();
+  // });
+  const fetchPersons = async () => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await axiosInstance.get(
+        `/persons?size=${size}&current=${page}`
+      );
+      // console.log("Fetched data:", response.data);
+      setData(response.data.data.persons);
+      setTotalPage(response.data.page.totalPage);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPersons();
+  }, [page, size]);
+
+  isLoading ? <div className="mt-5">Loading...</div> : <></>;
+  // isLoading ? <div>Error: {error.message}</div> : <></>;
+
   // react query - person
-  const { data, isLoading, error } = useQueryPersons(page, size);
-  if (isLoading) {
-    return <div className="mt-5">Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // const { data, isLoading, error } = useQueryPersons(page, size);
+  // if (isLoading) {
+  //   return <div className="mt-5">Loading...</div>;
+  // }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
   // button prev - pagination
   const prevButton = (): void => {
@@ -93,14 +139,15 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   };
 
   // data-data untuk pagination component
-  const userData = data.data.persons ?? []; // menyimpan data persons yg ingin ditampilkan di tabel
-  const lastVisiblePage = data?.page?.totalPages ?? 1; // menyimpan data total page untuk button prev dan next
+  const userData = data ? data : []; // menyimpan data persons yg ingin ditampilkan di tabel
+  const lastVisiblePage = totalPage ?? 1;
+
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
       ? (page - 1) * size + userData.length
       : (page - 1) * size;
-  const totalData = data?.page?.total ?? 0; // total data person yg ada
+  const totalData = total ?? 0; // total data person yg ada
 
   // untuk membuat nomor page di pagination nya
   const numberPage = Array.from(

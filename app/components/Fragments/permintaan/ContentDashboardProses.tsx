@@ -4,6 +4,7 @@ import TablePermintaanProses from "./TablePermintaanProses";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import Link from "next/link";
 import { useQueryReports } from "@/app/utils/hooks/useQuery";
+import { axiosInstance } from "@/app/utils/lib/axios";
 
 interface UsersProsesDataProps {
   nik: string;
@@ -19,6 +20,11 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
 }) => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(2);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [data, setData] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState();
+  const [total, setTotal] = useState();
 
   const prevButton = (): void => {
     if (page <= 1) return;
@@ -30,26 +36,47 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
     setPage(page + 1);
   };
 
-  const { data, isLoading, error } = useQueryReports(page, size);
+  const fetchReports = async () => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await axiosInstance.get(
+        `/reports?size=${size}&current=${page}`
+      );
+      // console.log("Fetched data:", response.data);
+      setData(response.data.data.reports);
+      setTotalPage(response.data.page.totalPage);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    fetchReports();
+  }, [page, size]);
+  
   // console.log(data);
 
   if (isLoading) {
     return <div className="mt-5">Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
   const userData = data ?? [];
-  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
       ? (page - 1) * size + userData.length
       : (page - 1) * size;
-  const totalData = data?.page?.total ?? 0;
+  const totalData = total ?? 0;
 
   const numberPage = Array.from(
     { length: lastVisiblePage },

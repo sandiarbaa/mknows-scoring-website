@@ -51,7 +51,7 @@ const TambahDataDanInputTemplate = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/persons",
+        "http://13.210.185.89/persons",
         formData,
         {
           headers: {
