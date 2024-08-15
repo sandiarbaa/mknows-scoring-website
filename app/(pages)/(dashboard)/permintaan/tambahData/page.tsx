@@ -1,5 +1,6 @@
 "use client";
 import api from "@/app/(pages)/(auth)/login/api";
+import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedRoute";
 import DatePicker from "@/app/components/Elements/DatePicker";
 import Pagination from "@/app/components/Fragments/Pagination";
 import TablePermintaan from "@/app/components/Fragments/permintaan/TablePermintaan";
@@ -102,7 +103,8 @@ const AddDataPage = () => {
   };
 
   return (
-    <DashboardLayout hover={pathname}>
+    <ProtectedRoute>
+      <DashboardLayout hover={pathname}>
       <div className="px-5 py-10 md:py-5">
         {/* Title */}
         <h1 className="mb-5 text-xl font-bold md:text-2xl">
@@ -191,6 +193,7 @@ const AddDataPage = () => {
         )}
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 

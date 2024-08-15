@@ -6,6 +6,7 @@ import DashboardLaporanLayouts from "@/app/components/Layouts/DashboardLaporanLa
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
+import ProtectedRoute from "../../(auth)/login/protectedRoute/ProtectedRoute";
 
 const LaporanPage = () => {
   const pathname = usePathname();
@@ -23,7 +24,8 @@ const LaporanPage = () => {
     setLinkStatus("/laporanFitur");
   }
   return (
-    <DashboardLayout hover={pathname}>
+    <ProtectedRoute>
+      <DashboardLayout hover={pathname}>
       <DashboardLaporanLayouts
         linkStatus={linkStatus}
         laporanUser={toLinkLaporanUser}
@@ -37,6 +39,7 @@ const LaporanPage = () => {
         {linkStatus === "/laporanFitur" && <ContentDashboardLaporanFitur />}
       </DashboardLaporanLayouts>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 

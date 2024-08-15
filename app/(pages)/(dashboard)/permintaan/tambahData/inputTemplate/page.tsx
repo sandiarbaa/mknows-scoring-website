@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import api from "@/app/(pages)/(auth)/login/api";
+import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedRoute";
 
 const TambahDataDanInputTemplate = () => {
   const pathname: string = usePathname();
@@ -54,7 +55,7 @@ const TambahDataDanInputTemplate = () => {
 
     try {
       const response = await api.post(
-        "http://13.210.185.89/persons",
+        "/persons",
         formData,
         {
           headers: {
@@ -77,7 +78,8 @@ const TambahDataDanInputTemplate = () => {
   };
 
   return (
-    <DashboardLayout hover={pathname}>
+    <ProtectedRoute>
+      <DashboardLayout hover={pathname}>
       <div className="px-5 py-10 md:py-5">
         {/* Navigasi */}
         <div className="flex flex-wrap items-center w-full max-w-lg space-x-1">
@@ -198,6 +200,7 @@ const TambahDataDanInputTemplate = () => {
         </form>
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 

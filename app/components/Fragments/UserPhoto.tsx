@@ -10,7 +10,7 @@ const UserPhoto = () => {
         width={30}
         height={30}
         className="mr-3 border-2 rounded-full border-ijoToska"
-      />
+      /> 
       <div>
         <h4 className="font-semibold text-sm italic">Fatwa Nasution</h4>
         {/* Fikri */}

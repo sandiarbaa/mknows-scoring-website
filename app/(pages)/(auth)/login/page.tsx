@@ -5,7 +5,7 @@ import Link from "next/link";
 import Button from "@/app/components/Elements/Button";
 import InputCheckbox from "@/app/components/Elements/InputCheckbox";
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
-import api from "./api";
+import axios from "axios";
 import ModalAuth from "./modalAuth/ModalAuth";
 
 const LoginPage: React.FC = () => {
@@ -20,13 +20,12 @@ const LoginPage: React.FC = () => {
   const auth = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await api.post("/authentication", {
+      const response = await axios.post("http://13.210.185.89/authentication", {
         email,
         password,
       });
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
-        const accessToken1 = accessToken;
 
         localStorage.setItem("accessToken", accessToken);
         document.cookie = `refreshToken=${refreshToken}; path=/; secure; samesite=strict; max-age=${
