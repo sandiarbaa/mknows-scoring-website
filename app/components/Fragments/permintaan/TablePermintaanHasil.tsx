@@ -1,3 +1,4 @@
+import api from "@/app/(pages)/(auth)/login/api";
 import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -64,6 +65,8 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
     });
   };
 
+  const accessToken = localStorage.getItem("accessToken");
+
   // ketika baris dari tabel utama di klik
   const toggleRow = async (index: number, reqId: string) => {
     if (expandedRows.includes(index)) {
@@ -79,8 +82,12 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
 
       try {
         // Fetch data dari API setiap kali baris di-expand
-        const { data } = await axios.get(
-          `http://localhost:3001/reports?reqId=${reqId}`
+        const { data } = await api.get(
+          `/reports?reqId=${reqId}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,

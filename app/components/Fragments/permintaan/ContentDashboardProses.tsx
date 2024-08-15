@@ -5,6 +5,7 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import Link from "next/link";
 import { useQueryReports } from "@/app/utils/hooks/useQuery";
 import { axiosInstance } from "@/app/utils/lib/axios";
+import api from "@/app/(pages)/(auth)/login/api";
 
 interface UsersProsesDataProps {
   nik: string;
@@ -35,13 +36,19 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
+  
+  const accessToken = localStorage.getItem("accessToken");
 
   const fetchReports = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await axiosInstance.get(
-        `/reports?size=${size}&current=${page}`
+      const response = await api.get(
+        `/reports?size=${size}&current=${page}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       // console.log("Fetched data:", response.data);
       setData(response.data.data.reports);

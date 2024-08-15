@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import api from "@/app/(pages)/(auth)/login/api";
 
 const TambahDataDanInputTemplate = () => {
   const pathname: string = usePathname();
@@ -52,7 +53,7 @@ const TambahDataDanInputTemplate = () => {
     formData.append("selfie", selfie!);
 
     try {
-      const response = await axios.post(
+      const response = await api.post(
         "http://13.210.185.89/persons",
         formData,
         {

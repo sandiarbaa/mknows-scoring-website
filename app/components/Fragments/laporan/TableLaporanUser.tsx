@@ -1,3 +1,4 @@
+import api from "@/app/(pages)/(auth)/login/api";
 import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -105,6 +106,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
   };
 
   const toggleRow = async (index: number, nik: string) => {
+    const accessToken = localStorage.getItem("accessToken");
     if (expandedRows.includes(index)) {
       setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index));
     } else {
@@ -112,8 +114,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
       setLoadingRows({ ...loadingRows, [index]: true });
 
       try {
-        const { data } = await axios.get(
-          `http://localhost:3001/reports?nik=${nik}`
+        const { data } = await api.get(
+          `/reports?nik=${nik}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         setDataTableExpanded(data.data.reports);
         setPermintaanHasilDatas({
@@ -138,9 +144,14 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
 
   // API Lihat Detail PDF Person by ID
   const handleLihatDetail = async (id: number) => {
+    const accessToken = localStorage.getItem("accessToken");
     try {
       setLoadingShowPDF(true);
-      await axios.get(`http://localhost:3001/reports/pdf/${id}`);
+      await api.get(`/reports/pdf/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
     } catch (error) {
       console.error("Error fetching PDF:", error);
     } finally {
@@ -149,6 +160,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
   };
 
   const downloadPDF = async () => {
+    const accessToken = localStorage.getItem("accessToken");
     if (idDownload.length > 0) {
       try {
         setLoadingShowPDF(true);
@@ -157,9 +169,13 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
         if (idDownload.length === 1) {
           setLoadingDownloadButton(true);
           // Jika hanya satu ID, download file PDF tunggal
-          response = await axios.get(
-            `http://localhost:3001/reports/pdf/${idDownload[0]}`,
-            { responseType: "blob" }
+          response = await api.get(
+            `/reports/pdf/${idDownload[0]}`,
+            { responseType: "blob", 
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+             },
           );
 
           const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -173,10 +189,14 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
         } else {
           setLoadingDownloadButton(true);
           // Jika lebih dari satu ID, download file ZIP yang berisi beberapa file PDF
-          response = await axios.post(
-            "http://localhost:3001/reports/pdf",
+          response = await api.post(
+            "/reports/pdf",
             { arrayOfIdReport: idDownload },
-            { responseType: "blob" }
+            { responseType: "blob", 
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+             }
           );
 
           const url = window.URL.createObjectURL(new Blob([response.data]));

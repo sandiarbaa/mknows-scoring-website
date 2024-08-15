@@ -5,6 +5,7 @@ import Pagination from "../Pagination";
 import TableLaporanUser from "./TableLaporanUser";
 import { useQueryReportsLaporan } from "@/app/utils/hooks/useQuery";
 import { axiosInstance } from "@/app/utils/lib/axios";
+import api from "@/app/(pages)/(auth)/login/api";
 
 const ContentDashboardLaporanUser = () => {
   const [page, setPage] = useState<number>(1);
@@ -27,12 +28,18 @@ const ContentDashboardLaporanUser = () => {
     setPage(page + 1);
   };
 
+  const accessToken = localStorage.getItem("accessToken");
+
   const fetchRequests = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await axiosInstance.get(
-        `/reports?size=${size}&current=${page}`
+      const response = await api.get(
+        `/reports?size=${size}&current=${page}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       // console.log("Fetched data:", response.data);
       setData(response.data.data.reports);

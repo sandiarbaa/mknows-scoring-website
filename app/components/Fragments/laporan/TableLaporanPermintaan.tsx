@@ -1,3 +1,4 @@
+import api from "@/app/(pages)/(auth)/login/api";
 import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -31,6 +32,7 @@ const TableLaporanPermintaan = ({
   const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [idDownload, setIdDownload] = useState<string[]>([]);
+  const accessToken = localStorage.getItem("accessToken");
   const [checkboxListExpanded, setCheckboxListExpanded] = useState<{
     [key: number]: boolean[];
   }>({});
@@ -110,8 +112,12 @@ const TableLaporanPermintaan = ({
       setLoadingRows({ ...loadingRows, [index]: true });
 
       try {
-        const { data } = await axios.get(
-          `http://localhost:3001/reports?reqId=${reqId}`
+        const { data } = await api.get(
+          `/reports?reqId=${reqId}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         setDataTableExpanded(data.data.reports);
         setPermintaanHasilDatas({
@@ -138,7 +144,11 @@ const TableLaporanPermintaan = ({
   const handleLihatDetail = async (id: number) => {
     try {
       setLoadingShowPDF(true);
-      await axios.get(`http://localhost:3001/reports/pdf/${id}`);
+      await api.get(`/reports/pdf/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
     } catch (error) {
       console.error("Error fetching PDF:", error);
     } finally {
@@ -155,9 +165,13 @@ const TableLaporanPermintaan = ({
         if (idDownload.length === 1) {
           setLoadingDownloadButton(true);
           // Jika hanya satu ID, download file PDF tunggal
-          response = await axios.get(
-            `http://localhost:3001/reports/pdf/${idDownload[0]}`,
-            { responseType: "blob" }
+          response = await api.get(
+            `/reports/pdf/${idDownload[0]}`,
+            { responseType: "blob",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+             }
           );
 
           const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -171,10 +185,14 @@ const TableLaporanPermintaan = ({
         } else {
           // Jika lebih dari satu ID, download file ZIP yang berisi beberapa file PDF
           setLoadingDownloadButton(true);
-          response = await axios.post(
-            "http://localhost:3001/reports/pdf",
+          response = await api.post(
+            "/reports/pdf",
             { arrayOfIdReport: idDownload },
-            { responseType: "blob" }
+            { responseType: "blob",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+             },
           );
 
           const url = window.URL.createObjectURL(new Blob([response.data]));

@@ -1,4 +1,5 @@
 "use client";
+import api from "@/app/(pages)/(auth)/login/api";
 import DatePicker from "@/app/components/Elements/DatePicker";
 import Pagination from "@/app/components/Fragments/Pagination";
 import TablePermintaan from "@/app/components/Fragments/permintaan/TablePermintaan";
@@ -33,12 +34,19 @@ const AddDataPage = () => {
     setPage(page + 1);
   };
 
+  const accessToken = localStorage.getItem("accessToken");
+
+
   const fetchPersons = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await axiosInstance.get(
-        `/persons?size=${size}&current=${page}`
+      const response = await api.get(
+        `/persons?size=${size}&current=${page}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       // console.log("Fetched data:", response.data);
       setData(response.data.data.persons);

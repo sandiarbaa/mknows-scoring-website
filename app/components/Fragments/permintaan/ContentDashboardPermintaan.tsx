@@ -8,6 +8,7 @@ import { useQueryPersons } from "@/app/utils/hooks/useQuery";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 import { axiosInstance } from "@/app/utils/lib/axios";
+import api from "@/app/(pages)/(auth)/login/api";
 
 interface PersonsProsesProps {
   nik: string;
@@ -95,7 +96,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await axiosInstance.get(
+      const response = await api.get(
         `/persons?size=${size}&current=${page}`
       );
       // console.log("Fetched data:", response.data);
@@ -169,14 +170,19 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
 
   // mengeksekusi proses cek skoring
   const submitCekSkoring = async () => {
+    const accessToken = localStorage.getItem("accessToken");
     setLoadingSkoring(true); // menampilkan teks loading di button cek skoring
     setUsersProsesData(personsProses); // overwirite data usersProsesData
     proses(); // sebelum nembak ke api, arahkan  dulu ke tab proses, untuk melihat proses cek skoring
     try {
-      const res = await axios.post(
-        "http://localhost:3001/scoring?features=identity",
+      const res = await api.post(
+        "/scoring?features=identity",
         {
           arrayOfNIK: nik, // kirim data nik berdasarkan person yg sudah di pilih
+        }, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
       // console.log(res.data);

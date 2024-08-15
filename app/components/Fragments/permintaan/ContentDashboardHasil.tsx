@@ -5,6 +5,7 @@ import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
 import { useQueryRequests } from "@/app/utils/hooks/useQuery";
 import { axiosInstance } from "@/app/utils/lib/axios";
+import api from "@/app/(pages)/(auth)/login/api";
 
 const ContentDashboardHasil: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -28,11 +29,16 @@ const ContentDashboardHasil: React.FC = () => {
   };
 
   const fetchRequests = async () => {
+    const accessToken = localStorage.getItem("accessToken");
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await axiosInstance.get(
-        `/requests?size=${size}&current=${page}`
+      const response = await api.get(
+        `/requests?size=${size}&current=${page}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       console.log("Fetched data:", response.data);
       setData(response.data.data.requests);
