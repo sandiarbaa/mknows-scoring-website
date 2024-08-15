@@ -5,83 +5,69 @@ import DatePicker from "../../Elements/DatePicker";
 import TableLaporanPermintaan from "./TableLaporanPermintaan";
 import Pagination from "../Pagination";
 import { useQueryRequests } from "@/app/utils/hooks/useQuery";
+import { axiosInstance } from "@/app/utils/lib/axios";
 
 const ContentDashboardLaporanPermintaan: React.FC = () => {
-  // const [userData, setUserData] = useState<any[]>([]);
-  // const [page, setPage] = useState<number>(1);
-  // const [lastVisiblePage, setLastVisiblePage] = useState<number>(1);
-  // const [noAwal, setNoAwal] = useState<number>(1);
-  // const [noAkhir, setNoAkhir] = useState<number>(10);
-  // const [totalData, setTotalData] = useState<number>(0);
-
-  // const fetchData = useCallback(async () => {
-  //   const res = await fetch(
-  //     `http://localhost:3000/api/laporanPermintaan?page=${page}`
-  //   ).then((res) => res.json());
-
-  //   setUserData(res.data);
-  //   setLastVisiblePage(res.pagination.last_visible_page);
-  //   setNoAwal(res.data[0].no);
-  //   setNoAkhir(
-  //     res.data.length > 0 ? res.data[res.data.length - 1].no : noAkhir
-  //   );
-
-  //   setTotalData(res.data_length);
-  // }, [page, noAkhir]);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [page, fetchData, noAwal]);
-
-  // const prevButton = () => {
-  //   if (page <= 1) return;
-  //   setPage(page - 1);
-  // };
-
-  // const nextButton = () => {
-  //   if (page >= lastVisiblePage) return;
-  //   setPage(page + 1);
-  // };
-
-  // // Generate numberPage array based on lastVisiblePage
-  // const numberPage = Array.from(
-  //   { length: lastVisiblePage },
-  //   (_, index) => index + 1
-  // );
-
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(1);
+  const [size] = useState<number>(2);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [data, setData] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState();
+  const [total, setTotal] = useState();
 
+  // button prev - pagination
   const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
+  // button next - pagination
   const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
 
-  const { data, isLoading, error } = useQueryRequests(page, size);
+  const fetchRequests = async () => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await axiosInstance.get(
+        `/requests?size=${size}&current=${page}`
+      );
+      console.log("Fetched data:", response.data);
+      setData(response.data.data.requests);
+      setTotalPage(response.data.page.totalPage);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // console.log(data);
+  useEffect(() => {
+    fetchRequests();
+  }, [page, size]);
 
+  // react query - request
+  // const { error } = useQueryRequests(page, size);
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="mt-5">Loading...</div>;
   }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  const userData = data.data.requests ?? [];
-  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const userData = data ?? [];
+  const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
       ? (page - 1) * size + userData.length
       : (page - 1) * size;
-  const totalData = data?.page?.total ?? 0;
+  const totalData = total ?? 0;
 
   const numberPage = Array.from(
     { length: lastVisiblePage },
@@ -109,16 +95,18 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
       </section>
 
       {/* Pagination */}
-      <Pagination
-        noAwal={noAwal}
-        noAkhir={noAkhir}
-        totalData={totalData}
-        page={page}
-        setPage={setPage}
-        prevButton={prevButton}
-        nextButton={nextButton}
-        numberPage={numberPage}
-      />
+      {userData.length > 0 && (
+        <Pagination
+          noAwal={noAwal}
+          noAkhir={noAkhir}
+          totalData={totalData}
+          page={page}
+          setPage={setPage}
+          prevButton={prevButton}
+          nextButton={nextButton}
+          numberPage={numberPage}
+        />
+      )}
     </section>
   );
 };

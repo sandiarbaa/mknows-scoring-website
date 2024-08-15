@@ -5,10 +5,11 @@ import TablePermintaan from "@/app/components/Fragments/permintaan/TablePerminta
 
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import { useQueryPersons } from "@/app/utils/hooks/useQuery";
+import { axiosInstance } from "@/app/utils/lib/axios";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiChevronRight } from "react-icons/bi"; // Tambahkan BiCalendar dan BiSearch
 
 const AddDataPage = () => {
@@ -16,6 +17,11 @@ const AddDataPage = () => {
   const [size] = useState<number>(2);
   const [nik, setNik] = useState<string[]>([]); // Menyimpan NIK yang dipilih.
   const pathname: string = usePathname();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [data, setData] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState();
+  const [total, setTotal] = useState();
 
   const prevButton = (): void => {
     if (page <= 1) return;
@@ -27,24 +33,47 @@ const AddDataPage = () => {
     setPage(page + 1);
   };
 
-  const { data, isLoading, error } = useQueryPersons(page, size);
+  const fetchPersons = async () => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await axiosInstance.get(
+        `/persons?size=${size}&current=${page}`
+      );
+      // console.log("Fetched data:", response.data);
+      setData(response.data.data.persons);
+      setTotalPage(response.data.page.totalPage);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPersons();
+  }, [page, size]);
+  
+  // const { error } = useQueryPersons(page, size);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
-  const userData = data.data.persons ?? [];
-  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const userData = data ?? [];
+  const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
       ? (page - 1) * size + userData.length
       : (page - 1) * size;
-  const totalData = data?.page?.total ?? 0;
+  const totalData = total ?? 0;
 
   const numberPage = Array.from(
     { length: lastVisiblePage },
@@ -137,7 +166,7 @@ const AddDataPage = () => {
 
         {/* Table */}
         {/* <TablePermintaan userData={userData} /> */}
-        <TablePermintaan userData={userData} checkboxPerson={checkboxPerson} />
+        <TablePermintaan userData={userData} checkboxPerson={checkboxPerson} setPersonsProses={undefined} setUsersProsesData={undefined} />
 
         {/* Pagination */}
         {userData.length > 0 && (

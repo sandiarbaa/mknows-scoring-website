@@ -1,44 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TablePermintaanHasil from "./TablePermintaanHasil";
 import Dropdown from "../../Elements/Dropdown";
 import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
 import { useQueryRequests } from "@/app/utils/hooks/useQuery";
+import { axiosInstance } from "@/app/utils/lib/axios";
 
 const ContentDashboardHasil: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(2);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [data, setData] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState();
+  const [total, setTotal] = useState();
 
+  // button prev - pagination
   const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
   };
 
+  // button next - pagination
   const nextButton = (): void => {
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
 
-  const { data, isLoading, error } = useQueryRequests(page, size);
+  const fetchRequests = async () => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await axiosInstance.get(
+        `/requests?size=${size}&current=${page}`
+      );
+      console.log("Fetched data:", response.data);
+      setData(response.data.data.requests);
+      setTotalPage(response.data.page.totalPage);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // console.log(data);
+  useEffect(() => {
+    fetchRequests();
+  }, [page, size]);
 
+  // react query request
+  // const {  error } = useQueryRequests(page, size);
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="mt-5">Loading...</div>;
   }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  const userData = data.data.requests ?? [];
-  const lastVisiblePage = data?.page?.totalPages ?? 1;
+  const userData = data ?? [];
+  const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
       ? (page - 1) * size + userData.length
       : (page - 1) * size;
-  const totalData = data?.page?.total ?? 0;
+  const totalData = total ?? 0;
 
   const numberPage = Array.from(
     { length: lastVisiblePage },

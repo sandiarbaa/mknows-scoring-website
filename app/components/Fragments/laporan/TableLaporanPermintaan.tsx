@@ -1,321 +1,443 @@
+import axios from "axios";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface userDataProps {
-  no: number;
-  tanggalInput: number;
-  jenisPermintaan: number;
-  jumlahCustomer: number;
-  noPermintaan: number;
-  tanggalPermintaan: number;
-  tanggalSelesai: number;
+  id: string;
+  jenis_permintaan: string;
+  jumlah_customer: string;
+  created_at: string;
+  finished_at: string;
 }
 
 interface expandedRowsDataProps {
-  no: string;
-  noPermintaan: string;
-  tanggalPermintaan: string;
-  jenisPermintaan: string;
+  id: number;
+  nik: string;
+  created_at: string;
+  person: {
+    nama: string;
+  };
+  status: string;
 }
-
-const expandedRowsData: expandedRowsDataProps[] = [
-  {
-    no: "1",
-    noPermintaan: "0007821",
-    tanggalPermintaan: "02/08/22 09:23:30",
-    jenisPermintaan: "AI Identity Scoring",
-  },
-  {
-    no: "2",
-    noPermintaan: "0007821",
-    tanggalPermintaan: "02/08/22 09:23:30",
-    jenisPermintaan: "AI Character Scoring",
-  },
-  {
-    no: "3",
-    noPermintaan: "0007821",
-    tanggalPermintaan: "02/08/22 09:23:30",
-    jenisPermintaan: "AI Capability Scoring",
-  },
-  {
-    no: "4",
-    noPermintaan: "0007821",
-    tanggalPermintaan: "02/08/22 09:23:30",
-    jenisPermintaan: "AI Credit Scoring",
-  },
-  {
-    no: "5",
-    noPermintaan: "0007821",
-    tanggalPermintaan: "02/08/22 09:23:30",
-    jenisPermintaan: "AI Identity Scoring",
-  },
-];
 
 const TableLaporanPermintaan = ({
   userData,
 }: {
   userData: userDataProps[];
 }) => {
+  const [loadingDownloadButton, setLoadingDownloadButton] =
+    useState<boolean>(false);
+  const [loadingShowPDF, setLoadingShowPDF] = useState<boolean>(false);
+  const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
-  const [selectAllExpanded, setSelectAllExpanded] = useState<boolean>(false);
-  const [checkboxListExpanded, setCheckboxListExpanded] = useState<boolean[]>(
-    new Array(expandedRowsData.length).fill(false)
-  );
+  const [idDownload, setIdDownload] = useState<string[]>([]);
+  const [checkboxListExpanded, setCheckboxListExpanded] = useState<{
+    [key: number]: boolean[];
+  }>({});
+  const [selectAllExpanded, setSelectAllExpanded] = useState<{
+    [key: number]: boolean;
+  }>({});
 
-  const handleCheckboxListExpanded = () => {
-    const newSelectAll = !selectAllExpanded;
-    setSelectAllExpanded(newSelectAll);
-    setCheckboxListExpanded(
-      new Array(expandedRowsData.length).fill(newSelectAll)
-    );
-  };
+  const [permintaanHasilDatas, setPermintaanHasilDatas] = useState<{
+    [key: number]: expandedRowsDataProps[];
+  }>({});
+  const [loadingRows, setLoadingRows] = useState<{
+    [key: number]: boolean;
+  }>({});
 
-  const handleCheckboxChangeExpanded = (index: number) => {
-    const newCheckboxList = [...checkboxListExpanded];
-    newCheckboxList[index] = !newCheckboxList[index];
-    setCheckboxListExpanded(newCheckboxList);
-    setSelectAllExpanded(newCheckboxList.every((checkbox) => checkbox));
-  };
+  const handleCheckboxListExpanded = (index: number) => {
+    const allChecked = !selectAllExpanded[index];
+    setSelectAllExpanded({
+      ...selectAllExpanded,
+      [index]: allChecked,
+    });
 
-  const toggleRow = (no: number) => {
-    if (expandedRows.includes(no)) {
-      setExpandedRows(expandedRows.filter((rowNo) => rowNo !== no));
+    const idsForThisRow = permintaanHasilDatas[index].map((data) => data.id);
+
+    setCheckboxListExpanded({
+      ...checkboxListExpanded,
+      [index]: new Array(idsForThisRow.length).fill(allChecked),
+    });
+
+    if (allChecked) {
+      // Tambahkan semua ID ke dalam idDownload jika semua checkbox dipilih
+      setIdDownload((prevIdDownload) => [
+        ...Array.from(
+          new Set([...prevIdDownload, ...idsForThisRow.map(String)])
+        ),
+      ]);
     } else {
-      setExpandedRows([...expandedRows, no]);
+      // Hapus semua ID dari idDownload jika semua checkbox di-uncheck
+      setIdDownload((prevIdDownload) =>
+        prevIdDownload.filter((id) => !idsForThisRow.includes(Number(id)))
+      );
     }
   };
 
-  useEffect(() => {
-    console.log(userData);
-  });
+  const handleCheckboxChangeExpanded = (
+    index: number,
+    expandedIndex: number,
+    id: string
+  ) => {
+    // console.log("ini clik");
+    const newCheckboxList = [...(checkboxListExpanded[index] || [])];
+    newCheckboxList[expandedIndex] = !newCheckboxList[expandedIndex];
+    setCheckboxListExpanded({
+      ...checkboxListExpanded,
+      [index]: newCheckboxList,
+    });
+    setSelectAllExpanded({
+      ...selectAllExpanded,
+      [index]: newCheckboxList.every((checkbox) => checkbox),
+    });
+
+    setIdDownload((prevIdDownload) => {
+      if (prevIdDownload.includes(id)) {
+        const results = prevIdDownload.filter((prevId) => prevId !== id);
+        return results;
+      } else {
+        const results = [...prevIdDownload, id];
+        return results;
+      }
+    });
+  };
+
+  const toggleRow = async (index: number, reqId: string) => {
+    if (expandedRows.includes(index)) {
+      setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index));
+    } else {
+      setExpandedRows([...expandedRows, index]);
+      setLoadingRows({ ...loadingRows, [index]: true });
+
+      try {
+        const { data } = await axios.get(
+          `http://localhost:3001/reports?reqId=${reqId}`
+        );
+        setDataTableExpanded(data.data.reports);
+        setPermintaanHasilDatas({
+          ...permintaanHasilDatas,
+          [index]: data.data.reports,
+        });
+        setCheckboxListExpanded({
+          ...checkboxListExpanded,
+          [index]: new Array(data.data.reports.length).fill(false),
+        });
+        setSelectAllExpanded({
+          ...selectAllExpanded,
+          [index]: false,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoadingRows({ ...loadingRows, [index]: false });
+      }
+    }
+  };
+
+  // API Lihat Detail PDF Person by ID
+  const handleLihatDetail = async (id: number) => {
+    try {
+      setLoadingShowPDF(true);
+      await axios.get(`http://localhost:3001/reports/pdf/${id}`);
+    } catch (error) {
+      console.error("Error fetching PDF:", error);
+    } finally {
+      setLoadingShowPDF(false);
+    }
+  };
+
+  const downloadPDF = async () => {
+    if (idDownload.length > 0) {
+      try {
+        setLoadingShowPDF(true);
+
+        let response;
+        if (idDownload.length === 1) {
+          setLoadingDownloadButton(true);
+          // Jika hanya satu ID, download file PDF tunggal
+          response = await axios.get(
+            `http://localhost:3001/reports/pdf/${idDownload[0]}`,
+            { responseType: "blob" }
+          );
+
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "report.pdf"); // Nama file PDF
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setLoadingDownloadButton(false);
+        } else {
+          // Jika lebih dari satu ID, download file ZIP yang berisi beberapa file PDF
+          setLoadingDownloadButton(true);
+          response = await axios.post(
+            "http://localhost:3001/reports/pdf",
+            { arrayOfIdReport: idDownload },
+            { responseType: "blob" }
+          );
+
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "reports.zip"); // Nama file ZIP
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setLoadingDownloadButton(false);
+        }
+
+        // Resetting checkbox states
+        const newCheckboxListExpanded = { ...checkboxListExpanded };
+        Object.keys(newCheckboxListExpanded).forEach((key: any) => {
+          newCheckboxListExpanded[key] = new Array(
+            permintaanHasilDatas[parseInt(key)]?.length || 0
+          ).fill(false);
+        });
+        setCheckboxListExpanded(newCheckboxListExpanded);
+        setSelectAllExpanded({});
+        setIdDownload([]);
+      } catch (error) {
+        console.error("Error downloading file:", error);
+      } finally {
+        setLoadingShowPDF(false);
+      }
+    } else {
+      alert("Pilih data terlebih dahulu");
+    }
+  };
+
   return (
-    <div className="bg-blue-500 overflow-x-auto">
+    <div className="overflow-x-auto">
       <table className="w-full text-xs bg-white table-auto text-start">
         <thead className="bg-[#F5F8FF] text-tulisan">
           <tr>
-            <th className="p-2 text-end" colSpan={2}>
+            <th colSpan={2} className="py-2">
               No
             </th>
-            <th className="min-w-[150px]">
-              Tanggal Input
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
-            <th className="min-w-[150px]">
-              Jenis Permintaan
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
-            <th className="min-w-[150px]">
-              Jumlah Customer
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
-            <th className="min-w-[150px]">
-              No. Permintaan
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
-            <th className="min-w-[150px]">
+            <th className="min-w-[120px] border-b-[1.8px]">Tanggal Input</th>
+            <th className="min-w-[150px] border-b-[1.8px]">Jenis Permintaan</th>
+            <th className="min-w-[140px] border-b-[1.8px]">Jumlah Customer</th>
+            <th className="min-w-[140px] border-b-[1.8px]">No. Permintaan</th>
+            <th className="min-w-[150px] border-b-[1.8px]">
               Tanggal Permintaan
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
             </th>
-            <th className="min-w-[150px]">
-              Tanggal Selesai
-              <Image
-                src="/assets/dashboard/permintaan/arrowTable.png"
-                alt="arrow-table"
-                width={8}
-                height={8}
-                className="inline-block ml-2"
-              />
-            </th>
+            <th className="min-w-[150px] border-b-[1.8px]">Tanggal Selesai</th>
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: any, index: number) => (
-            <React.Fragment key={index}>
-              <tr
-                className="border-t border-b cursor-pointer"
-                onClick={() => toggleRow(data.no)}
-              >
-                <td className="p-2 text-center">
-                  <Image
-                    src="/assets/dashboard/permintaan/play.png"
-                    alt="play-dropdown"
-                    width={20}
-                    height={0}
-                    className={
-                      expandedRows.includes(data.no) ? "rotate-90" : ""
-                    }
-                  />
-                </td>
-                <td className="p-2 text-center">{index + 1}</td>
-                <td className="text-center text-tulisan">{data.created_at}</td>
-                <td className="text-center text-tulisan">
-                  {data.jenis_permintaan}
-                </td>
-                <td className="text-center text-tulisan">
-                  {data.jumlah_customer}
-                </td>
-                <td className="text-center text-tulisan">{data.id}</td>
-                <td className="text-center text-tulisan">{data.created_at}</td>
-                <td className="text-center text-tulisan">{data.finished_at}</td>
-              </tr>
-              {expandedRows.includes(data.no) && (
-                <tr>
-                  <td colSpan={8} className="p-0">
-                    <table className="w-full text-xs bg-white table-auto text-start">
-                      <thead className=" text-tulisan">
-                        <tr className="px-20 text-ijoToska">
-                          <th className="p-2"></th>
-                          <th className="p-2 bg-[#F5F8FF]">No</th>
-                          <th className="bg-[#F5F8FF]">NIK</th>
-                          <th className="bg-[#F5F8FF]">Tanggal Permintaan</th>
-                          <th className="bg-[#F5F8FF]">Nama</th>
-                          <th className="bg-[#F5F8FF]">Hasil</th>
-                          <th className="min-w-[100px] bg-[#F5F8FF]">
-                            <div className="flex justify-center items-center">
-                              <label
-                                htmlFor="checkboxListAllExpanded"
-                                className={`border px-2.5 py-0.5 w-5 h-5 rounded-[3px] relative mr-1`}
-                              >
-                                <Image
-                                  src="/assets/dashboard/permintaan/ceklisList.png"
-                                  alt="ceklis"
-                                  width={20}
-                                  height={20}
-                                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-                                    selectAllExpanded ? "block" : "hidden"
-                                  }`}
-                                />
-                              </label>
-                              <input
-                                type="checkbox"
-                                name="allButtonExpanded"
-                                id="checkboxListAllExpanded"
-                                className="mr-2 hidden"
-                                onClick={handleCheckboxListExpanded}
-                                checked={selectAllExpanded}
-                              />
-                              Semua
-                            </div>
+          {userData.length > 0 ? (
+            userData.map((data: userDataProps, index: number) => (
+              <React.Fragment key={index}>
+                <tr
+                  className="border-t border-b cursor-pointer"
+                  onClick={() => toggleRow(index, data.id)}
+                >
+                  <td className="p-2 text-center border-b-[1.8px]">
+                    <Image
+                      src="/assets/dashboard/permintaan/play.png"
+                      alt="play-dropdown"
+                      width={20}
+                      height={20}
+                      className={
+                        expandedRows.includes(index) ? "rotate-90" : ""
+                      }
+                    />
+                  </td>
+                  <td>{index + 1}</td>
+                  <td className="text-center border-b-[1.8px] text-tulisan">
+                    {data.created_at}
+                  </td>
+                  <td className="text-center border-b-[1.8px] text-tulisan">
+                    {data.jenis_permintaan}
+                  </td>
+                  <td className="font-medium text-center border-b-[1.8px]">
+                    {data.jumlah_customer}
+                  </td>
+                  <td className="text-center border-b-[1.8px] text-tulisan">
+                    {data.id}
+                  </td>
+                  <td className="text-center border-b-[1.8px] text-tulisan">
+                    {data.created_at}
+                  </td>
+                  <td className="text-center border-b-[1.8px] text-tulisan">
+                    {data.finished_at}
+                  </td>
+                </tr>
+                {expandedRows.includes(index) && (
+                  <>
+                    {loadingRows[index] ? (
+                      <tr>
+                        <td colSpan={8} className="text-center p-2">
+                          <span>Loading...</span>
+                        </td>
+                      </tr>
+                    ) : (
+                      <>
+                        <tr className="text-ijoToska">
+                          <th className="p-2 min-w-[70px]"></th>
+                          <th className="p-2 bg-[#F5F8FF] border-y-[1.4px]">
+                            No
                           </th>
-                          {/* <th className="min-w-[100px] p-2 bg-[#F5F8FF]">
+                          <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
+                            NIK
+                          </th>
+                          <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
+                            Tanggal Permintaan
+                          </th>
+                          <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
+                            Nama
+                          </th>
+                          <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
+                            Hasil
+                          </th>
+                          <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
+                            Lihat Detail
+                          </th>
+                          <th className="min-w-[100px] bg-[#F5F8FF] border-b-[1.4px]">
                             <div className="flex justify-center items-center">
-                              <label htmlFor="checkboxListAllLaporanUser">
-                                ceklis
-                              </label>
-                              <input
-                                type="checkbox"
-                                name="semuaButton"
-                                id="checkboxListAllLaporanUser"
-                                className="mr-2"
-                                // onClick={handleCheckboxListLaporan}
-                                // checked={checkboxListLaporan}
-                              />
-                              Semua
-                            </div>
-                          </th> */}
-                          <th className="p-2"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {expandedRowsData.map(
-                          (
-                            expandedData: expandedRowsDataProps,
-                            expandedIndex: number
-                          ) => (
-                            <tr key={expandedIndex}>
-                              <td></td>
-                              <td className="text-center py-2 border-y">
-                                {expandedData.no}
-                              </td>
-                              <td className="text-center border-y">
-                                {expandedData.noPermintaan}
-                              </td>
-                              <td className="border-y text-center">
-                                {expandedData.tanggalPermintaan}
-                              </td>
-                              <td className="border-y">
-                                {expandedData.jenisPermintaan}
-                              </td>
-                              <td className="border-y">
-                                <div className="py-1 bg-[#54B435] w-24 rounded font-semibold text-white text-center mx-auto">
-                                  Sangat Baik
-                                </div>
-                              </td>
-                              <td className="text-center border-y">
-                                <label
-                                  htmlFor={`checkboxListExpanded${expandedIndex}`}
-                                  className={`border px-2.5 py-0.5 rounded-[3px] relative`}
-                                >
+                              <span className="mr-2">Semua</span>
+                              <label
+                                htmlFor={`selectAll-${index}`}
+                                className="cursor-pointer flex items-center"
+                              >
+                                <input
+                                  type="checkbox"
+                                  id={`selectAll-${index}`}
+                                  className="hidden"
+                                  onChange={() =>
+                                    handleCheckboxListExpanded(index)
+                                  }
+                                  checked={selectAllExpanded[index] || false}
+                                />
+                                <span className="border-[1.5px] bg-slate-100 px-2.5 py-0.5 w-5 h-5 rounded-[3px] flex items-center justify-center relative">
                                   <Image
                                     src="/assets/dashboard/permintaan/ceklisList.png"
                                     alt="ceklis"
                                     width={20}
                                     height={20}
                                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-                                      checkboxListExpanded[expandedIndex]
+                                      selectAllExpanded[index]
                                         ? "block"
                                         : "hidden"
                                     }`}
                                   />
-                                </label>
-                                <input
-                                  type="checkbox"
-                                  name={`checkboxListExpanded${expandedIndex}`}
-                                  id={`checkboxListExpanded${expandedIndex}`}
-                                  checked={checkboxListExpanded[expandedIndex]}
-                                  onChange={() =>
-                                    handleCheckboxChangeExpanded(expandedIndex)
-                                  }
-                                  className="hidden"
-                                />
+                                </span>
+                              </label>
+                            </div>
+                          </th>
+                        </tr>
+                        {permintaanHasilDatas[index]?.map(
+                          (item, expandedIndex) => (
+                            <tr key={item.id}>
+                              <td></td>
+                              <td className="text-center border-b">
+                                {expandedIndex + 1}
                               </td>
-                              {/* <td className="text-center border-y">
-                                <input
-                                  type="checkbox"
-                                  name="checkboxUser"
-                                  id="checkboxUser"
-                                />
-                              </td> */}
+                              <td className="text-center border-b">
+                                {item.nik}
+                              </td>
+                              <td className="text-center border-b">
+                                {item.created_at}
+                              </td>
+                              <td className="text-center border-b">
+                                {item.person.nama}
+                              </td>
+                              <td className="text-center border-b">
+                                <div className="bg-ijoToska w-20 py-1 rounded-md text-white font-semibold mx-auto">
+                                  {item.status}
+                                </div>
+                              </td>
+                              <td className="text-center border-b">
+                                <div
+                                  onClick={() => handleLihatDetail(item.id)}
+                                  className="bg-[#4AC1A2] cursor-pointer w-16 mx-auto font-medium text-white py-1 rounded"
+                                >
+                                  {/* {loadingShowPDF ? "Loading.." : "Lihat"} */}
+                                  Lihat
+                                </div>
+                              </td>
+                              <td className="flex justify-center border-b py-2">
+                                <label
+                                  htmlFor={`checkbox-${index}-${expandedIndex}`}
+                                  className="cursor-pointer flex items-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    id={`checkbox-${index}-${expandedIndex}`}
+                                    className="hidden"
+                                    checked={
+                                      checkboxListExpanded[index]?.[
+                                        expandedIndex
+                                      ] || false
+                                    }
+                                    onChange={() =>
+                                      handleCheckboxChangeExpanded(
+                                        index,
+                                        expandedIndex,
+                                        item.id.toString()
+                                      )
+                                    }
+                                  />
+                                  <span className="border-[1.5px] bg-[#F6FBFA] px-2.5 py-0.5 w-5 h-5 rounded-[3px] flex items-center justify-center relative">
+                                    <Image
+                                      src="/assets/dashboard/permintaan/ceklisList.png"
+                                      alt="ceklis"
+                                      width={20}
+                                      height={20}
+                                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                                        checkboxListExpanded[index]?.[
+                                          expandedIndex
+                                        ]
+                                          ? "block"
+                                          : "hidden"
+                                      }`}
+                                    />
+                                  </span>
+                                </label>
+                              </td>
                             </tr>
                           )
                         )}
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
+                        <tr className="border-b">
+                          <td colSpan={8} className="text-end pr-8">
+                            <div
+                              onClick={() => downloadPDF()}
+                              className="flex cursor-pointer justify-center space-x-1 rounded-md mt-2 items-center border-[1.3px] py-1.5 px-2 w-20 float-right mb-2"
+                            >
+                              {loadingDownloadButton ? (
+                                <span>loading..</span>
+                              ) : (
+                                <div>
+                                  <Image
+                                    src="/assets/dashboard/laporan/download.png"
+                                    alt="download-button"
+                                    className="inline-block"
+                                    width={20}
+                                    height={20}
+                                  />
+                                  <span>Unduh</span>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      </>
+                    )}
+                  </>
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={8}
+                className="text-center py-2 text-sm text-tulisan border-y"
+              >
+                Data laporan permintaan masih kosong!
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
