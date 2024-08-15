@@ -191,7 +191,7 @@ const TambahDataDanInputTemplate = () => {
                     {error ? error : "Terjadi kesalahan saat mengunggah data"}
                   </p>
                   <XMarkIcon
-                    className={`w-6 cursor-pointer`}
+                    className={"w-6 cursor-pointer"}
                     onClick={handleHideErrorNotif}
                   />
                 </div>
