@@ -8,6 +8,7 @@ import ContentDashboardPermintaan from "@/app/components/Fragments/permintaan/Co
 import ContentDashboardProses from "@/app/components/Fragments/permintaan/ContentDashboardProses";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import DashboardPermintaanLayouts from "@/app/components/Layouts/DashboardPermintaanLayouts";
+import ProtectedRoute from "../../(auth)/login/protectedRoute/ProtectedRoute";
 
 interface UsersProsesDataProps {
   nik: string;
@@ -40,7 +41,8 @@ const PermintaanPage = () => {
   }
 
   return (
-    <DashboardLayout hover={pathname}>
+    <ProtectedRoute>
+      <DashboardLayout hover={pathname}>
       <DashboardPermintaanLayouts
         linkStatus={linkStatus}
         permintaan={toLinkPermintaan}
@@ -60,6 +62,7 @@ const PermintaanPage = () => {
         {linkStatus === "/hasil" && <ContentDashboardHasil />}
       </DashboardPermintaanLayouts>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 

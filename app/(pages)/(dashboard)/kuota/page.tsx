@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import DashboardAlokasiKuota from "@/app/components/Layouts/DashboardAlokasiKuota";
 import ContentDashboardAlokasiKuota from "@/app/components/Fragments/kuota/ContentDashboardAlokasiKuota";
 import ContentDashboardRiwayatKuota from "@/app/components/Fragments/kuota/ContentDashboardRiwayatKuota";
+import ProtectedRoute from "../../(auth)/login/protectedRoute/ProtectedRoute";
 
 const KuotaPage = () => {
   const pathname = usePathname();
@@ -18,7 +19,8 @@ const KuotaPage = () => {
   }
 
   return (
-    <DashboardLayout alokasiKuota={linkStatus} hover={pathname}>
+    <ProtectedRoute>
+      <DashboardLayout alokasiKuota={linkStatus} hover={pathname}>
       <DashboardAlokasiKuota
         linkStatus={linkStatus}
         alokasiKuota={toLinkAlokasiKuota}
@@ -34,6 +36,7 @@ const KuotaPage = () => {
         )}
       </DashboardAlokasiKuota>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 

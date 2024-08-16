@@ -10,7 +10,7 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   hover?: string;
   alokasiKuota?: string;
-}
+} 
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,

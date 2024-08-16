@@ -4,6 +4,7 @@ import EmpetyData from "@/app/components/Elements/EmpetyData";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 // import { useState } from "react";
 import { usePathname } from "next/navigation";
+import ProtectedRoute from "../../(auth)/login/protectedRoute/ProtectedRoute";
 // import ContentDashboardInbox from "@/app/components/Fragments/inbox/ContentDashboardInbox";
 
 const InboxPage = () => {
@@ -11,7 +12,8 @@ const InboxPage = () => {
   const pathname = usePathname();
 
   return (
-    <DashboardLayout hover={pathname}>
+    <ProtectedRoute>
+      <DashboardLayout hover={pathname}>
       {/* {inActive ? (
         <ContentDashboardInbox data={inActive} />
       ) : (
@@ -21,6 +23,7 @@ const InboxPage = () => {
         <EmpetyData props={true} href="/dashboard" label="+ Request Inbox" />
       </div>
     </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 
