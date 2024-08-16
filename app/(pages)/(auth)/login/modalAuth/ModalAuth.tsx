@@ -2,23 +2,16 @@ import { useEffect, useState } from "react";
 
 type ModalAuthProp = {
   isVisible: boolean;
-  duration: number;
   msg: string;
+  onClose: () => void;
 };
 
-const ModalAuth = ({ msg, isVisible, duration }: ModalAuthProp) => {
+const ModalAuth = ({ msg, isVisible, onClose }: ModalAuthProp) => {
   const [visible, setVisible] = useState(isVisible);
 
   useEffect(() => {
-    if (isVisible) {
-      setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, duration);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, duration]);
+    setVisible(isVisible);
+  }, [isVisible]);
 
   if (!visible) return null;
 
@@ -26,6 +19,15 @@ const ModalAuth = ({ msg, isVisible, duration }: ModalAuthProp) => {
     <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
       <div className="bg-red-500 text-white p-4 rounded-md shadow-lg">
         {msg}
+        <button
+          onClick={() => {
+            setVisible(false); // Menyembunyikan modal
+            onClose(); // Memanggil fungsi onClose untuk memberi tahu komponen induk
+          }}
+          className="text-white bg-transparent font-bold pl-3"
+        >
+          x 
+        </button>
       </div>
     </div>
   );

@@ -4,8 +4,8 @@ import nextConfig from "@/next.config.mjs";
 
 // Buat instance Axios
 const api = axios.create({
-  // baseURL: "http://13.210.185.89",
-  baseURL: nextConfig.env?.CUSTOM_VAR,
+  baseURL: "http://13.210.185.89",
+  // baseURL: nextConfig.env?.CUSTOM_VAR,
 });
 
 // Fungsi untuk merefresh access token

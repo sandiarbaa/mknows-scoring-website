@@ -144,11 +144,13 @@ const TableLaporanPermintaan = ({
   const handleLihatDetail = async (id: number) => {
     try {
       setLoadingShowPDF(true);
-      await api.get(`/reports/pdf/${id}`, {
+      const response = await api.get(`/reports/pdf/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      const {pdfUrl} = response.data.data;
+      window.open(pdfUrl, '_blank');
     } catch (error) {
       console.error("Error fetching PDF:", error);
     } finally {

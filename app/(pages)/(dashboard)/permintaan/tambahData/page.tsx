@@ -35,10 +35,9 @@ const AddDataPage = () => {
     setPage(page + 1);
   };
 
+  const fetchPersons = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
-
-  const fetchPersons = async () => {
     try {
       setIsLoading(true);
       setIsError(false);

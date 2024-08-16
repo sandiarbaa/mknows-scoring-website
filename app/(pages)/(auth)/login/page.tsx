@@ -14,8 +14,12 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
   const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const router = useRouter();
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false); // Fungsi untuk menutup modal
+  };
 
   const auth = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,19 +41,14 @@ const LoginPage: React.FC = () => {
       }
     } catch (error: any) {
       setMsg(error.response.data.message);
-      setIsVisible(true);
-
-      // Tambahkan setTimeout untuk reset isVisible ke false setelah durasi
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 5000); // Waktu yang sama dengan duration di ModalAuth
+      setIsModalVisible(true);
     }
   };
 
   return (
     <div>
       <LoginLayout title="MASUK">
-        <ModalAuth duration={5000} isVisible={isVisible} msg={msg} />
+        <ModalAuth isVisible={isModalVisible} msg={msg} onClose={handleCloseModal} />
         <form onSubmit={auth}>
           {/* Email */}
           <div className="flex flex-col mb-3">
