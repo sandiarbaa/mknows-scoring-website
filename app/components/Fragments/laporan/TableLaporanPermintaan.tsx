@@ -1,5 +1,4 @@
 import api from "@/app/(pages)/(auth)/login/api";
-import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -16,6 +15,7 @@ interface expandedRowsDataProps {
   nik: string;
   created_at: string;
   person: {
+    nik: string;
     nama: string;
   };
   status: string;
@@ -112,13 +112,12 @@ const TableLaporanPermintaan = ({
       setLoadingRows({ ...loadingRows, [index]: true });
 
       try {
-        const { data } = await api.get(
-          `/reports?reqId=${reqId}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const { data } = await api.get(`/reports?reqId=${reqId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(data);
         setDataTableExpanded(data.data.reports);
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,
@@ -167,14 +166,12 @@ const TableLaporanPermintaan = ({
         if (idDownload.length === 1) {
           setLoadingDownloadButton(true);
           // Jika hanya satu ID, download file PDF tunggal
-          response = await api.get(
-            `/reports/pdf/${idDownload[0]}`,
-            { responseType: "blob",
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-             }
-          );
+          response = await api.get(`/reports/pdf/${idDownload[0]}`, {
+            responseType: "blob",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
@@ -190,11 +187,12 @@ const TableLaporanPermintaan = ({
           response = await api.post(
             "/reports/pdf",
             { arrayOfIdReport: idDownload },
-            { responseType: "blob",
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-             },
+            {
+              responseType: "blob",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
           );
 
           const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -355,7 +353,7 @@ const TableLaporanPermintaan = ({
                                 {expandedIndex + 1}
                               </td>
                               <td className="text-center border-b">
-                                {item.nik}
+                                {item.person.nik}
                               </td>
                               <td className="text-center border-b">
                                 {item.created_at}

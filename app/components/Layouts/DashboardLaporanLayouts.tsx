@@ -21,7 +21,7 @@ const DashboardLaporanLayouts = ({
       <div className="flex flex-col lg:flex-row">
         <Link
           href="/laporan"
-          className={` font-medium mr-5 relative ${
+          className={` font-medium mr-5 relative w-32 ${
             linkStatus === "/laporanUser"
               ? "text-ijoToska after:hidden after:lg:block after:w-full after:h-[2px] after:bg-ijoToska after:absolute after:left-0 after:-bottom-5"
               : "text-tulisan"
@@ -33,7 +33,7 @@ const DashboardLaporanLayouts = ({
 
         <Link
           href="/laporan"
-          className={` font-medium mr-5 relative ${
+          className={` font-medium mr-5 relative w-40 ${
             linkStatus === "/laporanPermintaan"
               ? "text-ijoToska after:hidden after:lg:block after:w-full after:h-[2px] after:bg-ijoToska after:absolute after:left-0 after:-bottom-5"
               : "text-tulisan"
@@ -45,7 +45,7 @@ const DashboardLaporanLayouts = ({
 
         <Link
           href="/laporan"
-          className={` font-medium mr-5 relative ${
+          className={` font-medium mr-5 relative w-32 ${
             linkStatus === "/laporanFitur"
               ? "text-ijoToska after:hidden after:lg:block after:w-full after:h-[2px] after:bg-ijoToska after:absolute after:left-0 after:-bottom-5"
               : "text-tulisan"

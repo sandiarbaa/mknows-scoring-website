@@ -140,9 +140,10 @@ const DashboardPage: React.FC = () => {
             </DashboardStatsContentLayout>
 
             <DashboardStatsContentLayout title="TRACK LOKASI">
-              <div className="italic font-medium text-xl h-full flex justify-center items-center text-tulisan">
+              {/* <div className="italic font-medium text-xl h-full flex justify-center items-center text-tulisan">
                 <span>Coming Soon...</span>
-              </div>
+              </div> */}
+              <EmpetyData props={false} />
             </DashboardStatsContentLayout>
           </div>
 

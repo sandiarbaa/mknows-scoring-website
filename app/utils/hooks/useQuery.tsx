@@ -32,7 +32,6 @@ const fetchReports = async ({ queryKey }: { queryKey: string[] }) => {
 };
 
 export const useQueryReports = (page: number, size: number) => {
-  // export const useQueryReports = () => {
   return useQuery({
     queryKey: ["reports"],
     queryFn: fetchReports,

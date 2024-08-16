@@ -6,15 +6,34 @@ import TableLaporanUser from "./TableLaporanUser";
 import { useQueryReportsLaporan } from "@/app/utils/hooks/useQuery";
 import { axiosInstance } from "@/app/utils/lib/axios";
 import api from "@/app/(pages)/(auth)/login/api";
+import Image from "next/image";
 
 const ContentDashboardLaporanUser = () => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(2);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [data, setData] = useState<any[]>([]);
+  const [datas, setDatas] = useState([]);
   const [totalPage, setTotalPage] = useState();
   const [total, setTotal] = useState();
+
+  // Search
+  const [search, setSearch] = useState<string>("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    // kalau ada pencarian
+    if (search !== "") {
+      const results = datas.filter(
+        (data: { person: { nik: string; nama: string } }) =>
+          data.person.nik.toLowerCase().includes(search.toLowerCase()) ||
+          data.person.nama.toLowerCase().includes(search.toLowerCase())
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults(datas);
+    }
+  }, [datas, search]);
 
   // button prev - pagination
   const prevButton = (): void => {
@@ -34,15 +53,12 @@ const ContentDashboardLaporanUser = () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await api.get(
-        `/reports?size=${size}&current=${page}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      // console.log("Fetched data:", response.data);
-      setData(response.data.data.reports);
+      const response = await api.get(`/reports?size=${size}&current=${page}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setDatas(response.data.data.reports);
       setTotalPage(response.data.page.totalPage);
       setTotal(response.data.page.total);
     } catch (error) {
@@ -57,16 +73,11 @@ const ContentDashboardLaporanUser = () => {
     fetchRequests();
   }, [page, size]);
 
-  // react query - person in report page to query request
-  // const {  error } = useQueryReportsLaporan();
   if (isLoading) {
     return <div className="mt-5">Loading...</div>;
   }
-  // if (error) {
-  //   return <div>Error: {error.message}</div>;
-  // }
 
-  const userData = data ?? [];
+  const userData = datas ?? [];
   const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
@@ -85,8 +96,25 @@ const ContentDashboardLaporanUser = () => {
       {/* Header */}
       <section className="flex flex-col items-center lg:flex-row justify-between space-y-3 lg:space-y-0">
         <div className="flex flex-col lg:flex-row items-center space-x-3 space-y-3 lg:space-y-0">
-          {/* <Dropdown title="Semua" /> */}
-          <SearchBox />
+          {/* <SearchBox /> */}
+          <div className="relative inline-block mr-2">
+            <input
+              type="text"
+              name="search"
+              id="search"
+              className="border text-sm w-[288px] -mr-2 lg:mr-0 lg:w-[300px] py-2.5 rounded-md px-3 pl-10"
+              placeholder="Search by NIK or Nama"
+              autoComplete="off"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Image
+              src="/assets/dashboard/permintaan/search.png"
+              alt="search"
+              width={20}
+              height={0}
+              className="absolute text-lg left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            />
+          </div>
         </div>
         <div className="pl-3">
           <DatePicker />
@@ -95,7 +123,7 @@ const ContentDashboardLaporanUser = () => {
 
       {/* Table */}
       <section className="mt-5">
-        <TableLaporanUser userData={userData} />
+        <TableLaporanUser userData={searchResults} />
       </section>
 
       {/* Pagination */}

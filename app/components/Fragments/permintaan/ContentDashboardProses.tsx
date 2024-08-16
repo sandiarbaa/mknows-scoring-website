@@ -36,20 +36,18 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
     if (page >= lastVisiblePage) return;
     setPage(page + 1);
   };
-  
+
   const accessToken = localStorage.getItem("accessToken");
 
   const fetchReports = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await api.get(
-        `/reports?size=${size}&current=${page}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await api.get(`/reports?size=${size}&current=${page}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       // console.log("Fetched data:", response.data);
       setData(response.data.data.reports);
       setTotalPage(response.data.page.totalPage);
@@ -65,7 +63,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
   useEffect(() => {
     fetchReports();
   }, [page, size]);
-  
+
   // console.log(data);
 
   if (isLoading) {
@@ -96,7 +94,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
       <div className="flex flex-col lg:flex-row items-center justify-between">
         <h1 className="text-xl font-bold mb-3 lg:mb-0">Permintaan Hari Ini</h1>
         {/* Search & Button Tambah */}
-        <div className="relative inline-block mr-2">
+        {/* <div className="relative inline-block mr-2">
           <input
             type="text"
             name="search"
@@ -111,7 +109,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
             height={0}
             className="absolute text-lg left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Table */}

@@ -1,5 +1,4 @@
 import api from "@/app/(pages)/(auth)/login/api";
-import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -7,6 +6,7 @@ interface userDataProps {
   id: string;
   nik: string;
   person: {
+    nik: string;
     nama: string;
   };
 }
@@ -45,7 +45,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
   const [loadingRows, setLoadingRows] = useState<{
     [key: number]: boolean;
   }>({});
-
+  
   const handleCheckboxListExpanded = (index: number) => {
     const allChecked = !selectAllExpanded[index];
     setSelectAllExpanded({
@@ -114,13 +114,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
       setLoadingRows({ ...loadingRows, [index]: true });
 
       try {
-        const { data } = await api.get(
-          `/reports?nik=${nik}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const { data } = await api.get(`/reports?nik=${nik}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        // console.log(data);
         setDataTableExpanded(data.data.reports);
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,
@@ -169,14 +168,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
         if (idDownload.length === 1) {
           setLoadingDownloadButton(true);
           // Jika hanya satu ID, download file PDF tunggal
-          response = await api.get(
-            `/reports/pdf/${idDownload[0]}`,
-            { responseType: "blob", 
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-             },
-          );
+          response = await api.get(`/reports/pdf/${idDownload[0]}`, {
+            responseType: "blob",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
@@ -192,11 +189,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
           response = await api.post(
             "/reports/pdf",
             { arrayOfIdReport: idDownload },
-            { responseType: "blob", 
+            {
+              responseType: "blob",
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },
-             }
+            }
           );
 
           const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -237,8 +235,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
             <th colSpan={2} className="py-2">
               No
             </th>
-            <th colSpan={3} className="min-w-[120px] border-b-[1.8px]">NIK</th>
-            <th colSpan={3} className="min-w-[150px] border-b-[1.8px]">Nama</th>
+            <th colSpan={3} className="min-w-[120px] border-b-[1.8px]">
+              NIK
+            </th>
+            <th colSpan={3} className="min-w-[150px] border-b-[1.8px]">
+              Nama
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -247,7 +249,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
               <React.Fragment key={index}>
                 <tr
                   className="border-t border-b cursor-pointer"
-                  onClick={() => toggleRow(index, data.nik)}
+                  onClick={() => toggleRow(index, data.person.nik)}
                 >
                   <td className="p-2 text-center border-b-[1.8px]">
                     <Image
@@ -261,10 +263,16 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                     />
                   </td>
                   <td>{index + 1}</td>
-                  <td colSpan={3} className="text-center border-b-[1.8px] text-tulisan">
-                    {data.nik}
+                  <td
+                    colSpan={3}
+                    className="text-center border-b-[1.8px] text-tulisan"
+                  >
+                    {data.person.nik}
                   </td>
-                  <td colSpan={3} className="text-center border-b-[1.8px] text-tulisan">
+                  <td
+                    colSpan={3}
+                    className="text-center border-b-[1.8px] text-tulisan"
+                  >
                     {data.person.nama}
                   </td>
                 </tr>
