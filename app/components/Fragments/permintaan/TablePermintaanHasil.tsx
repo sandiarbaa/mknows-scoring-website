@@ -15,6 +15,7 @@ interface expandedRowsDataProps {
   nik: string;
   created_at: string;
   person: {
+    nik: string;
     nama: string;
   };
   status: string;
@@ -82,13 +83,12 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
 
       try {
         // Fetch data dari API setiap kali baris di-expand
-        const { data } = await api.get(
-          `/reports?reqId=${reqId}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const { data } = await api.get(`/reports?reqId=${reqId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        // console.log(data);
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,
           [index]: data.data.reports,
@@ -205,7 +205,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                               {expandedIndex + 1}
                             </td>
                             <td className="text-center border-y">
-                              {expandedData.nik}
+                              {expandedData.person.nik}
                             </td>
                             <td className="text-center border-y">
                               {expandedData.created_at}

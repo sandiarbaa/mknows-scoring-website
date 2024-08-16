@@ -42,7 +42,7 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
           },
         }
       );
-      console.log("Fetched data:", response.data);
+      // console.log("Fetched data:", response.data);
       setData(response.data.data.requests);
       setTotalPage(response.data.page.totalPage);
       setTotal(response.data.page.total);
