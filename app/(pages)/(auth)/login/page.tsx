@@ -3,17 +3,15 @@ import { useRouter } from "next/navigation";
 import React, { useState, FormEvent } from "react";
 import Link from "next/link";
 import Button from "@/app/components/Elements/Button";
-import InputCheckbox from "@/app/components/Elements/InputCheckbox";
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
 import axios from "axios";
 import ModalAuth from "./modalAuth/ModalAuth";
 
 const LoginPage: React.FC = () => {
-  const [token, setToken] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
-  const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
+  const [status, setStatus] = useState<"success" | "error">("error");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const router = useRouter();
 
@@ -28,6 +26,7 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
+      setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
 
@@ -35,20 +34,19 @@ const LoginPage: React.FC = () => {
         document.cookie = `refreshToken=${refreshToken}; path=/; secure; samesite=strict; max-age=${
           30 * 24 * 60 * 60
         }`;
-
-        setToken(response.data.data.accessToken);
         router.push("/dashboard");
       }
     } catch (error: any) {
       setMsg(error.response.data.message);
       setIsModalVisible(true);
+      setStatus("error")
     }
   };
 
   return (
     <div>
       <LoginLayout title="MASUK">
-        <ModalAuth isVisible={isModalVisible} msg={msg} onClose={handleCloseModal} />
+        <ModalAuth isVisible={isModalVisible} msg={msg} status={status} onClose={handleCloseModal} />
         <form onSubmit={auth}>
           {/* Email */}
           <div className="flex flex-col mb-3">
@@ -70,20 +68,6 @@ const LoginPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </div>
-
-          {/* Checkbox Remember Me */}
-          <div className="flex items-center ml-2 mt-5">
-            <InputCheckbox
-              checkboxValue={checkboxValue}
-              setCheckboxValue={setCheckboxValue}
-            />
-            <span
-              className="text-tulisan text-sm ml-1 cursor-pointer"
-              onClick={() => setCheckboxValue(!checkboxValue)}
-            >
-              Ingatkan Saya
-            </span>
           </div>
 
           {/* Link Forgot Password */}

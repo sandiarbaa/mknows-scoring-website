@@ -23,8 +23,6 @@ const TambahDataDanInputTemplate = () => {
   const [selfieFileName, setSelfieFileName] = useState<string>("");
   const [hideErrorNotif, setHideErrorNotif] = useState<boolean>(true);
 
-  const accessToken = localStorage.getItem("accessToken");
-
   const handleHideErrorNotif = (): void => {
     setHideErrorNotif(false);
   };
@@ -44,6 +42,8 @@ const TambahDataDanInputTemplate = () => {
   };
 
   const HandleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
+    
+    const accessToken = localStorage.getItem("accessToken");
     event.preventDefault();
     setIsLoading(true);
     setIsError(false);

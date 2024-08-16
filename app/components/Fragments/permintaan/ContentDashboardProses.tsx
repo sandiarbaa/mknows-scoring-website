@@ -37,9 +37,9 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
     setPage(page + 1);
   };
 
+  const fetchReports = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
-  const fetchReports = async () => {
     try {
       setIsLoading(true);
       setIsError(false);

@@ -14,6 +14,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("user");
   const [msg, setMsg] = useState<string>("");
+  const [status, setStatus] = useState<"success" | "error">("error");
 
   const handleCloseModal = () => {
     setIsModalVisible(false); // Fungsi untuk menutup modal
@@ -36,15 +37,17 @@ const RegisterPage = () => {
             // console.log(response);
             setMsg(response.data.message);
             setIsModalVisible(true);
+            setStatus("success");
         } catch (error: any) {
             setMsg(error.response.data.message);
             setIsModalVisible(true);
+            setStatus("error");
         }
     }
 
   return (
     <ProtectedRoute>
-      <ModalAuth msg={msg} isVisible={isModalVisible} onClose={handleCloseModal} />
+      <ModalAuth msg={msg} status={status} isVisible={isModalVisible} onClose={handleCloseModal} />
       <LoginLayout title="Register">
         <form onSubmit={Auth}>
           {/* Email */}

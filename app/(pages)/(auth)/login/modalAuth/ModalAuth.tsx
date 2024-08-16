@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 type ModalAuthProp = {
   isVisible: boolean;
   msg: string;
+  status: "success" | "error";
   onClose: () => void;
 };
 
-const ModalAuth = ({ msg, isVisible, onClose }: ModalAuthProp) => {
+const ModalAuth = ({ msg, isVisible, onClose, status }: ModalAuthProp) => {
   const [visible, setVisible] = useState(isVisible);
+  const bgColor = status === "success" ? "bg-ijoToska" : "bg-red-500";
 
   useEffect(() => {
     setVisible(isVisible);
@@ -17,7 +19,7 @@ const ModalAuth = ({ msg, isVisible, onClose }: ModalAuthProp) => {
 
   return (
     <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="bg-red-500 text-white p-4 rounded-md shadow-lg">
+      <div className={`${bgColor} text-white p-4 rounded-md shadow-lg`}>
         {msg}
         <button
           onClick={() => {

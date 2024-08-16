@@ -66,10 +66,10 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
     });
   };
 
-  const accessToken = localStorage.getItem("accessToken");
-
   // ketika baris dari tabel utama di klik
   const toggleRow = async (index: number, reqId: string) => {
+    const accessToken = localStorage.getItem("accessToken");
+
     if (expandedRows.includes(index)) {
       setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index));
     } else {
