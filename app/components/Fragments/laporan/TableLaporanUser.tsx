@@ -26,8 +26,6 @@ interface expandedRowsDataProps {
 }
 
 const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
-  const [loadingDownloadButton, setLoadingDownloadButton] =
-    useState<boolean>(false);
   const [loadingShowPDF, setLoadingShowPDF] = useState<boolean>(false);
   const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
@@ -45,7 +43,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
   const [loadingRows, setLoadingRows] = useState<{
     [key: number]: boolean;
   }>({});
-  
+
+  // Menyimpan status loading untuk setiap baris
+  const [loadingDownloadPerRow, setLoadingDownloadPerRow] = useState<{
+    [key: number]: boolean;
+  }>({});
+
   const handleCheckboxListExpanded = (index: number) => {
     const allChecked = !selectAllExpanded[index];
     setSelectAllExpanded({
@@ -158,53 +161,70 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
     }
   };
 
-  const downloadPDF = async () => {
+  const downloadFiles = async (index: number) => {
     const accessToken = localStorage.getItem("accessToken");
+    // kalau ada id yg di pilih
     if (idDownload.length > 0) {
       try {
-        setLoadingShowPDF(true);
+        // setLoadingShowPDF(true);
+
+        setLoadingDownloadPerRow({
+          ...loadingDownloadPerRow,
+          [index]: true,
+        });
 
         let response;
+
+        // Jika hanya ada 1 ID, maka akan download PDF tunggal
         if (idDownload.length === 1) {
-          setLoadingDownloadButton(true);
-          // Jika hanya satu ID, download file PDF tunggal
-          response = await api.get(`/reports/pdf/${idDownload[0]}`, {
-            responseType: "blob",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
+          try {
+            response = await api.post(
+              `/reports/pdf`,
+              { arrayOfIdReport: idDownload },
+              {
+                responseType: "arraybuffer",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
 
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "report.pdf"); // Nama file PDF
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          setLoadingDownloadButton(false);
+            // Membuat URL dan link untuk PDF
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "report.pdf"); // Nama file PDF
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          } catch (error) {
+            console.error("Error downloading PDF:", error);
+          }
         } else {
-          setLoadingDownloadButton(true);
           // Jika lebih dari satu ID, download file ZIP yang berisi beberapa file PDF
-          response = await api.post(
-            "/reports/pdf",
-            { arrayOfIdReport: idDownload },
-            {
-              responseType: "blob",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
+          try {
+            response = await api.post(
+              "/reports/pdf",
+              { arrayOfIdReport: idDownload },
+              {
+                responseType: "blob",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
 
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "reports.zip"); // Nama file ZIP
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          setLoadingDownloadButton(false);
+            // Membuat URL dan link untuk ZIP
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "reports.zip"); // Nama file ZIP
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          } catch (error) {
+            console.error("Error downloading ZIP:", error);
+          }
         }
 
         // Resetting checkbox states
@@ -220,7 +240,11 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
       } catch (error) {
         console.error("Error downloading file:", error);
       } finally {
-        setLoadingShowPDF(false);
+        // setLoadingShowPDF(false);
+        setLoadingDownloadPerRow({
+          ...loadingDownloadPerRow,
+          [index]: false,
+        });
       }
     } else {
       alert("Pilih data terlebih dahulu");
@@ -408,26 +432,33 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                             </tr>
                           )
                         )}
-                        <tr className="border-b">
-                          <td colSpan={8} className="text-end pr-8">
-                            <div
-                              onClick={() => downloadPDF()}
-                              className="flex cursor-pointer justify-center space-x-1 rounded-md mt-2 items-center border-[1.3px] py-1.5 px-2 w-20 float-right mb-2"
-                            >
-                              {loadingDownloadButton ? (
-                                <span>loading..</span>
-                              ) : (
-                                <div>
-                                  <Image
-                                    src="/assets/dashboard/laporan/download.png"
-                                    alt="download-button"
-                                    className="inline-block"
-                                    width={20}
-                                    height={20}
-                                  />
-                                  <span>Unduh</span>
-                                </div>
-                              )}
+                        <tr>
+                          <td colSpan={8}>
+                            <div className="flex justify-end">
+                              <button
+                                onClick={() => downloadFiles(index)}
+                                className={`flex cursor-pointer justify-center space-x-1 rounded-md mt-2 items-center border-[1.3px] py-1.5 px-2 w-24 float-right mb-2 ${
+                                  loadingDownloadPerRow[index]
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                                disabled={loadingDownloadPerRow[index]}
+                              >
+                                {loadingDownloadPerRow[index] ? (
+                                  "Downloading.."
+                                ) : (
+                                  <div>
+                                    <Image
+                                      src="/assets/dashboard/laporan/download.png"
+                                      alt="download-button"
+                                      className="inline-block"
+                                      width={20}
+                                      height={20}
+                                    />
+                                    <span>Unduh</span>
+                                  </div>
+                                )}
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -443,7 +474,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                 colSpan={8}
                 className="text-center py-2 text-sm text-tulisan border-y"
               >
-                Data laporan permintaan masih kosong!
+                Tidak ada data!
               </td>
             </tr>
           )}

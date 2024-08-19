@@ -238,7 +238,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                 colSpan={8}
                 className="text-center py-2 text-sm text-tulisan border-b-[1.4px] italic"
               >
-                Belum ada permintaan yang selesai di proses!
+                Tidak ada data!
               </td>
             </tr>
           )}

@@ -450,7 +450,7 @@ const TableLaporanPermintaan = ({
                 colSpan={8}
                 className="text-center py-2 text-sm text-tulisan border-y"
               >
-                Data laporan permintaan masih kosong!
+                Tidak ada data!
               </td>
             </tr>
           )}
