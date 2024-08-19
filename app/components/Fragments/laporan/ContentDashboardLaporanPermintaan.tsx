@@ -29,20 +29,27 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
     setPage(page + 1);
   };
 
+  const fetchRequests = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
-  const fetchRequests = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
       const response = await api.get(
         `/requests?size=${size}&current=${page}`, {
+          responseType: 'blob',
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      // console.log("Fetched data:", response.data);
+      const url = window.URL.createObjectURL(new Blob([response.data.data.pdfUrl]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'report.pdf'); // Nama file yang akan diunduh
+      document.body.appendChild(link);
+      link.click();
+      console.log("Fetched data:", response.data);
       setData(response.data.data.requests);
       setTotalPage(response.data.page.totalPage);
       setTotal(response.data.page.total);

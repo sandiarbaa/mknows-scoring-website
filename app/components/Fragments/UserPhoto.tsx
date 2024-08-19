@@ -1,7 +1,13 @@
 import Image from "next/image";
 import React from "react";
 
-const UserPhoto = () => {
+type UserPhotoProps = {
+  username: string;
+  role: string;
+  // msg: string;
+}
+
+const UserPhoto = ({ username, role }: UserPhotoProps) => {
   return (
     <div className="flex mt-10 items-center">
       <Image
@@ -12,9 +18,9 @@ const UserPhoto = () => {
         className="mr-3 border-2 rounded-full border-ijoToska"
       /> 
       <div>
-        <h4 className="font-semibold text-sm italic">Fatwa Nasution</h4>
+        <h4 className="font-semibold text-sm italic">{username}</h4>
         {/* Fikri */}
-        <p className="text-xs italic">User</p>
+        <p className="text-xs italic">{role}</p>
       </div>
     </div>
   );

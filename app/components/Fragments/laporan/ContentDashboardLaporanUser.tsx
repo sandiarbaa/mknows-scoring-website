@@ -47,9 +47,9 @@ const ContentDashboardLaporanUser = () => {
     setPage(page + 1);
   };
 
+  const fetchRequests = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
-  const fetchRequests = async () => {
     try {
       setIsLoading(true);
       setIsError(false);

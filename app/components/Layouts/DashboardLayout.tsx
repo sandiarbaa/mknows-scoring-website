@@ -5,12 +5,20 @@ import UserPhoto from "../Fragments/UserPhoto";
 import SidebarLink from "../Fragments/SidebarLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import logout from "@/app/(pages)/(auth)/login/logout";
+import api from "@/app/(pages)/(auth)/login/api";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   hover?: string;
   alokasiKuota?: string;
 } 
+interface UserData {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  img_profile: string | null;
+}
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
@@ -19,6 +27,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const [nav, setNav] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
+  const [username, setUsername] = useState<string>("None");
+  const [role, setRole] = useState<string>("user");
 
   const openNavHandler = () => setNav(true);
   const closeNavHandler = () => setNav(false);
@@ -44,6 +54,26 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [nav]);
+
+  const Auth = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+        try {
+            const response = await api.get('/users', {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+            setRole(response.data.data.user.role)
+            setUsername(response.data.data.user.username)
+        } catch (error: any) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+      Auth();
+    }, []);
 
   return (
     <main className="relative w-full h-screen bg-primary">
@@ -72,7 +102,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             height={100}
           />
           {/* Photo & Username */}
-          <UserPhoto />
+          <UserPhoto username={username} role={role} />
           <hr className="my-5 border-b-2 rounded-full" />
 
           {/* Sidebar Link */}
@@ -121,7 +151,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           />
 
           {/* Photo & Username */}
-          <UserPhoto />
+          <UserPhoto username={username} role={role}/>
           <hr className="my-5 border-b-2 rounded-full" />
 
           {/* Sidebar Link */}
