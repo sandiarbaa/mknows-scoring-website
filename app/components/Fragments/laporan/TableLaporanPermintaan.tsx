@@ -5,20 +5,36 @@ import React, { useState } from "react";
 interface userDataProps {
   id: string;
   jenis_permintaan: string;
-  jumlah_customer: string;
+  jumlah_customer: number;
   created_at: string;
   finished_at: string;
+  owner: number;
 }
 
 interface expandedRowsDataProps {
   id: number;
+  id_permintaan: string;
+  request: {
+    jenis_permintaan: string;
+  };
   nik: string;
   created_at: string;
   person: {
-    nik: string;
     nama: string;
   };
   status: string;
+}
+
+interface permintaanHasilDatasProps {
+  id: number;
+  created_at: string;
+  finished_at: string;
+  skor: string;
+  id_person: number;
+  id_permintaan: string;
+  owner: number;
+  person: { nik: string; nama: string };
+  request: { jenis_permintaan: string };
 }
 
 const TableLaporanPermintaan = ({
@@ -26,13 +42,11 @@ const TableLaporanPermintaan = ({
 }: {
   userData: userDataProps[];
 }) => {
-  const [loadingDownloadButton, setLoadingDownloadButton] =
-    useState<boolean>(false);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingShowPDF, setLoadingShowPDF] = useState<boolean>(false);
   const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [idDownload, setIdDownload] = useState<string[]>([]);
-  const accessToken = localStorage.getItem("accessToken");
   const [checkboxListExpanded, setCheckboxListExpanded] = useState<{
     [key: number]: boolean[];
   }>({});
@@ -44,6 +58,11 @@ const TableLaporanPermintaan = ({
     [key: number]: expandedRowsDataProps[];
   }>({});
   const [loadingRows, setLoadingRows] = useState<{
+    [key: number]: boolean;
+  }>({});
+
+  // Menyimpan status loading untuk setiap baris
+  const [loadingDownloadPerRow, setLoadingDownloadPerRow] = useState<{
     [key: number]: boolean;
   }>({});
 
@@ -96,15 +115,18 @@ const TableLaporanPermintaan = ({
     setIdDownload((prevIdDownload) => {
       if (prevIdDownload.includes(id)) {
         const results = prevIdDownload.filter((prevId) => prevId !== id);
+        // console.log(results);
         return results;
       } else {
         const results = [...prevIdDownload, id];
+        // console.log(results);
         return results;
       }
     });
   };
 
-  const toggleRow = async (index: number, reqId: string) => {
+  const toggleRow = async (index: number, id_permintaan: string) => {
+    const accessToken = localStorage.getItem("accessToken");
     if (expandedRows.includes(index)) {
       setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index));
     } else {
@@ -112,12 +134,12 @@ const TableLaporanPermintaan = ({
       setLoadingRows({ ...loadingRows, [index]: true });
 
       try {
-        const { data } = await api.get(`/reports?reqId=${reqId}`, {
+        const { data } = await api.get(`/reports?reqId=${id_permintaan}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(data);
+        // console.log(data);
         setDataTableExpanded(data.data.reports);
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,
@@ -141,6 +163,7 @@ const TableLaporanPermintaan = ({
 
   // API Lihat Detail PDF Person by ID
   const handleLihatDetail = async (id: number) => {
+    const accessToken = localStorage.getItem("accessToken");
     try {
       setLoadingShowPDF(true);
       const response = await api.get(`/reports/pdf/${id}`, {
@@ -148,8 +171,13 @@ const TableLaporanPermintaan = ({
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const {pdfUrl} = response.data.data;
-      window.open(pdfUrl, '_blank');
+      const pdfUrl = response.data.data.pdfUrl;
+
+      // Buka PDF di tab baru
+      window.open(pdfUrl, "_blank");
+
+      // Atau tampilkan PDF di halaman
+      setPdfUrl(pdfUrl);
     } catch (error) {
       console.error("Error fetching PDF:", error);
     } finally {
@@ -157,52 +185,68 @@ const TableLaporanPermintaan = ({
     }
   };
 
-  const downloadPDF = async () => {
+  const downloadFiles = async (index: number) => {
+    const accessToken = localStorage.getItem("accessToken");
+    // kalau ada id yg di pilih
     if (idDownload.length > 0) {
       try {
-        setLoadingShowPDF(true);
+        setLoadingDownloadPerRow({
+          ...loadingDownloadPerRow,
+          [index]: true,
+        });
 
         let response;
-        if (idDownload.length === 1) {
-          setLoadingDownloadButton(true);
-          // Jika hanya satu ID, download file PDF tunggal
-          response = await api.get(`/reports/pdf/${idDownload[0]}`, {
-            responseType: "blob",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
 
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "report.pdf"); // Nama file PDF
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          setLoadingDownloadButton(false);
+        // Jika hanya ada 1 ID, maka akan download PDF tunggal
+        if (idDownload.length === 1) {
+          try {
+            response = await api.post(
+              `/reports/pdf`,
+              { arrayOfIdReport: idDownload },
+              {
+                responseType: "arraybuffer",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+
+            // Membuat URL dan link untuk PDF
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "report.pdf"); // Nama file PDF
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          } catch (error) {
+            console.error("Error downloading PDF:", error);
+          }
         } else {
           // Jika lebih dari satu ID, download file ZIP yang berisi beberapa file PDF
-          setLoadingDownloadButton(true);
-          response = await api.post(
-            "/reports/pdf",
-            { arrayOfIdReport: idDownload },
-            {
-              responseType: "blob",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
+          try {
+            response = await api.post(
+              "/reports/pdf",
+              { arrayOfIdReport: idDownload },
+              {
+                responseType: "blob",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
 
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "reports.zip"); // Nama file ZIP
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          setLoadingDownloadButton(false);
+            // Membuat URL dan link untuk ZIP
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "reports.zip"); // Nama file ZIP
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          } catch (error) {
+            console.error("Error downloading ZIP:", error);
+          }
         }
 
         // Resetting checkbox states
@@ -218,7 +262,11 @@ const TableLaporanPermintaan = ({
       } catch (error) {
         console.error("Error downloading file:", error);
       } finally {
-        setLoadingShowPDF(false);
+        // setLoadingShowPDF(false);
+        setLoadingDownloadPerRow({
+          ...loadingDownloadPerRow,
+          [index]: false,
+        });
       }
     } else {
       alert("Pilih data terlebih dahulu");
@@ -233,14 +281,14 @@ const TableLaporanPermintaan = ({
             <th colSpan={2} className="py-2">
               No
             </th>
-            <th className="min-w-[120px] border-b-[1.8px]">Tanggal Input</th>
-            <th className="min-w-[150px] border-b-[1.8px]">Jenis Permintaan</th>
-            <th className="min-w-[140px] border-b-[1.8px]">Jumlah Customer</th>
-            <th className="min-w-[140px] border-b-[1.8px]">No. Permintaan</th>
-            <th className="min-w-[150px] border-b-[1.8px]">
+            <th className="min-w-[20px] border-b-[1.8px]">Tanggal Input</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Jenis Permintaan</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Jumlah Customer</th>
+            <th className="min-w-[20px] border-b-[1.8px]">No. Permintaan</th>
+            <th className="min-w-[20px] border-b-[1.8px]">
               Tanggal Permintaan
             </th>
-            <th className="min-w-[150px] border-b-[1.8px]">Tanggal Selesai</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Tanggal Selesai</th>
           </tr>
         </thead>
         <tbody>
@@ -269,7 +317,7 @@ const TableLaporanPermintaan = ({
                   <td className="text-center border-b-[1.8px] text-tulisan">
                     {data.jenis_permintaan}
                   </td>
-                  <td className="font-medium text-center border-b-[1.8px]">
+                  <td className="text-center border-b-[1.8px] text-tulisan">
                     {data.jumlah_customer}
                   </td>
                   <td className="text-center border-b-[1.8px] text-tulisan">
@@ -346,7 +394,7 @@ const TableLaporanPermintaan = ({
                           </th>
                         </tr>
                         {permintaanHasilDatas[index]?.map(
-                          (item, expandedIndex) => (
+                          (item: any, expandedIndex) => (
                             <tr key={item.id}>
                               <td></td>
                               <td className="text-center border-b">
@@ -362,8 +410,8 @@ const TableLaporanPermintaan = ({
                                 {item.person.nama}
                               </td>
                               <td className="text-center border-b">
-                                <div className="bg-ijoToska w-20 py-1 rounded-md text-white font-semibold mx-auto">
-                                  {item.status}
+                                <div className="bg-green-500 w-24 mx-auto text-white font-semibold py-1 rounded-md">
+                                  {item.skor}
                                 </div>
                               </td>
                               <td className="text-center border-b">
@@ -371,7 +419,6 @@ const TableLaporanPermintaan = ({
                                   onClick={() => handleLihatDetail(item.id)}
                                   className="bg-[#4AC1A2] cursor-pointer w-16 mx-auto font-medium text-white py-1 rounded"
                                 >
-                                  {/* {loadingShowPDF ? "Loading.." : "Lihat"} */}
                                   Lihat
                                 </div>
                               </td>
@@ -417,26 +464,33 @@ const TableLaporanPermintaan = ({
                             </tr>
                           )
                         )}
-                        <tr className="border-b">
-                          <td colSpan={8} className="text-end pr-8">
-                            <div
-                              onClick={() => downloadPDF()}
-                              className="flex cursor-pointer justify-center space-x-1 rounded-md mt-2 items-center border-[1.3px] py-1.5 px-2 w-20 float-right mb-2"
-                            >
-                              {loadingDownloadButton ? (
-                                <span>loading..</span>
-                              ) : (
-                                <div>
-                                  <Image
-                                    src="/assets/dashboard/laporan/download.png"
-                                    alt="download-button"
-                                    className="inline-block"
-                                    width={20}
-                                    height={20}
-                                  />
-                                  <span>Unduh</span>
-                                </div>
-                              )}
+                        <tr>
+                          <td colSpan={8}>
+                            <div className="flex justify-end">
+                              <button
+                                onClick={() => downloadFiles(index)}
+                                className={`flex cursor-pointer justify-center space-x-1 rounded-md mt-2 items-center border-[1.3px] py-1.5 px-2 w-24 float-right mb-2 ${
+                                  loadingDownloadPerRow[index]
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                                disabled={loadingDownloadPerRow[index]}
+                              >
+                                {loadingDownloadPerRow[index] ? (
+                                  "Downloading.."
+                                ) : (
+                                  <div>
+                                    <Image
+                                      src="/assets/dashboard/laporan/download.png"
+                                      alt="download-button"
+                                      className="inline-block"
+                                      width={20}
+                                      height={20}
+                                    />
+                                    <span>Unduh</span>
+                                  </div>
+                                )}
+                              </button>
                             </div>
                           </td>
                         </tr>

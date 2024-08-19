@@ -13,7 +13,7 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
   const [size] = useState<number>(2);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [data, setData] = useState<any[]>([]);
+  const [datas, setDatas] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState();
   const [total, setTotal] = useState();
 
@@ -32,33 +32,51 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
   const fetchRequests = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
-    try {
-      setIsLoading(true);
-      setIsError(false);
-      const response = await api.get(
-        `/requests?size=${size}&current=${page}`, {
-          responseType: 'blob',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const url = window.URL.createObjectURL(new Blob([response.data.data.pdfUrl]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'report.pdf'); // Nama file yang akan diunduh
-      document.body.appendChild(link);
-      link.click();
-      console.log("Fetched data:", response.data);
-      setData(response.data.data.requests);
-      setTotalPage(response.data.page.totalPage);
-      setTotal(response.data.page.total);
-    } catch (error) {
-      console.error("Error fetching persons:", error);
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
+  try {
+    setIsLoading(true);
+    setIsError(false);
+    const response = await api.get(`/requests?size=${size}&current=${page}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    setDatas(response.data.data.requests);
+    setTotalPage(response.data.page.totalPage);
+    setTotal(response.data.page.total);
+  } catch (error) {
+    console.error("Error fetching persons:", error);
+    setIsError(true);
+  } finally {
+    setIsLoading(false);
+  }
+  
+    // try {
+    //   setIsLoading(true);
+    //   setIsError(false);
+    //   const response = await api.get(
+    //     `/requests?size=${size}&current=${page}`, {
+    //       // responseType: 'blob',
+    //       headers: {
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     }
+    //   );
+    //   const url = window.URL.createObjectURL(new Blob([response.data.data.pdfUrl]));
+    //   const link = document.createElement('a');
+    //   link.href = url;
+    //   link.setAttribute('download', 'report.pdf'); // Nama file yang akan diunduh
+    //   document.body.appendChild(link);
+    //   link.click();
+    //   console.log("Fetched data:", response.data);
+    //   setData(response.data.data.requests);
+    //   setTotalPage(response.data.page.totalPage);
+    //   setTotal(response.data.page.total);
+    // } catch (error) {
+    //   console.error("Error fetching persons:", error);
+    //   setIsError(true);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   useEffect(() => {
@@ -74,7 +92,7 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
   //   return <div>Error: {error.message}</div>;
   // }
 
-  const userData = data ?? [];
+  const userData = datas ?? [];
   const lastVisiblePage = totalPage ?? 1;
   const noAwal = (page - 1) * size + 1;
   const noAkhir =

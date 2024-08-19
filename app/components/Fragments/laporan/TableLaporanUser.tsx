@@ -23,9 +23,11 @@ interface expandedRowsDataProps {
     nama: string;
   };
   status: string;
+  skor: string;
 }
 
 const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingShowPDF, setLoadingShowPDF] = useState<boolean>(false);
   const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
@@ -149,11 +151,18 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
     const accessToken = localStorage.getItem("accessToken");
     try {
       setLoadingShowPDF(true);
-      await api.get(`/reports/pdf/${id}`, {
+      const response = await api.get(`/reports/pdf/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      const pdfUrl = response.data.data.pdfUrl;
+
+      // Buka PDF di tab baru
+      window.open(pdfUrl, "_blank");
+
+      // Atau tampilkan PDF di halaman
+      setPdfUrl(pdfUrl);
     } catch (error) {
       console.error("Error fetching PDF:", error);
     } finally {
@@ -380,7 +389,9 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                                 {item.request.jenis_permintaan}
                               </td>
                               <td className="text-center border-b">
-                                {item.status}
+                                <div className="bg-green-500 w-24 mx-auto text-white font-semibold py-1 rounded-md">
+                                  {item.skor}
+                                </div>
                               </td>
                               <td className="text-center border-b">
                                 <div
