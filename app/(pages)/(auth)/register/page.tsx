@@ -10,6 +10,7 @@ import ModalAuth from "../login/modalAuth/ModalAuth";
 
 const RegisterPage = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("user");
@@ -26,6 +27,7 @@ const RegisterPage = () => {
         e.preventDefault();
         try {
             const response = await api.post('/users',{
+                username: username,
                 email: email,
                 password: password,
                 role: role,
@@ -50,6 +52,16 @@ const RegisterPage = () => {
       <ModalAuth msg={msg} status={status} isVisible={isModalVisible} onClose={handleCloseModal} />
       <LoginLayout title="Register">
         <form onSubmit={Auth}>
+          {/* Username */}
+          <div className="flex flex-col mb-3">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
+            />
+          </div>
           {/* Email */}
           <div className="flex flex-col mb-3">
             <input
