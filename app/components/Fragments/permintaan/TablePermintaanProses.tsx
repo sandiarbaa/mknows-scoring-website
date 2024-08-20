@@ -69,14 +69,14 @@ const TablePermintaanProses = ({
           {usersProsesData.length > 0 ? (
             usersProsesData.map((data: usersProsesDataProps, index: number) => (
               <tr key={index} className="border-t border-b">
-                <td className="p-2 text-center">{index + 1}</td>
+                <td className="p-3 text-center">{index + 1}</td>
                 <td className="text-center text-tulisan">
                   {data.tanggalInput}
                 </td>
                 <td className="text-center text-tulisan">{data.nik}</td>
                 <td className="pl-5 font-medium">{data.nama}</td>
                 <td className="pl-5 font-medium">
-                  <div className="bg-[#F59E0B] px-2 py-1.5 w-28 rounded-md flex items-center justify-center">
+                  <div className="bg-[#F59E0B] px-2 py-1 w-28 rounded-md flex items-center justify-center">
                     <span className="text-white">Menunggu</span>
                     <div className="loader mx-auto"></div>
                   </div>

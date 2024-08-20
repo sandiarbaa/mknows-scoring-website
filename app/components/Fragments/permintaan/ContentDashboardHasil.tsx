@@ -3,13 +3,11 @@ import TablePermintaanHasil from "./TablePermintaanHasil";
 import Dropdown from "../../Elements/Dropdown";
 import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
-import { useQueryRequests } from "@/app/utils/hooks/useQuery";
-import { axiosInstance } from "@/app/utils/lib/axios";
 import api from "@/app/(pages)/(auth)/login/api";
 
 const ContentDashboardHasil: React.FC = () => {
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(2);
+  const [size] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
@@ -33,16 +31,14 @@ const ContentDashboardHasil: React.FC = () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await api.get(
-        `/requests?size=${size}&current=${page}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await api.get(`/requests?size=${size}&current=${page}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       // console.log("Fetched data:", response.data);
       setData(response.data.data.requests);
-      setTotalPage(response.data.page.totalPage);
+      setTotalPage(response.data.page.totalPages);
       setTotal(response.data.page.total);
     } catch (error) {
       console.error("Error fetching persons:", error);
@@ -56,14 +52,9 @@ const ContentDashboardHasil: React.FC = () => {
     fetchRequests();
   }, [page, size]);
 
-  // react query request
-  // const {  error } = useQueryRequests(page, size);
   if (isLoading) {
     return <div className="mt-5">Loading...</div>;
   }
-  // if (error) {
-  //   return <div>Error: {error.message}</div>;
-  // }
 
   const userData = data ?? [];
   const lastVisiblePage = totalPage ?? 1;

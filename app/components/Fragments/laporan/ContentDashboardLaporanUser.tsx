@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "../../Elements/DatePicker";
-import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
 import TableLaporanUser from "./TableLaporanUser";
-import { useQueryReportsLaporan } from "@/app/utils/hooks/useQuery";
-import { axiosInstance } from "@/app/utils/lib/axios";
 import api from "@/app/(pages)/(auth)/login/api";
 import Image from "next/image";
 
 const ContentDashboardLaporanUser = () => {
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(2);
+  const [size] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [datas, setDatas] = useState([]);
@@ -48,7 +45,7 @@ const ContentDashboardLaporanUser = () => {
   };
 
   const fetchRequests = async () => {
-  const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
 
     try {
       setIsLoading(true);
@@ -59,7 +56,7 @@ const ContentDashboardLaporanUser = () => {
         },
       });
       setDatas(response.data.data.reports);
-      setTotalPage(response.data.page.totalPage);
+      setTotalPage(response.data.page.totalPages);
       setTotal(response.data.page.total);
     } catch (error) {
       console.error("Error fetching persons:", error);

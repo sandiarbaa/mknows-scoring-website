@@ -1,5 +1,4 @@
 import api from "@/app/(pages)/(auth)/login/api";
-import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -182,7 +181,7 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                       <th className="bg-[#F5F8FF] min-w-[150px]">
                         Tanggal Permintaan
                       </th>
-                      <th className="bg-[#F5F8FF] min-w-[150px]">Nama</th>
+                      <th className="bg-[#F5F8FF] min-w-[250px]">Nama</th>
                       <th className="bg-[#F5F8FF] min-w-[150px]">Hasil</th>
                     </tr>
                     {loading[index] ? ( // Menampilkan indikator loading jika data sedang di-fetch

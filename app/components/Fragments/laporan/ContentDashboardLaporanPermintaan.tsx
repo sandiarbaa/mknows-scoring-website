@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "../../Elements/Dropdown";
 import SearchBox from "../../Elements/SearchBox";
 import DatePicker from "../../Elements/DatePicker";
 import TableLaporanPermintaan from "./TableLaporanPermintaan";
 import Pagination from "../Pagination";
-import { useQueryRequests } from "@/app/utils/hooks/useQuery";
-import { axiosInstance } from "@/app/utils/lib/axios";
 import api from "@/app/(pages)/(auth)/login/api";
 
 const ContentDashboardLaporanPermintaan: React.FC = () => {
   const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(2);
+  const [size] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [datas, setDatas] = useState<any[]>([]);
@@ -30,67 +28,34 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
   };
 
   const fetchRequests = async () => {
-  const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
 
-  try {
-    setIsLoading(true);
-    setIsError(false);
-    const response = await api.get(`/requests?size=${size}&current=${page}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    setDatas(response.data.data.requests);
-    setTotalPage(response.data.page.totalPage);
-    setTotal(response.data.page.total);
-  } catch (error) {
-    console.error("Error fetching persons:", error);
-    setIsError(true);
-  } finally {
-    setIsLoading(false);
-  }
-  
-    // try {
-    //   setIsLoading(true);
-    //   setIsError(false);
-    //   const response = await api.get(
-    //     `/requests?size=${size}&current=${page}`, {
-    //       // responseType: 'blob',
-    //       headers: {
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     }
-    //   );
-    //   const url = window.URL.createObjectURL(new Blob([response.data.data.pdfUrl]));
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.setAttribute('download', 'report.pdf'); // Nama file yang akan diunduh
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   console.log("Fetched data:", response.data);
-    //   setData(response.data.data.requests);
-    //   setTotalPage(response.data.page.totalPage);
-    //   setTotal(response.data.page.total);
-    // } catch (error) {
-    //   console.error("Error fetching persons:", error);
-    //   setIsError(true);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const response = await api.get(`/requests?size=${size}&current=${page}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setDatas(response.data.data.requests);
+      setTotalPage(response.data.page.totalPages);
+      setTotal(response.data.page.total);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchRequests();
   }, [page, size]);
 
-  // react query - request
-  // const { error } = useQueryRequests(page, size);
   if (isLoading) {
     return <div className="mt-5">Loading...</div>;
   }
-  // if (error) {
-  //   return <div>Error: {error.message}</div>;
-  // }
 
   const userData = datas ?? [];
   const lastVisiblePage = totalPage ?? 1;

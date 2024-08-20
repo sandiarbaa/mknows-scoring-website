@@ -4,7 +4,6 @@ import React from "react";
 type UserPhotoProps = {
   username: string;
   role: string;
-  // msg: string;
 }
 
 const UserPhoto = ({ username, role }: UserPhotoProps) => {
@@ -19,7 +18,6 @@ const UserPhoto = ({ username, role }: UserPhotoProps) => {
       /> 
       <div>
         <h4 className="font-semibold text-sm italic">{username}</h4>
-        {/* Fikri */}
         <p className="text-xs italic">{role}</p>
       </div>
     </div>

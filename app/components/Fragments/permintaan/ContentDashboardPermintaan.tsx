@@ -4,10 +4,7 @@ import React, { useEffect, useState } from "react";
 import TablePermintaan from "./TablePermintaan";
 import { fiturCards } from "@/app/utils/fiturCard";
 import Pagination from "../Pagination";
-import { useQueryPersons } from "@/app/utils/hooks/useQuery";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import axios from "axios";
-import { axiosInstance } from "@/app/utils/lib/axios";
 import api from "@/app/(pages)/(auth)/login/api";
 
 interface PersonsProsesProps {
@@ -33,7 +30,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   const [hideErrorNotif, setHideErrorNotif] = useState<boolean>(true); // untuk menutup notif succes add person
   const [nik, setNik] = useState<string[]>([]); // untuk menyimpan nik yg di pilih dari checkbox
   const [page, setPage] = useState<number>(1); // page untuk pagination
-  const [size] = useState<number>(3); // menampilkan mau berapa data dalam 1 page
+  const [size] = useState<number>(10); // menampilkan mau berapa data dalam 1 page
   const [loadingSkoring, setLoadingSkoring] = useState<boolean>(false); // untuk menampilkan teks loading saat cek skoring
   const [personsProses, setPersonsProses] = useState<PersonsProsesProps[]>([]); // menyimpan data person yg di pilih, lalu meng-overwrite isi array usersProsesData
   const [data, setData] = useState<any[]>([]);
@@ -78,30 +75,14 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     setUsersProsesData(personsProses);
   }, [personsProses, setUsersProsesData]);
 
-  // const fetchPersons = async () => {
-  //   setIsLoading(true);
-  //   setIsError(false);
-  //   const response = await axiosInstance.get(
-  //     `/persons?size=${size}&current=${page}`
-  //   );
-  //   console.log(response);
-  //   // setData(res.data);
-  //   setIsLoading(false);
-  //   setIsError(false);
-  // };
-  // useEffect(() => {
-  //   fetchPersons();
-  // });
   const fetchPersons = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const response = await api.get(
-        `/persons?size=${size}&current=${page}`
-      );
+      const response = await api.get(`/persons?size=${size}&current=${page}`);
       // console.log("Fetched data:", response.data);
       setData(response.data.data.persons);
-      setTotalPage(response.data.page.totalPage);
+      setTotalPage(response.data.page.totalPages);
       setTotal(response.data.page.total);
     } catch (error) {
       console.error("Error fetching persons:", error);
@@ -116,16 +97,6 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   }, [page, size]);
 
   isLoading ? <div className="mt-5">Loading...</div> : <></>;
-  // isLoading ? <div>Error: {error.message}</div> : <></>;
-
-  // react query - person
-  // const { data, isLoading, error } = useQueryPersons(page, size);
-  // if (isLoading) {
-  //   return <div className="mt-5">Loading...</div>;
-  // }
-  // if (error) {
-  //   return <div>Error: {error.message}</div>;
-  // }
 
   // button prev - pagination
   const prevButton = (): void => {
@@ -152,8 +123,8 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
 
   // untuk membuat nomor page di pagination nya
   const numberPage = Array.from(
-    { length: lastVisiblePage }, // panjang arraynya - di isi berdasarkan total page
-    (_, index) => index + 1 // isi setiap elemen arraynya
+    { length: lastVisiblePage },
+    (_, index) => index + 1
   );
 
   // mengelola data nik person yang dipilih - TablePermintaan Component
@@ -179,7 +150,8 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
         "/scoring?features=identity",
         {
           arrayOfNIK: nik, // kirim data nik berdasarkan person yg sudah di pilih
-        }, {
+        },
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

@@ -288,7 +288,7 @@ const TableLaporanPermintaan = ({
             <th className="min-w-[20px] border-b-[1.8px]">
               Tanggal Permintaan
             </th>
-            <th className="min-w-[20px] border-b-[1.8px]">Tanggal Selesai</th>
+            <th className="min-w-[150px] border-b-[1.8px]">Tanggal Selesai</th>
           </tr>
         </thead>
         <tbody>
@@ -351,7 +351,7 @@ const TableLaporanPermintaan = ({
                           <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
                             Tanggal Permintaan
                           </th>
-                          <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
+                          <th className="bg-[#F5F8FF] min-w-[250px] border-b-[1.4px]">
                             Nama
                           </th>
                           <th className="bg-[#F5F8FF] min-w-[150px] border-b-[1.4px]">
