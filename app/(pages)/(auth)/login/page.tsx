@@ -26,6 +26,7 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
+      console.log(response);
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;

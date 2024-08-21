@@ -1,7 +1,11 @@
+
 import axios from "axios";
+// import { useRouter } from "next/navigation";
 
 // Fungsi untuk menghapus token dan logout
-const logout = async () => {
+const Logout = async () => {
+  // const router = useRouter();
+
   try {
     const refreshToken = document.cookie
       .split("; ")
@@ -26,9 +30,10 @@ const logout = async () => {
 
     // Redirect ke halaman login
     window.location.href = "/login";
+    // router.push("/login");
   } catch (error) {
     return null;
   }
 };
 
-export default logout;
+export default Logout;

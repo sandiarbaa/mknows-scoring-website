@@ -1,15 +1,18 @@
 "use client";
 
-import LoginLayout from "@/app/components/Layouts/LoginLayout";
-import DropDownRegister from "./DropDownRegister";
-import Button from "@/app/components/Elements/Button";
-import { useState } from "react";
-import api from "../login/api";
-import ProtectedRoute from "../login/protectedRoute/ProtectedRoute";
-import ModalAuth from "../login/modalAuth/ModalAuth";
+import React, { useState } from 'react'
+import ProtectedRoute from '../../(auth)/login/protectedRoute/ProtectedRoute'
+import DashboardLayout from '@/app/components/Layouts/DashboardLayout'
+import { usePathname } from 'next/navigation';
+import LoginLayout from '@/app/components/Layouts/LoginLayout';
+import api from '../../(auth)/login/api';
+import DropDownRegister from '../../(auth)/register/DropDownRegister';
+import Button from '@/app/components/Elements/Button';
+import ModalAuth from '../../(auth)/login/modalAuth/ModalAuth';
 
 const RegisterPage = () => {
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const pathname = usePathname();
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -21,36 +24,40 @@ const RegisterPage = () => {
     setIsModalVisible(false); // Fungsi untuk menutup modal
   };
 
-    const Auth = async (e: any) => {
-    const accessToken = localStorage.getItem("accessToken");
 
-        e.preventDefault();
-        try {
-            const response = await api.post('/users',{
-                username: username,
-                email: email,
-                password: password,
-                role: role,
-            }, {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            })
-            // console.log(response);
-            setMsg(response.data.message);
-            setIsModalVisible(true);
-            setStatus("success");
-        } catch (error: any) {
-            setMsg(error.response.data.message);
-            setIsModalVisible(true);
-            setStatus("error");
+    const Auth = async (e: any) => {
+        const accessToken = localStorage.getItem("accessToken");
+    
+            e.preventDefault();
+            try {
+                const response = await api.post('/users',{
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: role,
+                }, {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                })
+                console.log(response);
+                setMsg(response.data.message);
+                setIsModalVisible(true);
+                setStatus("success");
+            } catch (error: any) {
+                setMsg(error.response.data.message);
+                setIsModalVisible(true);
+                setStatus("error");
+            }
         }
-    }
+        
 
   return (
+    <div>
     <ProtectedRoute>
-      <ModalAuth msg={msg} status={status} isVisible={isModalVisible} onClose={handleCloseModal} />
-      <LoginLayout title="Register">
+    <DashboardLayout hover={pathname}>
+    <ModalAuth msg={msg} status={status} isVisible={isModalVisible} onClose={handleCloseModal} />
+    <LoginLayout title="Register">
         <form onSubmit={Auth}>
           {/* Username */}
           <div className="flex flex-col mb-3">
@@ -91,8 +98,10 @@ const RegisterPage = () => {
           </div>
         </form>
       </LoginLayout>
+    </DashboardLayout>
     </ProtectedRoute>
-  );
-};
+    </div>
+  )
+}
 
-export default RegisterPage;
+export default RegisterPage

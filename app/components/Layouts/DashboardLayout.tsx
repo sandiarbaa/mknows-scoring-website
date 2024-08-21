@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import UserPhoto from "../Fragments/UserPhoto";
 import SidebarLink from "../Fragments/SidebarLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
-import logout from "@/app/(pages)/(auth)/login/logout";
+import Logout from "@/app/(pages)/(auth)/login/logout";
 import api from "@/app/(pages)/(auth)/login/api";
 
 interface DashboardLayoutProps {
@@ -29,12 +29,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const navRef = useRef<HTMLDivElement | null>(null);
   const [username, setUsername] = useState<string>("None");
   const [role, setRole] = useState<string>("user");
+  
 
   const openNavHandler = () => setNav(true);
   const closeNavHandler = () => setNav(false);
 
   const handleLogout = async () => {
-    await logout();
+    await Logout();
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -64,7 +65,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 Authorization: `Bearer ${accessToken}`,
               },
             })
+            const { role } = response.data.data.user;
             setRole(response.data.data.user.role)
+            localStorage.setItem("userRole", role);
             setUsername(response.data.data.user.username)
         } catch (error: any) {
             console.log(error);
