@@ -4,104 +4,51 @@ import React, { useState } from 'react'
 import ProtectedRoute from '../../(auth)/login/protectedRoute/ProtectedRoute'
 import DashboardLayout from '@/app/components/Layouts/DashboardLayout'
 import { usePathname } from 'next/navigation';
-import LoginLayout from '@/app/components/Layouts/LoginLayout';
-import api from '../../(auth)/login/api';
-import DropDownRegister from '../../(auth)/register/DropDownRegister';
-import Button from '@/app/components/Elements/Button';
-import ModalAuth from '../../(auth)/login/modalAuth/ModalAuth';
+import ModalRegister from '../../(auth)/register/ModalRegister';
+
 
 const RegisterPage = () => {
     const pathname = usePathname();
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [role, setRole] = useState<string>("user");
-  const [msg, setMsg] = useState<string>("");
-  const [status, setStatus] = useState<"success" | "error">("error");
+    const [akun, setAkun] = useState(false);
 
-  const handleCloseModal = () => {
-    setIsModalVisible(false); // Fungsi untuk menutup modal
-  };
-
-
-    const Auth = async (e: any) => {
-        const accessToken = localStorage.getItem("accessToken");
-    
-            e.preventDefault();
-            try {
-                const response = await api.post('/users',{
-                    username: username,
-                    email: email,
-                    password: password,
-                    role: role,
-                }, {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                  },
-                })
-                console.log(response);
-                setMsg(response.data.message);
-                setIsModalVisible(true);
-                setStatus("success");
-            } catch (error: any) {
-                setMsg(error.response.data.message);
-                setIsModalVisible(true);
-                setStatus("error");
-            }
-        }
-        
+    const handleAkun = () => {
+      setAkun(true);
+    }
+    const handleClose = () => {
+      setAkun(false);
+    }
 
   return (
     <div>
     <ProtectedRoute>
     <DashboardLayout hover={pathname}>
-    <ModalAuth msg={msg} status={status} isVisible={isModalVisible} onClose={handleCloseModal} />
-    <LoginLayout title="Register">
-        <form onSubmit={Auth}>
-          {/* Username */}
-          <div className="flex flex-col mb-3">
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-            />
-          </div>
-          {/* Email */}
-          <div className="flex flex-col mb-3">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-            />
-          </div>
-
-          {/* Password */}
-          <div className="flex flex-col mb-2">
-            <input
-              type="password"
-              placeholder="Password"
-              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <DropDownRegister setRole={setRole} />
-          <div className="pt-4">
-            <Button classStyle="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]">
-              Register
-            </Button>
-          </div>
-        </form>
-      </LoginLayout>
+    <div>
+      <div className='flex justify-between p-4 text-ijoToska'>
+        <p className='text-xl font-semibold'>Data Account M-Knows</p>
+         <button onClick={handleAkun} className='border-2 border-ijoToska p-1 rounded-md'>Tambah Akun</button>
+      </div>
+      <div className='px-4'>
+        <table className="w-full text-xs bg-white table-auto text-start">
+        <thead className="bg-[#F5F8FF] text-tulisan">
+          <tr>
+            <th colSpan={2} className="py-2 border-b-[1.8px]">
+              No
+            </th>
+            <th className="min-w-[20px] border-b-[1.8px]">Username</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Email</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Role</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Password</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Action</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+      {akun ? <ModalRegister close={handleClose} /> : ""}
+    </div>
     </DashboardLayout>
     </ProtectedRoute>
     </div>
   )
 }
-
+ 
 export default RegisterPage

@@ -65,9 +65,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 Authorization: `Bearer ${accessToken}`,
               },
             })
-            const { role } = response.data.data.user;
             setRole(response.data.data.user.role)
-            localStorage.setItem("userRole", role);
             setUsername(response.data.data.user.username)
         } catch (error: any) {
             console.log(error);
@@ -109,7 +107,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <hr className="my-5 border-b-2 rounded-full" />
 
           {/* Sidebar Link */}
-          <SidebarLink hover={hover} />
+          <SidebarLink hover={hover} role={role} />
           <button
             onClick={handleLogout}
             className="absolute flex space-x-3 bottom-5 left-10"
@@ -158,7 +156,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <hr className="my-5 border-b-2 rounded-full" />
 
           {/* Sidebar Link */}
-          <SidebarLink hover={hover} />
+          <SidebarLink hover={hover} role={role} />
           <button
             onClick={handleLogout}
             className="absolute flex space-x-3 bottom-5 left-10"
