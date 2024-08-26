@@ -91,7 +91,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
       </div>
 
       {/* Pagination */}
-      {usersProsesData.length > 0 && (
+      {/* {usersProsesData.length > 0 && (
         <Pagination
           noAwal={noAwal}
           noAkhir={noAkhir}
@@ -102,7 +102,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
           nextButton={nextButton}
           numberPage={numberPage}
         />
-      )}
+      )} */}
     </section>
   );
 };

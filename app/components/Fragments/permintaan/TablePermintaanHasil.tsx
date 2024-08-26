@@ -35,36 +35,6 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
     [key: number]: boolean;
   }>({}); // Menambahkan state loading
 
-  const handleCheckboxListExpanded = (index: number) => {
-    const allChecked = !selectAllExpanded[index];
-    setSelectAllExpanded({
-      ...selectAllExpanded,
-      [index]: allChecked,
-    });
-    setCheckboxListExpanded({
-      ...checkboxListExpanded,
-      [index]: new Array(permintaanHasilDatas[index]?.length || 0).fill(
-        allChecked
-      ),
-    });
-  };
-
-  const handleCheckboxChangeExpanded = (
-    index: number,
-    expandedIndex: number
-  ) => {
-    const newCheckboxList = [...(checkboxListExpanded[index] || [])];
-    newCheckboxList[expandedIndex] = !newCheckboxList[expandedIndex];
-    setCheckboxListExpanded({
-      ...checkboxListExpanded,
-      [index]: newCheckboxList,
-    });
-    setSelectAllExpanded({
-      ...selectAllExpanded,
-      [index]: newCheckboxList.every((checkbox) => checkbox),
-    });
-  };
-
   // ketika baris dari tabel utama di klik
   const toggleRow = async (index: number, reqId: string) => {
     const accessToken = localStorage.getItem("accessToken");

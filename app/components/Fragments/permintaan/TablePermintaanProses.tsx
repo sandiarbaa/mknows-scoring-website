@@ -76,7 +76,7 @@ const TablePermintaanProses = ({
                 <td className="text-center text-tulisan">{data.nik}</td>
                 <td className="pl-5 font-medium">{data.nama}</td>
                 <td className="pl-5 font-medium">
-                  <div className="bg-[#F59E0B] px-2 py-1 w-28 rounded-md flex items-center justify-center">
+                  <div className="bg-[#F59E0B] mx-auto px-2 py-1 w-28 rounded-md flex items-center justify-center">
                     <span className="text-white">Menunggu</span>
                     <div className="loader mx-auto"></div>
                   </div>
