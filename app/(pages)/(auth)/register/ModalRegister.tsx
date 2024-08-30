@@ -6,6 +6,7 @@ import api from '../login/api';
 import DropDownRegister from './DropDownRegister';
 import Button from '@/app/components/Elements/Button';
 import ModalAuth from '../login/modalAuth/ModalAuth';
+import Image from 'next/image';
 
 
 type ModalRegisterProp = {
@@ -62,7 +63,7 @@ const ModalRegister = ({ close }: ModalRegisterProp) => {
         </div>
         <div className='relative w-full max-w-xs md:max-w-md bg-white shadow px-7 py-6 z-20 border-2 rounded-md' onClick={(e) => e.stopPropagation()}>
           <button onClick={close} className="absolute top-2 right-2">
-          <img src="/assets/login/close.png" alt="none" className="pl-3" width={45} height={45} />
+          <Image src="/assets/login/close.png" alt="none" className="pl-3" width={45} height={45} />
           </button>
         <div className='text-center text-[24px] md:text-[30px] font-semibold text-ijoToska my-5'>Register</div>
         <form onSubmit={Auth}>

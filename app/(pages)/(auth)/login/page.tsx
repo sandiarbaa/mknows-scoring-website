@@ -26,15 +26,24 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
-      console.log(response);
+      console.log('console: ',response);
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
 
         localStorage.setItem("accessToken", accessToken);
-        document.cookie = `refreshToken=${refreshToken}; path=/; secure; samesite=strict; max-age=${
-          30 * 24 * 60 * 60
-        }`;
+        localStorage.setItem("refreshToken", refreshToken);
+        // document.cookie = `refreshToken=${refreshToken}; path=/; secure; samesite=strict; max-age=${
+        //   30 * 24 * 60 * 60
+        // }`;
+        setTimeout(async () => {
+          const newAccessToken = await refreshToken();
+          if (newAccessToken) {
+            console.log("Access token diperbarui setelah 30 detik:", newAccessToken);
+          } else {
+            console.log("Gagal memperbarui access token");
+          }
+        }, 30000); // 30000 milidetik = 30 detik
         router.push("/dashboard");
       }
     } catch (error: any) {
