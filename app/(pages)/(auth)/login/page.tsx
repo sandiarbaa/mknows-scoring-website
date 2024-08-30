@@ -6,6 +6,7 @@ import Button from "@/app/components/Elements/Button";
 import LoginLayout from "@/app/components/Layouts/LoginLayout";
 import axios from "axios";
 import ModalAuth from "./modalAuth/ModalAuth";
+import { refreshAccessToken } from "./api";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -26,7 +27,7 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
-      console.log('console: ',response);
+      // console.log('console: ',response);
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
@@ -37,7 +38,7 @@ const LoginPage: React.FC = () => {
         //   30 * 24 * 60 * 60
         // }`;
         setTimeout(async () => {
-          const newAccessToken = await refreshToken();
+          const newAccessToken = await refreshAccessToken();
           if (newAccessToken) {
             console.log("Access token diperbarui setelah 30 detik:", newAccessToken);
           } else {
