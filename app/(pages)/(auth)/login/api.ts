@@ -78,7 +78,7 @@ const api = axios.create({
 });
 
 // Fungsi untuk merefresh access token
-const refreshAccessToken = async () => {
+export const refreshAccessToken = async () => {
   try {
     // Ambil refresh token dari localStorage
     const refreshToken = localStorage.getItem("refreshToken");
