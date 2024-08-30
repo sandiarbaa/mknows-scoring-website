@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
-      console.log('console: ',response);
+      console.log("console: ", response);
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
@@ -39,9 +39,9 @@ const LoginPage: React.FC = () => {
         setTimeout(async () => {
           const newAccessToken = await refreshToken();
           if (newAccessToken) {
-            console.log("Access token diperbarui setelah 30 detik:", newAccessToken);
+            // console.log("Access token diperbarui setelah 30 detik:", newAccessToken);
           } else {
-            console.log("Gagal memperbarui access token");
+            // console.log("Gagal memperbarui access token");
           }
         }, 30000); // 30000 milidetik = 30 detik
         router.push("/dashboard");
@@ -49,14 +49,19 @@ const LoginPage: React.FC = () => {
     } catch (error: any) {
       setMsg(error.response.data.message);
       setIsModalVisible(true);
-      setStatus("error")
+      setStatus("error");
     }
   };
 
   return (
     <div>
       <LoginLayout title="MASUK">
-        <ModalAuth isVisible={isModalVisible} msg={msg} status={status} onClose={handleCloseModal} />
+        <ModalAuth
+          isVisible={isModalVisible}
+          msg={msg}
+          status={status}
+          onClose={handleCloseModal}
+        />
         <form onSubmit={auth}>
           {/* Email */}
           <div className="flex flex-col mb-3">
