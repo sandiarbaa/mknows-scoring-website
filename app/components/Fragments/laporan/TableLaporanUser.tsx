@@ -100,11 +100,9 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
     setIdDownload((prevIdDownload) => {
       if (prevIdDownload.includes(id)) {
         const results = prevIdDownload.filter((prevId) => prevId !== id);
-        // console.log(results);
         return results;
       } else {
         const results = [...prevIdDownload, id];
-        // console.log(results);
         return results;
       }
     });
@@ -373,75 +371,83 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                           </th>
                         </tr>
                         {permintaanHasilDatas[index]?.map(
-                          (item, expandedIndex) => (
-                            <tr key={item.id}>
-                              <td></td>
-                              <td className="text-center border-b">
-                                {expandedIndex + 1}
-                              </td>
-                              <td className="text-center border-b">
-                                {item.id_permintaan}
-                              </td>
-                              <td className="text-center border-b">
-                                {item.created_at}
-                              </td>
-                              <td className="text-center border-b">
-                                {item.request.jenis_permintaan}
-                              </td>
-                              <td className="text-center border-b">
-                                <div className="bg-green-500 w-24 mx-auto text-white font-semibold py-1 rounded-md">
-                                  {item.skor}
-                                </div>
-                              </td>
-                              <td className="text-center border-b">
-                                <div
-                                  onClick={() => handleLihatDetail(item.id)}
-                                  className="bg-[#4AC1A2] cursor-pointer w-16 mx-auto font-medium text-white py-1 rounded"
-                                >
-                                  Lihat
-                                </div>
-                              </td>
-                              <td className="flex justify-center border-b py-2">
-                                <label
-                                  htmlFor={`checkbox-${index}-${expandedIndex}`}
-                                  className="cursor-pointer flex items-center"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    id={`checkbox-${index}-${expandedIndex}`}
-                                    className="hidden"
-                                    checked={
-                                      checkboxListExpanded[index]?.[
-                                        expandedIndex
-                                      ] || false
-                                    }
-                                    onChange={() =>
-                                      handleCheckboxChangeExpanded(
-                                        index,
-                                        expandedIndex,
-                                        item.id.toString()
-                                      )
-                                    }
-                                  />
-                                  <span className="border-[1.5px] bg-[#F6FBFA] px-2.5 py-0.5 w-5 h-5 rounded-[3px] flex items-center justify-center relative">
-                                    <Image
-                                      src="/assets/dashboard/permintaan/ceklisList.png"
-                                      alt="ceklis"
-                                      width={20}
-                                      height={20}
-                                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                          (item, expandedIndex) => {
+                            if (
+                              !item.request ||
+                              item.request.jenis_permintaan === null
+                            ) {
+                              return null;
+                            }
+                            return (
+                              <tr key={item.id}>
+                                <td></td>
+                                <td className="text-center border-b">
+                                  {expandedIndex + 1}
+                                </td>
+                                <td className="text-center border-b">
+                                  {item.id_permintaan || "no data"}
+                                </td>
+                                <td className="text-center border-b">
+                                  {item.created_at}
+                                </td>
+                                <td className="text-center border-b">
+                                  {item.request?.jenis_permintaan || "no data"}
+                                </td>
+                                <td className="text-center border-b">
+                                  <div className="bg-green-500 w-24 mx-auto text-white font-semibold py-1 rounded-md">
+                                    {item.skor}
+                                  </div>
+                                </td>
+                                <td className="text-center border-b">
+                                  <div
+                                    onClick={() => handleLihatDetail(item.id)}
+                                    className="bg-[#4AC1A2] cursor-pointer w-16 mx-auto font-medium text-white py-1 rounded"
+                                  >
+                                    Lihat
+                                  </div>
+                                </td>
+                                <td className="flex justify-center border-b py-2">
+                                  <label
+                                    htmlFor={`checkbox-${index}-${expandedIndex}`}
+                                    className="cursor-pointer flex items-center"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      id={`checkbox-${index}-${expandedIndex}`}
+                                      className="hidden"
+                                      checked={
                                         checkboxListExpanded[index]?.[
                                           expandedIndex
-                                        ]
-                                          ? "block"
-                                          : "hidden"
-                                      }`}
+                                        ] || false
+                                      }
+                                      onChange={() =>
+                                        handleCheckboxChangeExpanded(
+                                          index,
+                                          expandedIndex,
+                                          item.id.toString()
+                                        )
+                                      }
                                     />
-                                  </span>
-                                </label>
-                              </td>
-                            </tr>
-                          )
+                                    <span className="border-[1.5px] bg-[#F6FBFA] px-2.5 py-0.5 w-5 h-5 rounded-[3px] flex items-center justify-center relative">
+                                      <Image
+                                        src="/assets/dashboard/permintaan/ceklisList.png"
+                                        alt="ceklis"
+                                        width={20}
+                                        height={20}
+                                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                                          checkboxListExpanded[index]?.[
+                                            expandedIndex
+                                          ]
+                                            ? "block"
+                                            : "hidden"
+                                        }`}
+                                      />
+                                    </span>
+                                  </label>
+                                </td>
+                              </tr>
+                            );
+                          }
                         )}
                         <tr>
                           <td colSpan={8}>
