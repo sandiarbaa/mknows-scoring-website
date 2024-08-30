@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import ProtectedRoute from "../login/protectedRoute/ProtectedRoute";
-import api from "../login/api";
-import DropDownRegister from "./DropDownRegister";
-import Button from "@/app/components/Elements/Button";
-import ModalAuth from "../login/modalAuth/ModalAuth";
-import Image from "next/image";
+import React, { useState } from 'react'
+import ProtectedRoute from '../login/protectedRoute/ProtectedRoute'
+import api from '../login/api';
+import DropDownRegister from './DropDownRegister';
+import Button from '@/app/components/Elements/Button';
+import ModalAuth from '../login/modalAuth/ModalAuth';
+import Image from 'next/image';
+
 
 type ModalRegisterProp = {
   close: () => void;
@@ -57,75 +58,56 @@ const ModalRegister = ({ close }: ModalRegisterProp) => {
 
   return (
     <div>
-      <ProtectedRoute>
-        <div
-          onClick={close}
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
-        >
-          <div onClick={(e) => e.stopPropagation()}>
-            <ModalAuth
-              msg={msg}
-              status={status}
-              isVisible={isModalVisible}
-              onClose={handleCloseModal}
+    <ProtectedRoute>
+        <div onClick={close} className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
+        <div onClick={(e) => e.stopPropagation()}>
+        <ModalAuth msg={msg} status={status} isVisible={isModalVisible} onClose={handleCloseModal} />
+        </div>
+        <div className='relative w-full max-w-xs md:max-w-md bg-white shadow px-7 py-6 z-20 border-2 rounded-md' onClick={(e) => e.stopPropagation()}>
+          <button onClick={close} className="absolute top-2 right-2">
+          <Image src="/assets/login/close.png" alt="none" className="pl-3" width={45} height={45} />
+          </button>
+        <div className='text-center text-[24px] md:text-[30px] font-semibold text-ijoToska my-5'>Register</div>
+        <form onSubmit={Auth}>
+          {/* Username */}
+          <div className="flex flex-col mb-3">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
             />
           </div>
-          <div
-            className="relative w-full max-w-xs md:max-w-md bg-white shadow px-7 py-6 z-20 border-2 rounded-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button onClick={close} className="absolute top-2 right-2">
-              <Image
-                src="/assets/login/close.png"
-                alt="none"
-                className="pl-3"
-                width={45}
-                height={45}
-              />
-            </button>
-            <div className="text-center text-[24px] md:text-[30px] font-semibold text-ijoToska my-5">
-              Register
-            </div>
-            <form onSubmit={Auth}>
-              {/* Username */}
-              <div className="flex flex-col mb-3">
-                <input
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-                />
-              </div>
-              {/* Email */}
-              <div className="flex flex-col mb-3">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-                />
-              </div>
-
-              {/* Password */}
-              <div className="flex flex-col mb-2">
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <DropDownRegister setRole={setRole} />
-              <div className="pt-4">
-                <Button classStyle="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]">
-                  Register
-                </Button>
-              </div>
-            </form>
+          {/* Email */}
+          <div className="flex flex-col mb-3">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
+            />
           </div>
+
+          {/* Password */}
+          <div className="flex flex-col mb-2">
+            <input
+              type="password"
+              placeholder="Password"
+              className="px-4 py-2 rounded-md border-2 focus:border-ijoToska focus:outline-none placeholder:text-tulisan"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <DropDownRegister setRole={setRole} />
+          <div className="pt-4">
+            <Button classStyle="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]">
+              Register
+            </Button>
+          </div>
+        </form>
+        </div>
         </div>
       </ProtectedRoute>
     </div>
