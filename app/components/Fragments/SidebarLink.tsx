@@ -116,7 +116,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
             <Image
               src={
                 isClicked
-                  ? "/assets/dashboard/sidebarNavbar/register.png"
+                  ? "/assets/dashboard/sidebarNavbar/register-aktif.png"
                   : "/assets/dashboard/sidebarNavbar/register.png"
               }
               width={30}

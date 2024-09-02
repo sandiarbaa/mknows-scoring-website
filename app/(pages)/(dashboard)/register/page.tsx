@@ -31,13 +31,14 @@ const RegisterPage = () => {
         <table className="w-full text-xs bg-white table-auto text-start">
         <thead className="bg-[#F5F8FF] text-tulisan">
           <tr>
-            <th colSpan={2} className="py-2 border-b-[1.8px]">
+            <th colSpan={2} className="py-2 border-b-[1.8px] max-w-[14px]">
               No
             </th>
-            <th className="min-w-[20px] border-b-[1.8px]">Username</th>
+            <th className="min-w-[20px] border-b-[1.8px]">NIK</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Nama</th>
             <th className="min-w-[20px] border-b-[1.8px]">Email</th>
-            <th className="min-w-[20px] border-b-[1.8px]">Role</th>
-            <th className="min-w-[20px] border-b-[1.8px]">Password</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Tanggal Input</th>
+            <th className="min-w-[20px] border-b-[1.8px]">Foto</th>
             <th className="min-w-[20px] border-b-[1.8px]">Action</th>
           </tr>
         </thead>
