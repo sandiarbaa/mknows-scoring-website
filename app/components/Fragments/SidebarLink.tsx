@@ -111,9 +111,9 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
       {role === "admin" ? (<Link href="/register" onClick={handleClick} className={`flex items-center pl-5 p-2 rounded-md 
         ${isClicked ? 'bg-ijoToska text-white' : 'bg-white text-tulisan'} 
         transition-colors duration-300`}>
-              <Image width={50} height={50} src={isClicked ? '/assets/dashboard/sidebarNavbar/register.png' : '/assets/dashboard/sidebarNavbar/register.png'}
+              <Image width={20} height={20} src={isClicked ? '/assets/dashboard/sidebarNavbar/register-active.png' : '/assets/dashboard/sidebarNavbar/register.png'}
               alt="icon"
-              className="w-6 h-6 mr-2" />
+              className="w-6 h-6 mr-2 max-w-[30px] max-h-[30px]" />
               <span>Register</span>
               </Link>) : ""}
       </div>
