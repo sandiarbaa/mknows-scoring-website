@@ -11,10 +11,10 @@ import Image from 'next/image';
 
 type ModalRegisterProp = {
   close: () => void;
-}
+};
 
 const ModalRegister = ({ close }: ModalRegisterProp) => {
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -26,33 +26,35 @@ const ModalRegister = ({ close }: ModalRegisterProp) => {
     setIsModalVisible(false); // Fungsi untuk menutup modal
   };
 
+  const Auth = async (e: any) => {
+    const accessToken = localStorage.getItem("accessToken");
 
-    const Auth = async (e: any) => {
-        const accessToken = localStorage.getItem("accessToken");
-    
-            e.preventDefault();
-            try {
-                const response = await api.post('/users',{
-                    username: username,
-                    email: email,
-                    password: password,
-                    role: role,
-                }, {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                  },
-                })
-                console.log(response);
-                setMsg(response.data.message);
-                setIsModalVisible(true);
-                setStatus("success");
-            } catch (error: any) {
-                setMsg(error.response.data.message);
-                setIsModalVisible(true);
-                setStatus("error");
-            }
+    e.preventDefault();
+    try {
+      const response = await api.post(
+        "/users",
+        {
+          username: username,
+          email: email,
+          password: password,
+          role: role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-        
+      );
+      console.log(response);
+      setMsg(response.data.message);
+      setIsModalVisible(true);
+      setStatus("success");
+    } catch (error: any) {
+      setMsg(error.response.data.message);
+      setIsModalVisible(true);
+      setStatus("error");
+    }
+  };
 
   return (
     <div>
@@ -107,9 +109,9 @@ const ModalRegister = ({ close }: ModalRegisterProp) => {
         </form>
         </div>
         </div>
-    </ProtectedRoute>
+      </ProtectedRoute>
     </div>
-  )
-}
+  );
+};
 
-export default ModalRegister
+export default ModalRegister;

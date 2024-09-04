@@ -27,7 +27,11 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
+<<<<<<< HEAD
+      console.log("console: ", response);
+=======
       // console.log('console: ',response);
+>>>>>>> 26236be6b1a36ac31891b6d809d41264c0d4de5d
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
@@ -50,14 +54,19 @@ const LoginPage: React.FC = () => {
     } catch (error: any) {
       setMsg(error.response.data.message);
       setIsModalVisible(true);
-      setStatus("error")
+      setStatus("error");
     }
   };
 
   return (
     <div>
       <LoginLayout title="MASUK">
-        <ModalAuth isVisible={isModalVisible} msg={msg} status={status} onClose={handleCloseModal} />
+        <ModalAuth
+          isVisible={isModalVisible}
+          msg={msg}
+          status={status}
+          onClose={handleCloseModal}
+        />
         <form onSubmit={auth}>
           {/* Email */}
           <div className="flex flex-col mb-3">
