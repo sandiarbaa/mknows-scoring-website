@@ -40,12 +40,12 @@ const InputRegister = ({ title }: InputRegisterProps) => {
             *Pastikan Pas foto dapat terlihat dengan jelas dan pencahayaan yang
             baik
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-x-1">
             <Image
               src="/assets/dashboard/register/info.png"
               alt="none"
-              width={20}
-              height={20}
+              width={16}
+              height={16}
             />
             <span className="text-tulisan text-xs">Max 3 MB</span>
           </div>

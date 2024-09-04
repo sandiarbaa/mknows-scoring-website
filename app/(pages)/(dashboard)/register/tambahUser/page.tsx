@@ -1,16 +1,28 @@
 "use client";
 
 import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedRoute";
+import FieldRegister from "@/app/components/Fragments/register/FieldRegister";
 import InputRegister from "@/app/components/Fragments/register/InputRegister";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import { useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
 const TambahUser = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showKonfirmasiPassword, setShowKonfirmasiPassword] =
+    useState<boolean>(false);
   const pathname = usePathname();
 
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleKonfirmasiPassword = () => {
+    setShowKonfirmasiPassword(!showKonfirmasiPassword);
+  };
   return (
     <>
       <ProtectedRoute>
@@ -47,84 +59,72 @@ const TambahUser = () => {
 
             {/* Tambah User */}
             <div className="flex flex-col gap-y-5">
-              <div className="flex flex-col gap-y-0.5">
-                <p className="text-sm text-grey-300">Nama Lengkap</p>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  className="border text-sm w-full py-2.5 rounded-md px-3"
-                  placeholder="Masukkan Nama Lengkap"
-                />
-                <p className="text-xs text-ijoToska">
-                  Nama Lengkap Harus Sesuai KTP
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-5 pt-4">
-              <div className="flex flex-col gap-y-0.5">
-                <p className="text-sm text-grey-300">
-                  Nomor Induk Kependudukan
-                </p>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  className="border text-sm w-full py-2.5 rounded-md px-3"
-                  placeholder="Masukkan Nomor Induk Kependudukan"
-                />
-                <p className="text-xs text-ijoToska">
-                  Nomor Induk Kependudukan(NIK) Harus Sesuai KTP
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-5 pt-4">
-              <div className="flex flex-col gap-y-0.5">
-                <p className="text-sm text-grey-300">Email</p>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="border text-sm w-full py-2.5 rounded-md px-3"
-                  placeholder="Masukkan Email"
-                />
-                <p className="text-xs text-ijoToska">
-                  contoh:usercreditscoring@gmail.com
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-5 pt-4">
-              <div className="flex flex-col gap-y-0.5">
-                <p className="text-sm text-grey-300">Password</p>
-                <input
-                  type="password"
+              <FieldRegister
+                title="Nama Lengkap Harus Sesuai KTP"
+                name="name"
+                placeholder="Masukkan Nama Lengkap"
+                type="text"
+                lowerText="Nama Sesuai KTP"
+              />
+              <FieldRegister
+                title="Nomor Induk Kependudukan"
+                name="NIK"
+                placeholder="Ketik Nomor Induk Kependudukan"
+                type="text"
+                lowerText="Nomor Induk Kependudukan(NIK) Harus Sesuai KTP"
+              />
+              <FieldRegister
+                title="Email"
+                name="email"
+                placeholder="Ketik Email"
+                type="email"
+                lowerText="contoh:usercreditscoring@gmail.com"
+              />
+              <div>
+                <FieldRegister
+                  title="Password"
                   name="password"
-                  id="password"
-                  className="border text-sm w-full py-2.5 rounded-md px-3"
-                  placeholder="Masukkan Nama Lengkap"
+                  placeholder="Ketik Password"
+                  type={showPassword ? "text" : "password"}
+                  lowerText="Password harus berisi satu huruf kapital, dan berisikan angka"
                 />
-                <p className="text-xs text-ijoToska">
-                  Password harus berisi satu huruf kapital, dan berisikan angka
-                </p>
+                <button
+                  className="flex flex-row gap-x-4"
+                  onClick={togglePassword}
+                >
+                  <Image
+                    src={"/assets/dashboard/register/eye.png"}
+                    width={20}
+                    height={20}
+                    alt="eye"
+                  />
+                  <p className="text-xs pt-0.5">Tampilkan Password</p>
+                </button>
               </div>
-            </div>
-            <div className="flex flex-col gap-y-5 pt-4">
-              <div className="flex flex-col gap-y-0.5">
-                <p className="text-sm text-grey-300">Konfirmasi Password</p>
-                <input
-                  type="password"
+              <div>
+                <FieldRegister
+                  title="konfirmasi Password"
                   name="password"
-                  id="password"
-                  className="border text-sm w-full py-2.5 rounded-md px-3"
-                  placeholder="Masukkan Konfirmasi Password"
+                  placeholder="Ketik Konfirmasi Password"
+                  type={showKonfirmasiPassword ? "text" : "password"}
+                  lowerText="Password harus berisi satu huruf kapital, dan berisikan angka"
                 />
-                <p className="text-xs text-ijoToska">
-                  Password harus berisi satu huruf kapital, dan berisikan angka
-                </p>
+                <button
+                  className="flex flex-row gap-x-4"
+                  onClick={toggleKonfirmasiPassword}
+                >
+                  <Image
+                    src={"/assets/dashboard/register/eye.png"}
+                    alt="eye"
+                    width={20}
+                    height={20}
+                  />
+                  <p className="text-xs pt-0.5">Tampilkan Password</p>
+                </button>
               </div>
             </div>
 
-            <div className="pt-4">
+            <div className="py-6">
               <InputRegister title={"PasFoto"} />
               <InputRegister title={"PasSelfie"} />
             </div>
