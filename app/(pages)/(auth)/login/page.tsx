@@ -27,11 +27,8 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
-<<<<<<< HEAD
       console.log("console: ", response);
-=======
       // console.log('console: ',response);
->>>>>>> 26236be6b1a36ac31891b6d809d41264c0d4de5d
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
@@ -44,7 +41,10 @@ const LoginPage: React.FC = () => {
         setTimeout(async () => {
           const newAccessToken = await refreshAccessToken();
           if (newAccessToken) {
-            console.log("Access token diperbarui setelah 30 detik:", newAccessToken);
+            console.log(
+              "Access token diperbarui setelah 30 detik:",
+              newAccessToken
+            );
           } else {
             console.log("Gagal memperbarui access token");
           }

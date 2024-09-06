@@ -19,6 +19,12 @@ interface ContentDashboardPermintaanProps {
   setUsersProsesData: any;
 }
 
+interface UserDataProps {
+  nik: string;
+  nama: string;
+  created_at: string;
+}
+
 const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   proses,
   hasil,
@@ -33,7 +39,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   const [size] = useState<number>(10); // menampilkan mau berapa data dalam 1 page
   const [loadingSkoring, setLoadingSkoring] = useState<boolean>(false); // untuk menampilkan teks loading saat cek skoring
   const [personsProses, setPersonsProses] = useState<PersonsProsesProps[]>([]); // menyimpan data person yg di pilih, lalu meng-overwrite isi array usersProsesData
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<UserDataProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [totalPage, setTotalPage] = useState();
@@ -75,12 +81,12 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     setUsersProsesData(personsProses);
   }, [personsProses, setUsersProsesData]);
 
+  // fetching data person
   const fetchPersons = async () => {
     try {
       setIsLoading(true);
       setIsError(false);
       const response = await api.get(`/persons?size=${size}&current=${page}`);
-      // console.log("Fetched data:", response.data);
       setData(response.data.data.persons);
       setTotalPage(response.data.page.totalPages);
       setTotal(response.data.page.total);
@@ -96,6 +102,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     fetchPersons();
   }, [page, size]);
 
+  // kalau halaman ini belum siap di render, maka tampilkan div loading
   isLoading ? <div className="mt-5">Loading...</div> : <></>;
 
   // button prev - pagination
@@ -113,7 +120,6 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   // data-data untuk pagination component
   const userData = data ? data : []; // menyimpan data persons yg ingin ditampilkan di tabel
   const lastVisiblePage = totalPage ?? 1;
-
   const noAwal = (page - 1) * size + 1;
   const noAkhir =
     userData.length > 0
@@ -127,7 +133,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     (_, index) => index + 1
   );
 
-  // mengelola data nik person yang dipilih - TablePermintaan Component
+  // mengelola data nik person yang dipilih - TablePermintaan Component - Pilih Nama Untuk Cek Skor
   const checkboxPerson = (nikPerson: string) => {
     // memperbarui state nik dengan memanfaatkan state sebelumnya (prevNik).
     setNik((prevNik) => {
@@ -295,6 +301,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
               ? "bg-gray-400"
               : "bg-ijoToska"
           } ${
+            // kalau card identity dan user belum terpilih, button nonaktif
             !isCard13Selected || !isAnyUserSelected
               ? "cursor-not-allowed"
               : "hover:bg-ijoToska"
