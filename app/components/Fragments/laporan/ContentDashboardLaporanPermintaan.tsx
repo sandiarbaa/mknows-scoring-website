@@ -7,10 +7,10 @@ import Pagination from "../Pagination";
 import api from "@/app/(pages)/(auth)/login/api";
 
 const ContentDashboardLaporanPermintaan: React.FC = () => {
-  const [page, setPage] = useState<number>(1);
-  const [size] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [size] = useState<number>(10);
   const [datas, setDatas] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState();
   const [total, setTotal] = useState();

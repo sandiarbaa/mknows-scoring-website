@@ -25,6 +25,24 @@ interface UserDataProps {
   created_at: string;
 }
 
+// Function for handling notifications
+const useNotification = (initialState = true, duration = 4000) => {
+  const [notifikasi, setNotifikasi] = useState<boolean>(initialState);
+
+  // setNotifikasi(true);
+  useEffect(() => {
+    if (notifikasi) {
+      const timeout = setTimeout(() => {
+        setNotifikasi(false);
+        // setNotifikasi(true);
+      }, duration);
+      return () => clearTimeout(timeout);
+    }
+  }, [notifikasi, duration]);
+
+  return { notifikasi, setNotifikasi };
+};
+
 const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   proses,
   hasil,
@@ -33,7 +51,6 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   const [showAll, setShowAll] = useState<boolean>(false); // status kartu yg ingin di tampilkan mau semua / 4 kartu terakhir
   const [activeCardIndices, setActiveCardIndices] = useState<number[]>([]); // Array untuk menyimpan index kartu yang aktif/dipilih.
   const [message, setMessage] = useState<string | null>(null); // message notif success add data person
-  const [hideErrorNotif, setHideErrorNotif] = useState<boolean>(true); // untuk menutup notif succes add person
   const [nik, setNik] = useState<string[]>([]); // untuk menyimpan nik yg di pilih dari checkbox
   const [page, setPage] = useState<number>(1); // page untuk pagination
   const [size] = useState<number>(10); // menampilkan mau berapa data dalam 1 page
@@ -41,9 +58,12 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
   const [personsProses, setPersonsProses] = useState<PersonsProsesProps[]>([]); // menyimpan data person yg di pilih, lalu meng-overwrite isi array usersProsesData
   const [data, setData] = useState<UserDataProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
   const [totalPage, setTotalPage] = useState();
   const [total, setTotal] = useState();
+
+  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const { notifikasi, setNotifikasi } = useNotification();
 
   // cardsToShow ber isi array fiturCards/fiturCards.slice(-4) tergantung dari state showAll
   const cardsToShow = showAll ? fiturCards : fiturCards.slice(-4);
@@ -71,11 +91,6 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
     }
   }, []);
 
-  // menutup notifikasi success add person
-  const handleHideErrorNotif = (): void => {
-    setHideErrorNotif(false);
-  };
-
   // meng-overwrite isi array usersProsesData dengan array personsProses agar datanya dapat ditampilkan di tab proses, saat proses cek skoring berlangsung
   useEffect(() => {
     setUsersProsesData(personsProses);
@@ -90,6 +105,7 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
       setData(response.data.data.persons);
       setTotalPage(response.data.page.totalPages);
       setTotal(response.data.page.total);
+      setNotifikasi(true);
     } catch (error) {
       console.error("Error fetching persons:", error);
       setIsError(true);
@@ -274,21 +290,11 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
       <section className="flex flex-col lg:flex-row justify-center items-center w-full lg:justify-between">
         <div className="order-2 lg:order-1">
           {message && (
-            <div
-              className={`h-12 w-52 mt-5 bg-green-500 rounded-md p-0.5 ${
-                hideErrorNotif ? "" : "hidden"
-              }`}
-            >
-              <div className="bg-white w-[95%] float-right h-full rounded flex items-center justify-between pl-5 pr-2">
-                <p className="text-green-500 font-semibold text-sm mr-3">
-                  {message}
-                </p>
-                <XMarkIcon
-                  className={`w-6 cursor-pointer`}
-                  onClick={handleHideErrorNotif}
-                />
-              </div>
-            </div>
+            <Notification
+              notifikasi={notifikasi}
+              error={error}
+              message={message}
+            />
           )}
         </div>
 
@@ -315,3 +321,25 @@ const ContentDashboardPermintaan: React.FC<ContentDashboardPermintaanProps> = ({
 };
 
 export default ContentDashboardPermintaan;
+
+const Notification: React.FC<{
+  notifikasi: boolean;
+  error: string;
+  message: string;
+}> = ({ notifikasi, error, message }) => (
+  <div
+    className={`h-full fixed top-1/2 z-[9999999] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:w-full bg-black/30 p-0.5 flex justify-center items-center ${
+      notifikasi ? "" : "hidden"
+    }`}
+  >
+    <div className="bg-white w-64 h-40 flex flex-col justify-center items-center rounded-md">
+      <Image
+        src="/assets/dashboard/permintaan/ceklis-notifikasi.png"
+        alt="ceklis-notifikasi"
+        width={40}
+        height={40}
+      />
+      <p className="text-black text-sm font-medium mt-5">{message}</p>
+    </div>
+  </div>
+);
