@@ -3,18 +3,11 @@ import Image from "next/image";
 
 type InputRegisterProps = {
   title: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  fileName?: File;
 };
 
-const InputRegister = ({ title }: InputRegisterProps) => {
-  const [fileName, setFileName] = useState<string>("");
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setFileName(file.name);
-    }
-  };
-
+const InputRegister = ({ title, onChange, fileName }: InputRegisterProps) => {
   return (
     <div className="w-full">
       <div>
@@ -33,13 +26,13 @@ const InputRegister = ({ title }: InputRegisterProps) => {
                 id="file-upload"
                 type="file"
                 className="hidden"
-                onChange={handleFileChange}
+                onChange={onChange}
               />
             </label>
 
             {/* Teks Tidak Ada File yang Dipilih */}
             <span className="flex-grow bg-gray-100 border border-gray-300 text-tulisan py-1.5 px-4 text-xs md:text-sm inline-block">
-              {fileName || "Tidak ada file yang dipilih"}
+              {fileName ? fileName.name : "Tidak ada file yang dipilih"}
             </span>
 
             {/* Kotak Hijau Muda dengan Format Gambar */}

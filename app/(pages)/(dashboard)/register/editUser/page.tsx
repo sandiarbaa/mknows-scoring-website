@@ -2,6 +2,7 @@
 
 import api from "@/app/(pages)/(auth)/login/api";
 import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedRoute";
+import DropDownRegister from "@/app/(pages)/(auth)/register/DropDownRegister";
 import FieldRegister from "@/app/components/Fragments/register/FieldRegister";
 import InputRegister from "@/app/components/Fragments/register/InputRegister";
 // import ModalSuksess from "@/app/components/Fragments/register/ModalSuksess";
@@ -25,6 +26,9 @@ const EditUser = () => {
   const [KonfirmasipPassword, setKonfirmasiPassword] = useState<string>("");
   const [nik, setNik] = useState<string>("user");
   const [role, setRole] = useState<string>("user");
+  const [jenisKelamin, setJenisKelamin] = useState<string>("male");
+  const [ktpPhoto, setKtpPhoto] = useState<File>();
+  const [selfiePhoto, setSefliePhoto] = useState<File>();
   const pathname = usePathname();
 
   const togglePassword = () => {
@@ -35,34 +39,30 @@ const EditUser = () => {
     setShowKonfirmasiPassword(!showKonfirmasiPassword);
   };
   const Auth = async (e: any) => {
+    e.preventDefault();
     const accessToken = localStorage.getItem("accessToken");
 
-    e.preventDefault();
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("nik", nik);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", KonfirmasipPassword);
+    formData.append("role", role);
+    formData.append("jenis_kelamin", jenisKelamin);
+    if (ktpPhoto) formData.append("ktp_photo", ktpPhoto); // Tambah file KTP
+    if (selfiePhoto) formData.append("selfie_photo", selfiePhoto); // Tambah file Selfie
+
     try {
-      const response = await api.post(
-        "/users",
-        {
-          username: username,
-          nik: nik,
-          email: email,
-          password: password,
-          KonfirmasipPassword: KonfirmasipPassword,
-          role: role,
+      const response = await api.patch("/users", formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      });
       console.log(response);
-      setMsg(response.data.message);
-      setIsModalVisible(true);
-      setStatus("success");
     } catch (error: any) {
-      setMsg(error.response.data.message);
-      setIsModalVisible(true);
-      setStatus("error");
+      console.log(error);
     }
   };
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,6 +74,9 @@ const EditUser = () => {
   const handleNikChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNik(e.target.value);
   };
+  const handleJenisKelaminChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setJenisKelamin(e.target.value);
+  };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
@@ -81,6 +84,19 @@ const EditUser = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setKonfirmasiPassword(e.target.value);
+  };
+
+  const handleSelfiePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; // Ambil file pertama dari input
+    if (file) {
+      setSefliePhoto(file); // Simpan file di state
+    }
+  };
+  const handleKtpPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; // Ambil file pertama dari input
+    if (file) {
+      setKtpPhoto(file); // Simpan file di state
+    }
   };
 
   // const handleCloseModal = () => {
@@ -121,12 +137,13 @@ const EditUser = () => {
               <div className="text-sm font-semibold flex justify-between py-4">
                 <div>Tambah User Baru</div>
                 <div>
-                  <Link
-                    href="#"
+                  <button
+                    type="submit"
+                    onClick={Auth}
                     className="bg-ijoToska active:bg-tulisan text-sm rounded font-semibold text-white py-2 text-center px-10"
                   >
                     Simpan
-                  </Link>
+                  </button>
                 </div>
               </div>
 
@@ -146,6 +163,14 @@ const EditUser = () => {
                   type="text"
                   lowerText="Nomor Induk Kependudukan(NIK) Harus Sesuai KTP"
                   onChange={handleNikChange}
+                />
+                <FieldRegister
+                  title="Jenis Kelamin"
+                  name="Jenis Kelamin"
+                  placeholder="Ketik Jenis Kelamin Anda"
+                  type="text"
+                  lowerText="Jenis Kelamin Harus Sesuai KTP"
+                  onChange={handleJenisKelaminChange}
                 />
                 <FieldRegister
                   title="Email"
@@ -203,12 +228,24 @@ const EditUser = () => {
                     </p>
                   </button>
                 </div>
+
+                <div>
+                  <DropDownRegister setRole={setRole} />
+                </div>
               </div>
             </form>
 
             <div className="flex flex-col gap-y-4 mt-4 w-full">
-              <InputRegister title="PasFoto" />
-              <InputRegister title="PasSelfie" />
+              <InputRegister
+                title="PasFoto"
+                onChange={handleKtpPhoto}
+                fileName={ktpPhoto}
+              />
+              <InputRegister
+                title="PasSelfie"
+                onChange={handleSelfiePhoto}
+                fileName={selfiePhoto}
+              />
             </div>
           </div>
         </DashboardLayout>

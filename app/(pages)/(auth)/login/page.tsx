@@ -7,7 +7,7 @@ import LoginLayout from "@/app/components/Layouts/LoginLayout";
 import axios from "axios";
 import ModalAuth from "./modalAuth/ModalAuth";
 import { refreshAccessToken } from "./api";
-``
+``;
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -27,7 +27,10 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://13.210.185.89/authentication", {
+      // const response = await axios.post("http://13.210.185.89/authentication", {
+      //   email,
+      //   password,
+      const response = await axios.post("http://localhost:80/authentication", {
         email,
         password,
       });

@@ -11,7 +11,12 @@ const Logout = async () => {
     }
 
     // Lakukan request DELETE ke backend untuk menghapus token
-    await axios.delete("http://13.210.185.89/authentication", {
+    // await axios.delete("http://13.210.185.89/authentication", {
+    //   data: {
+    //     refreshToken,
+    //   },
+    // });
+    await axios.delete("http://localhost:80/authentication", {
       data: {
         refreshToken,
       },
