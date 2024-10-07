@@ -64,8 +64,6 @@
 
 // export default api;
 
-
-
 import axios from "axios";
 // import nextConfig from "@/app/next.config";
 import nextConfig from "@/next.config.mjs";
@@ -105,7 +103,6 @@ export const refreshAccessToken = async () => {
     return null;
   }
 };
-
 
 // Tambahkan interceptor ke instance Axios
 api.interceptors.response.use(

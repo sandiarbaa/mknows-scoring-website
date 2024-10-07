@@ -51,11 +51,11 @@ const dataSidebarLink: SidebarItem[] = [
 
 interface SidebarLinkProps {
   hover: string;
-  role: string;
 }
 
-const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
+const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
   const [isClicked, setIsClicked] = useState(false);
+  const isRole = localStorage.getItem("role");
 
   const handleClick = () => {
     setIsClicked(!isClicked);
@@ -72,6 +72,11 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
             imageSize = 25;
           } else {
             imageSize = 20;
+          }
+
+          if (index === 6 && hover === "admin") {
+            return null;
+          } else {
           }
 
           const isActive =
@@ -105,7 +110,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
       </div>
 
       <div>
-        {role === "admin" ? (
+        {isRole === "admin" || "superadmin" ? (
           <Link
             href="/register"
             onClick={handleClick}

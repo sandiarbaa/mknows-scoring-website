@@ -32,7 +32,7 @@ const TambahUser = () => {
             <div className="flex items-center w-full py-3 max-w-xs space-x-1">
               <Link
                 href="/register"
-                className="text-sm font-semibold text-ijoToska"
+                className="text-sm font-semibold text-tulisan"
               >
                 Data User
               </Link>
@@ -124,7 +124,7 @@ const TambahUser = () => {
               </div>
             </div>
 
-            <div className="py-6">
+            <div className="flex flex-col gap-y-4 mt-4 w-full">
               <InputRegister title={"PasFoto"} />
               <InputRegister title={"PasSelfie"} />
             </div>

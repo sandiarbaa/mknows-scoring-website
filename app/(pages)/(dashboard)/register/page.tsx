@@ -1,25 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
 import ProtectedRoute from "../../(auth)/login/protectedRoute/ProtectedRoute";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import { usePathname } from "next/navigation";
-import ModalRegister from "../../(auth)/register/ModalRegister";
 import Link from "next/link";
 import Image from "next/image";
 import { BiChevronRight } from "react-icons/bi";
 import DatePicker from "@/app/components/Elements/DatePicker";
+import { useRouter } from "next/navigation";
+import TableRegister from "@/app/components/Fragments/register/TableRegister";
+// import axios from "axios";
+import { useEffect } from "react";
+import { headers } from "next/headers";
+import api from "../../(auth)/login/api";
 
 const RegisterPage = () => {
   const pathname = usePathname();
-  const [akun, setAkun] = useState(false);
+  const router = useRouter();
 
-  const handleAkun = () => {
-    setAkun(true);
+  const fecthUsers = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const res = await api.get("http://localhost/users/list", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("users :", res);
+      return res.data;
+    } catch (error) {
+      console.log("error :", error);
+    }
   };
-  const handleClose = () => {
-    setAkun(false);
-  };
+
+  useEffect(() => {
+    fecthUsers();
+  }, []);
 
   return (
     <div>
@@ -39,11 +55,13 @@ const RegisterPage = () => {
               </Link>
               <BiChevronRight className="text-2xl text-tulisan" />
             </div>
-            <div className="py-5 flex justify-between">
+
+            {/* Header Register */}
+            <div className="py-5 flex flex-col lg:flex-row justify-between gap-y-3">
               <div>
                 <DatePicker />
               </div>
-              <div className="flex space-x-4">
+              <div className="flex flex-col lg:flex-row">
                 {/* <SearchBox /> */}
                 <div className="relative inline-block mr-2">
                   <input
@@ -63,41 +81,27 @@ const RegisterPage = () => {
                     className="absolute text-lg left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                   />
                 </div>
-                <Link
-                  href={"/register/tambahUser"}
-                  className="border-2 mt-2 lg:mt-0 text-center border-ijoToska py-2 px-3 rounded-md text-sm font-semibold text-ijoToska active:shadow active:shadow-ijoToska"
-                >
-                  <Image
-                    src={"/assets/dashboard/permintaan/tambah.png"}
-                    alt="tambah"
-                    width={15}
-                    height={0}
-                    className="inline-block mr-2"
-                  />
-                  Tambah Data
-                </Link>
+                <div className="flex items-center">
+                  <Link
+                    href={"/register/tambahUser"}
+                    className="border-2 mt-2 lg:mt-0 text-center border-ijoToska py-2 px-3 rounded-md text-sm font-semibold text-ijoToska active:shadow active:shadow-ijoToska"
+                  >
+                    <Image
+                      src={"/assets/dashboard/permintaan/tambah.png"}
+                      alt="tambah"
+                      width={15}
+                      height={0}
+                      className="inline-block mr-2"
+                    />
+                    Tambah Data
+                  </Link>
+                </div>
               </div>
             </div>
-            <div>
-              <table className="w-full text-xs bg-white table-auto text-start">
-                <thead className="bg-[#F5F8FF] text-tulisan">
-                  <tr>
-                    <th colSpan={2} className="py-2 border-b-[1.8px]">
-                      No
-                    </th>
-                    <th className="min-w-[20px] border-b-[1.8px]">NIK</th>
-                    <th className="min-w-[20px] border-b-[1.8px]">Nama</th>
-                    <th className="min-w-[20px] border-b-[1.8px]">Email</th>
-                    <th className="min-w-[20px] border-b-[1.8px]">
-                      Tanggal Input
-                    </th>
-                    <th className="min-w-[20px] border-b-[1.8px]">Foto</th>
-                    <th className="min-w-[20px] border-b-[1.8px]">Action</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-            {/* {akun ? <ModalRegister close={handleClose} /> : ""} */}
+            {/* /Header Register */}
+
+            <TableRegister />
+            {/* <Pagination noAwal={}/> */}
           </div>
         </DashboardLayout>
       </ProtectedRoute>

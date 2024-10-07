@@ -6,6 +6,7 @@ type FieldRegisterProps = {
   name: string;
   placeholder: string;
   lowerText: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const FieldRegister = ({
@@ -14,6 +15,7 @@ const FieldRegister = ({
   type,
   placeholder,
   lowerText,
+  onChange,
 }: FieldRegisterProps) => {
   return (
     <div>
@@ -23,9 +25,9 @@ const FieldRegister = ({
           <input
             type={type}
             name={name}
-            id="name"
             className="border text-sm w-full py-2.5 rounded-md px-3"
             placeholder={placeholder}
+            onChange={onChange}
           />
           <p className="text-xs text-ijoToska">{lowerText}</p>
         </div>
