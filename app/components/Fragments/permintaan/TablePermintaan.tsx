@@ -2,7 +2,6 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 interface userDataProps {
-  no: number;
   nik: string;
   nama: string;
   created_at: string;
@@ -33,10 +32,14 @@ const TablePermintaan: React.FC<tablePermintaanProps> = ({
 
   // Jika selectAll dicentang (true), semua user data akan ditambahkan ke dalam personsProses dan usersProsesData.
   const handleSelectAll = () => {
-    const newSelectAll = !selectAll; // state selectAll di isi dengan kebalikan nya
-    setSelectAll(newSelectAll);
+    const newSelectAll = !selectAll; // Membalik nilai selectAll, jika sebelumnya false, maka sekarang menjadi true, dan sebaliknya.
+    setSelectAll(newSelectAll); // Mengupdate state selectAll dengan nilai baru.
+
     const updatedCheckboxes = new Array(userData.length).fill(newSelectAll);
-    setCheckboxListPermintaan(updatedCheckboxes); // mengisi state array checkboxListPermintaan dengan array updatedCheckboxes yg semua elemen nya bernilai sesuai newSelectAll
+    // Membuat array baru yang panjangnya sesuai jumlah userData, diisi dengan nilai `newSelectAll`.
+    // Misalnya, jika newSelectAll adalah true, semua elemen array akan diisi dengan true (berarti semua checkbox dianggap tercentang).
+
+    setCheckboxListPermintaan(updatedCheckboxes); // Mengupdate state `checkboxListPermintaan` yang menyimpan status setiap checkbox, apakah dicentang atau tidak, dengan array baru tadi.
 
     if (newSelectAll) {
       // Jika semua checkbox dicentang, tambahkan semua user data ke personsProses dan usersProsesData
@@ -48,12 +51,12 @@ const TablePermintaan: React.FC<tablePermintaanProps> = ({
 
       setPersonsProses(allSelectedUsers);
       setUsersProsesData(allSelectedUsers);
-      userData.forEach((data) => checkboxPerson(data.nik)); // Pastikan memanggil checkboxPerson untuk setiap NIK
+      userData.forEach((data) => checkboxPerson(data.nik)); // mengirim nik ke checkboxPerson
     } else {
       // Jika checkbox dicentang ulang untuk membatalkan select all, kosongkan personsProses dan usersProsesData
       setPersonsProses([]);
       setUsersProsesData([]);
-      userData.forEach((data) => checkboxPerson(data.nik)); // Pastikan memanggil checkboxPerson untuk setiap NIK
+      userData.forEach((data) => checkboxPerson(data.nik)); // kirim lagi nik ke checkboxPerson setelah di uncentang, jika nik sudah ada, maka akan dihapus di checkboxPerson
     }
   };
 
@@ -63,11 +66,12 @@ const TablePermintaan: React.FC<tablePermintaanProps> = ({
     nama: string,
     tanggalInput: string
   ) => {
+    // ambil data dari state checkboxListPermintaan
     const updatedCheckboxes = [...checkboxListPermintaan];
-    updatedCheckboxes[index] = !updatedCheckboxes[index];
-    setCheckboxListPermintaan(updatedCheckboxes);
+    updatedCheckboxes[index] = !updatedCheckboxes[index]; // lalu balikan nilainya jika index nya ada yg sama
+    setCheckboxListPermintaan(updatedCheckboxes); // lalu perbarui nilai state checkboxListPermintaan dengan memasukan perubahan index yg sudah terjadi itu
 
-    const selected = updatedCheckboxes[index];
+    const selected = updatedCheckboxes[index]; // kalau ada index person yg sesuai di checkbox nya maka lalukan ini dibawah
     if (selected) {
       setPersonsProses((prev: any) => [
         ...prev,

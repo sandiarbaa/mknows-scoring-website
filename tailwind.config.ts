@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import daisyui from "daisyui";
 
 const config: Config = {
   content: [
@@ -23,6 +24,19 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [daisyui],
+  daisyui: {
+    themes: false, // Disable all themes and use default DaisyUI light and dark themes
+    darkTheme: "light", // Set dark mode theme
+    base: true, // Apply base styles
+    styled: true, // Include DaisyUI component styles
+    utils: true, // Include DaisyUI utility classes
+    prefix: "", // No prefix
+    logs: false, // Disable logs
+    themeRoot: ":root", // Use :root for theme colors
+  },
+  // daisyui: {
+  //   themes: ["light"],
+  // },
 };
 export default config;

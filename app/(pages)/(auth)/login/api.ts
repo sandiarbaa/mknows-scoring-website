@@ -65,14 +65,10 @@
 // export default api;
 
 import axios from "axios";
-// import nextConfig from "@/app/next.config";
-import nextConfig from "@/next.config.mjs";
 
 // Buat instance Axios
 const api = axios.create({
   baseURL: "http://13.210.185.89",
-  // baseURL: process.env.NEXT_PUBLIC_API_URL
-  // baseURL: nextConfig.env?.CUSTOM_VAR,
 });
 
 // Fungsi untuk merefresh access token
@@ -89,8 +85,6 @@ export const refreshAccessToken = async () => {
     const refresh = await api.put("/authentication", {
       refreshToken,
     });
-
-    // console.log('ini refresh :', refresh);
 
     const { accessToken } = refresh.data.data;
 

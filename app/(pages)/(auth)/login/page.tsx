@@ -7,7 +7,7 @@ import LoginLayout from "@/app/components/Layouts/LoginLayout";
 import axios from "axios";
 import ModalAuth from "./modalAuth/ModalAuth";
 import { refreshAccessToken } from "./api";
-
+``
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

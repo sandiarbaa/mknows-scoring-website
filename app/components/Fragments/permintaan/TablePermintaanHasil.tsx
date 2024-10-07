@@ -5,7 +5,7 @@ import React, { useState } from "react";
 interface userDataProps {
   id: string;
   jenis_permintaan: string;
-  jumlah_customer: string;
+  jumlah_customer: number;
   created_at: string;
   finished_at: string;
 }
@@ -21,26 +21,30 @@ interface expandedRowsDataProps {
 }
 
 const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
-  const [expandedRows, setExpandedRows] = useState<number[]>([]);
-  const [checkboxListExpanded, setCheckboxListExpanded] = useState<{
-    [key: number]: boolean[];
-  }>({});
-  const [selectAllExpanded, setSelectAllExpanded] = useState<{
-    [key: number]: boolean;
-  }>({});
+  const [expandedRows, setExpandedRows] = useState<number[]>([]); // untuk menangkap index row dari table utama, untuk fitur expand table
+  // const [checkboxListExpanded, setCheckboxListExpanded] = useState<{
+  //   [key: number]: boolean[];
+  // }>({});
+  // const [selectAllExpanded, setSelectAllExpanded] = useState<{
+  //   [key: number]: boolean;
+  // }>({});
   const [permintaanHasilDatas, setPermintaanHasilDatas] = useState<{
     [key: number]: expandedRowsDataProps[];
-  }>({});
+  }>({}); // untuk menyimpan data yg di fetch berdasarkan row yg di expand
   const [loading, setLoading] = useState<{
-    [key: number]: boolean;
+    [key: number]: boolean; // untuk proses loading saat fetching data ketika expand table
   }>({}); // Menambahkan state loading
 
   // ketika baris dari tabel utama di klik
   const toggleRow = async (index: number, reqId: string) => {
     const accessToken = localStorage.getItem("accessToken");
 
+    // kalau index yg didapatkan belum ada di state expandedRows, maka tambahkan
+    // kalau sudah ada, hapus dengan filter nih
     if (expandedRows.includes(index)) {
-      setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index));
+      setExpandedRows(
+        expandedRows.filter((rowIndex: number) => rowIndex !== index)
+      );
     } else {
       setExpandedRows([...expandedRows, index]);
 
@@ -58,18 +62,21 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
           },
         });
         // console.log(data);
+        // untuk mengisi data di dalam tabel yg ter-expand
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,
           [index]: data.data.reports,
         });
-        setCheckboxListExpanded({
-          ...checkboxListExpanded,
-          [index]: new Array(data.data.reports.length).fill(false),
-        });
-        setSelectAllExpanded({
-          ...selectAllExpanded,
-          [index]: false,
-        });
+        // merender data checkbox nya dijadikan false dulu
+        // setCheckboxListExpanded({
+        //   ...checkboxListExpanded,
+        //   [index]: new Array(data.data.reports.length).fill(false),
+        // });
+        // untuk keperluan checkbox all | tapi di permintaanHasil tidak dipakai
+        // setSelectAllExpanded({
+        //   ...selectAllExpanded,
+        //   [index]: false,
+        // });
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -160,7 +167,8 @@ const TablePermintaanHasil = ({ userData }: { userData: userDataProps[] }) => {
                           Loading...
                         </td>
                       </tr>
-                    ) : permintaanHasilDatas[index] &&
+                    ) : // kalau berhasil fetching data dari api nya, dan datanya > 0, maka render dengan mapping
+                    permintaanHasilDatas[index] &&
                       permintaanHasilDatas[index].length > 0 ? (
                       permintaanHasilDatas[index].map(
                         (

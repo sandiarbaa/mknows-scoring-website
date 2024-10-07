@@ -23,6 +23,8 @@ const ContentDashboardLaporanUser = () => {
     if (search !== "") {
       const results = datas.filter(
         (data: { person: { nik: string; nama: string } }) =>
+          // nik dan nama yg di cari di convert dulu ke huruf kecil lalu baru di filtering
+          // dan di filter nya juga di convert ke kecil dulu
           data.person.nik.toLowerCase().includes(search.toLowerCase()) ||
           data.person.nama.toLowerCase().includes(search.toLowerCase())
       );
