@@ -55,7 +55,16 @@ interface SidebarLinkProps {
 
 const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const isRole = localStorage.getItem("role");
+  // const isRole = localStorage.getItem("role");
+  const [isRole, setIsRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Memastikan akses localStorage hanya di client-side
+    if (typeof window !== "undefined") {
+      const role = localStorage.getItem("role");
+      setIsRole(role);
+    }
+  }, []); // Hanya dijalankan sekali setelah komponen mount
 
   const handleClick = () => {
     setIsClicked(!isClicked);
@@ -109,7 +118,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
         })}
       </div>
 
-      <div>
+      {/* <div>
         {isRole === "admin" || "superadmin" ? (
           <Link
             href="/register"
@@ -133,6 +142,31 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
           </Link>
         ) : (
           ""
+        )}
+      </div> */}
+
+      <div>
+        {(isRole === "admin" || isRole === "superadmin") && (
+          <Link
+            href="/register"
+            onClick={handleClick}
+            className={`flex items-center pl-5 p-2 rounded-md 
+        ${isClicked ? "bg-ijoToska text-white" : "bg-white text-tulisan"} 
+        transition-colors duration-300`}
+          >
+            <Image
+              src={
+                isClicked
+                  ? "/assets/dashboard/sidebarNavbar/register-aktif.png"
+                  : "/assets/dashboard/sidebarNavbar/register.png"
+              }
+              width={30}
+              height={30}
+              alt="icon"
+              className="w-6 h-6 mr-2"
+            />
+            <span>Register</span>
+          </Link>
         )}
       </div>
     </div>

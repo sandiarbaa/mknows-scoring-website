@@ -10,6 +10,7 @@ import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
@@ -30,6 +31,8 @@ const EditUser = () => {
   const [ktpPhoto, setKtpPhoto] = useState<File>();
   const [selfiePhoto, setSefliePhoto] = useState<File>();
   const pathname = usePathname();
+  const params = useParams();
+  const userId = params.userId;
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -38,9 +41,40 @@ const EditUser = () => {
   const toggleKonfirmasiPassword = () => {
     setShowKonfirmasiPassword(!showKonfirmasiPassword);
   };
-  const Auth = async (e: any) => {
-    e.preventDefault();
-    const accessToken = localStorage.getItem("accessToken");
+
+  // const Auth = async (e: any) => {
+  //   const { userId } = useParams();
+  //   e.preventDefault();
+  //   const accessToken = localStorage.getItem("accessToken");
+
+  //   const formData = new FormData();
+  //   formData.append("username", username);
+  //   formData.append("nik", nik);
+  //   formData.append("email", email);
+  //   formData.append("password", password);
+  //   formData.append("confirmPassword", KonfirmasipPassword);
+  //   formData.append("role", role);
+  //   formData.append("jenis_kelamin", jenisKelamin);
+  //   if (ktpPhoto) formData.append("ktp_photo", ktpPhoto); // Tambah file KTP
+  //   if (selfiePhoto) formData.append("selfie_photo", selfiePhoto); // Tambah file Selfie
+
+  //   console.log("Form Data:", formData);
+
+  //   try {
+  //     const response = await api.patch(`/users/${userId}`, formData, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     console.log(response.data.message); // Feedback dari backend
+  //   } catch (error: any) {
+  //     console.log(error.response.data.message); // Handle error message dari backend
+  //   }
+  // };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault(); // Mencegah refresh atau submit default dari form
 
     const formData = new FormData();
     formData.append("username", username);
@@ -53,18 +87,24 @@ const EditUser = () => {
     if (ktpPhoto) formData.append("ktp_photo", ktpPhoto); // Tambah file KTP
     if (selfiePhoto) formData.append("selfie_photo", selfiePhoto); // Tambah file Selfie
 
+    const accessToken = localStorage.getItem("accessToken"); // Ganti dengan userId yang sesuai
+
     try {
-      const response = await api.patch("/users", formData, {
+      const response = await api.patch(`/users/${userId}`, formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data", // Ini penting saat menggunakan FormData
         },
       });
-      console.log(response);
+      console.log("Response:", response.data);
     } catch (error: any) {
-      console.log(error);
+      console.error(
+        "Error updating user:",
+        error.response?.data || error.message
+      );
     }
   };
+
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
@@ -133,13 +173,12 @@ const EditUser = () => {
             </div>
 
             {/* Edit User */}
-            <form onSubmit={Auth}>
+            <form onSubmit={handleSubmit}>
               <div className="text-sm font-semibold flex justify-between py-4">
                 <div>Tambah User Baru</div>
                 <div>
                   <button
                     type="submit"
-                    onClick={Auth}
                     className="bg-ijoToska active:bg-tulisan text-sm rounded font-semibold text-white py-2 text-center px-10"
                   >
                     Simpan

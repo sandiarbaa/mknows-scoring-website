@@ -18,8 +18,8 @@ const TableRegister = () => {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]); // Deklarasikan state users
 
-  const handleEditAccount = () => {
-    router.push("/register/editUser");
+  const handleEditAccount = (userId: number) => {
+    router.push(`/register/editUser/${userId}`);
   };
 
   // Fetch users
@@ -87,7 +87,7 @@ const TableRegister = () => {
                   )}
                 </td>
                 <td className="border-b">
-                  <button onClick={handleEditAccount}>
+                  <button onClick={() => handleEditAccount(user.id)}>
                     <Image
                       src={"/assets/dashboard/register/edit-account.png"}
                       alt="edit"
