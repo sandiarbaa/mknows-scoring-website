@@ -68,8 +68,8 @@ import axios from "axios";
 
 // Buat instance Axios
 const api = axios.create({
-  // baseURL: "http://13.210.185.89",
-  baseURL: "http://localhost:80",
+  baseURL: "http://13.210.185.89",
+  // baseURL: "http://localhost:80",
 });
 
 // Fungsi untuk merefresh access token

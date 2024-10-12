@@ -5,7 +5,6 @@ import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedR
 import DropDownRegister from "@/app/(pages)/(auth)/register/DropDownRegister";
 import FieldRegister from "@/app/components/Fragments/register/FieldRegister";
 import InputRegister from "@/app/components/Fragments/register/InputRegister";
-// import ModalSuksess from "@/app/components/Fragments/register/ModalSuksess";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +17,8 @@ const EditUser = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showKonfirmasiPassword, setShowKonfirmasiPassword] =
     useState<boolean>(false);
-  const [status, setStatus] = useState<"success" | "error">("error");
-  const [msg, setMsg] = useState<string>("");
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [status, setStatus] = useState<"success" | "error" | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -41,37 +39,6 @@ const EditUser = () => {
   const toggleKonfirmasiPassword = () => {
     setShowKonfirmasiPassword(!showKonfirmasiPassword);
   };
-
-  // const Auth = async (e: any) => {
-  //   const { userId } = useParams();
-  //   e.preventDefault();
-  //   const accessToken = localStorage.getItem("accessToken");
-
-  //   const formData = new FormData();
-  //   formData.append("username", username);
-  //   formData.append("nik", nik);
-  //   formData.append("email", email);
-  //   formData.append("password", password);
-  //   formData.append("confirmPassword", KonfirmasipPassword);
-  //   formData.append("role", role);
-  //   formData.append("jenis_kelamin", jenisKelamin);
-  //   if (ktpPhoto) formData.append("ktp_photo", ktpPhoto); // Tambah file KTP
-  //   if (selfiePhoto) formData.append("selfie_photo", selfiePhoto); // Tambah file Selfie
-
-  //   console.log("Form Data:", formData);
-
-  //   try {
-  //     const response = await api.patch(`/users/${userId}`, formData, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     console.log(response.data.message); // Feedback dari backend
-  //   } catch (error: any) {
-  //     console.log(error.response.data.message); // Handle error message dari backend
-  //   }
-  // };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault(); // Mencegah refresh atau submit default dari form
@@ -96,13 +63,17 @@ const EditUser = () => {
           "Content-Type": "multipart/form-data", // Ini penting saat menggunakan FormData
         },
       });
-      console.log("Response:", response.data);
+      setStatus("success");
+      setMessage(response.data.message);
     } catch (error: any) {
-      console.error(
-        "Error updating user:",
-        error.response?.data || error.message
-      );
+      setMessage(error.response.data.message);
+      setStatus("error");
     }
+
+    setTimeout(() => {
+      setMessage(null);
+      setStatus(null);
+    }, 3000);
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,21 +110,22 @@ const EditUser = () => {
     }
   };
 
-  // const handleCloseModal = () => {
-  //   setIsModalVisible(false); // Fungsi untuk menutup modal
-  // };
-
   return (
     <>
       <ProtectedRoute>
         <DashboardLayout hover={pathname}>
           <div className="p-8">
-            {/* <ModalSuksess
-              status={status}
-              bgColor="bg-ijoToska"
-              msg={msg}
-              onClose={isModalVisible}
-            /> */}
+            {message && (
+              <div
+                className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md px-4 py-2 rounded-lg shadow-md text-center ${
+                  status === "success"
+                    ? "bg-green-500 text-white"
+                    : "bg-red-500 text-white"
+                }`}
+              >
+                {message}
+              </div>
+            )}
             {/* Navigasi */}
             <div className="flex items-center w-full py-3 max-w-xs space-x-1">
               <Link

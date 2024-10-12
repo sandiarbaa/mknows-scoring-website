@@ -6,13 +6,12 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { BiChevronRight } from "react-icons/bi";
-import DatePicker from "@/app/components/Elements/DatePicker";
-import { useRouter } from "next/navigation";
 import TableRegister from "@/app/components/Fragments/register/TableRegister";
+import { useState } from "react";
 
 const RegisterPage = () => {
+  const [search, setSearch] = useState<string>("");
   const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <div>
@@ -35,9 +34,6 @@ const RegisterPage = () => {
 
             {/* Header Register */}
             <div className="py-5 flex flex-col lg:flex-row justify-between gap-y-3">
-              <div>
-                <DatePicker />
-              </div>
               <div className="flex flex-col lg:flex-row">
                 {/* <SearchBox /> */}
                 <div className="relative inline-block mr-2">
@@ -48,7 +44,8 @@ const RegisterPage = () => {
                     className="border text-sm w-[288px] -mr-2 lg:mr-0 lg:w-[300px] py-2.5 rounded-md px-3 pl-10"
                     placeholder="Search by NIK or Nama"
                     autoComplete="off"
-                    // onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
                   <Image
                     src="/assets/dashboard/permintaan/search.png"
@@ -77,8 +74,7 @@ const RegisterPage = () => {
             </div>
             {/* /Header Register */}
 
-            <TableRegister />
-            {/* <Pagination noAwal={}/> */}
+            <TableRegister search={search} />
           </div>
         </DashboardLayout>
       </ProtectedRoute>

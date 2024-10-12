@@ -25,7 +25,25 @@ const TambahUser = () => {
   const [jenisKelamin, setJenisKelamin] = useState<string>("male");
   const [ktpPhoto, setKtpPhoto] = useState<File>();
   const [selfiePhoto, setSefliePhoto] = useState<File>();
+  const [message, setMessage] = useState<string | null>(null);
+  const [status, setStatus] = useState<"success" | "error" | null>(null);
+  const [fieldNik, setFieldNik] = useState<string>(""); // State untuk menyimpan NIK
+  const [nikError, setNikError] = useState<string | null>(null); // State untuk pesan error NIK
   const pathname = usePathname();
+
+  const handleFieldNik = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // Validasi: Hanya angka dan maksimal 16 karakter
+    if (/^\d*$/.test(value) && value.length <= 16) {
+      setNik(value);
+      setNikError(null); // Reset error jika input valid
+    } else if (value.length > 16) {
+      setNikError("NIK harus terdiri dari 16 angka.");
+    } else {
+      setNikError("NIK hanya boleh berisi angka.");
+    }
+  };
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -67,45 +85,14 @@ const TambahUser = () => {
     }
   };
 
-  // const Auth = async (e: any) => {
-  //   const accessToken = localStorage.getItem("accessToken");
-
-  //   e.preventDefault();
-  //   try {
-  //     const response = await api.post(
-  //       "/users",
-  //       {
-  //         username: username,
-  //         nik: nik,
-  //         email: email,
-  //         password: password,
-  //         KonfirmasipPassword: KonfirmasipPassword,
-  //         role: role,
-  //         jenisKelamin: jenisKelamin,
-  //         ktpPhoto: ktpPhoto,
-  //         selfiePhoto: selfiePhoto,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-  //     console.log(response);
-  //     // setMsg(response.data.message);
-  //     // setIsModalVisible(true);
-  //     // setStatus("success");
-  //   } catch (error: any) {
-  //     // setMsg(error.response.data.message);
-  //     // setIsModalVisible(true);
-  //     // setStatus("error");
-  //     console.log(error);
-  //   }
-  // };
-
   const Auth = async (e: any) => {
     e.preventDefault();
     const accessToken = localStorage.getItem("accessToken");
+
+    if (nik.length !== 16) {
+      setNikError("NIK harus terdiri dari 16 angka.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("username", username);
@@ -125,10 +112,17 @@ const TambahUser = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response);
+      setStatus("success");
+      setMessage(response.data.message);
     } catch (error: any) {
-      console.log(error);
+      setMessage(error.response.data.message);
+      setStatus("error");
     }
+    setTimeout(() => {
+      setMessage(null);
+      setStatus(null);
+      setNikError("");
+    }, 3000);
   };
 
   return (
@@ -136,6 +130,17 @@ const TambahUser = () => {
       <ProtectedRoute>
         <DashboardLayout hover={pathname}>
           <div className="py-6 px-10">
+            {message && (
+              <div
+                className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md px-4 py-2 rounded-lg shadow-md text-center ${
+                  status === "success"
+                    ? "bg-green-500 text-white"
+                    : "bg-red-500 text-white"
+                }`}
+              >
+                {message}
+              </div>
+            )}
             {/* Navigasi */}
             <div className="flex items-center w-full py-3 max-w-xs space-x-1">
               <Link
@@ -176,14 +181,19 @@ const TambahUser = () => {
                 lowerText="Nama Sesuai KTP"
                 onChange={handleUsername}
               />
-              <FieldRegister
-                title="Nomor Induk Kependudukan"
-                name="NIK"
-                placeholder="Ketik Nomor Induk Kependudukan"
-                type="text"
-                lowerText="Nomor Induk Kependudukan(NIK) Harus Sesuai KTP"
-                onChange={handleNik}
-              />
+              <div>
+                <FieldRegister
+                  title="Nomor Induk Kependudukan"
+                  name="NIK"
+                  placeholder="Ketik Nomor Induk Kependudukan"
+                  type="text"
+                  lowerText="Nomor Induk Kependudukan(NIK) Harus Sesuai KTP"
+                  onChange={handleNik}
+                />
+                {nikError && (
+                  <p className="text-red-500 text-xs pt-1">{nikError}</p>
+                )}
+              </div>
               <FieldRegister
                 title="Jenis Kelamin"
                 name="jenisKelamin"
