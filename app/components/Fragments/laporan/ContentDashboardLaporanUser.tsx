@@ -115,7 +115,6 @@ const ContentDashboardLaporanUser = () => {
             />
           </div>
         </div>
-        <div className="pl-3">{/* <DatePicker /> */}</div>
       </section>
 
       {/* Table */}

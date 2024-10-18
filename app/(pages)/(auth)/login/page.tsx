@@ -27,10 +27,13 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://13.210.185.89/authentication", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/authentication`,
+        {
+          email,
+          password,
+        }
+      );
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;

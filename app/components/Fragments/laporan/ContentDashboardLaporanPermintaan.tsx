@@ -81,9 +81,6 @@ const ContentDashboardLaporanPermintaan: React.FC = () => {
             <SearchBox />
           </div>
         </div>
-        <div className="ml-3">
-          <DatePicker />
-        </div>
       </section>
 
       {/* Table */}
