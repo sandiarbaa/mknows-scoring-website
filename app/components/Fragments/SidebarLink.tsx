@@ -36,16 +36,10 @@ const dataSidebarLink: SidebarItem[] = [
     linkName: "Kuota",
   },
   {
-    href: "/inbox",
+    href: "/notifikasi",
     imageTrue: "/assets/dashboard/sidebarNavbar/inbox-active.png",
     imageFalse: "/assets/dashboard/sidebarNavbar/inbox.png",
-    linkName: "Inbox",
-  },
-  {
-    href: "/setting",
-    imageTrue: "/assets/dashboard/sidebarNavbar/settings.png",
-    imageFalse: "/assets/dashboard/sidebarNavbar/settings.png",
-    linkName: "Setting",
+    linkName: "Notifikasi",
   },
 ];
 
@@ -157,7 +151,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
             <Image
               src={
                 isClicked
-                  ? "/assets/dashboard/sidebarNavbar/register-aktif.png"
+                  ? "/assets/dashboard/sidebarNavbar/register-active.png"
                   : "/assets/dashboard/sidebarNavbar/register.png"
               }
               width={30}

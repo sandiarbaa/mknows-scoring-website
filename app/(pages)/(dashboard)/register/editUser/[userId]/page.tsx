@@ -3,14 +3,15 @@
 import api from "@/app/(pages)/(auth)/login/api";
 import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedRoute";
 import DropDownRegister from "@/app/(pages)/(auth)/register/DropDownRegister";
+import DropDownJenisKelamin from "@/app/components/Fragments/register/DropDownJenisKelamin";
 import FieldRegister from "@/app/components/Fragments/register/FieldRegister";
 import InputRegister from "@/app/components/Fragments/register/InputRegister";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
 const EditUser = () => {
@@ -23,20 +24,37 @@ const EditUser = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [KonfirmasipPassword, setKonfirmasiPassword] = useState<string>("");
-  const [nik, setNik] = useState<string>("user");
+  const [nik, setNik] = useState<string>("");
   const [role, setRole] = useState<string>("user");
-  const [jenisKelamin, setJenisKelamin] = useState<string>("male");
+  const [jenisKelamin, setJenisKelamin] = useState<string>("");
   const [ktpPhoto, setKtpPhoto] = useState<File>();
   const [selfiePhoto, setSefliePhoto] = useState<File>();
   const pathname = usePathname();
   const params = useParams();
   const userId = params.userId;
+  const searchParams = useSearchParams();
 
-  const togglePassword = () => {
+  useEffect(() => {
+    const username = searchParams.get("username");
+    const email = searchParams.get("email");
+    const role = searchParams.get("role");
+    const nik = searchParams.get("nik");
+    const jenisKelamin = searchParams.get("jenis_kelamin");
+
+    if (username) setUsername(username);
+    if (email) setEmail(email);
+    if (role) setRole(role);
+    if (nik) setNik(nik);
+    if (jenisKelamin) setJenisKelamin(jenisKelamin); // Pastikan ini dipanggil dengan benar
+  }, [searchParams]);
+
+  const togglePassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setShowPassword(!showPassword);
   };
 
-  const toggleKonfirmasiPassword = () => {
+  const toggleKonfirmasiPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setShowKonfirmasiPassword(!showKonfirmasiPassword);
   };
 
@@ -84,9 +102,6 @@ const EditUser = () => {
   };
   const handleNikChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNik(e.target.value);
-  };
-  const handleJenisKelaminChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setJenisKelamin(e.target.value);
   };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -145,12 +160,13 @@ const EditUser = () => {
             </div>
 
             {/* Edit User */}
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="text-sm font-semibold flex justify-between py-4">
                 <div>Tambah User Baru</div>
                 <div>
                   <button
                     type="submit"
+                    onClick={handleSubmit}
                     className="bg-ijoToska active:bg-tulisan text-sm rounded font-semibold text-white py-2 text-center px-10"
                   >
                     Simpan
@@ -166,6 +182,7 @@ const EditUser = () => {
                   type="text"
                   lowerText="Nama Sesuai KTP"
                   onChange={handleUsernameChange}
+                  value={username}
                 />
                 <FieldRegister
                   title="Nomor Induk Kependudukan"
@@ -174,14 +191,7 @@ const EditUser = () => {
                   type="text"
                   lowerText="Nomor Induk Kependudukan(NIK) Harus Sesuai KTP"
                   onChange={handleNikChange}
-                />
-                <FieldRegister
-                  title="Jenis Kelamin"
-                  name="Jenis Kelamin"
-                  placeholder="Ketik Jenis Kelamin Anda"
-                  type="text"
-                  lowerText="Jenis Kelamin Harus Sesuai KTP"
-                  onChange={handleJenisKelaminChange}
+                  value={nik}
                 />
                 <FieldRegister
                   title="Email"
@@ -190,6 +200,7 @@ const EditUser = () => {
                   type="email"
                   lowerText="contoh:usercreditscoring@gmail.com"
                   onChange={handleEmailChange}
+                  value={email}
                 />
                 <div>
                   <FieldRegister
@@ -199,6 +210,7 @@ const EditUser = () => {
                     type={showPassword ? "text" : "password"}
                     lowerText="Password harus berisi satu huruf kapital, dan berisikan angka"
                     onChange={handlePasswordChange}
+                    value={password}
                   />
                   <button
                     className="flex flex-row gap-x-4 pt-1"
@@ -241,7 +253,18 @@ const EditUser = () => {
                 </div>
 
                 <div>
-                  <DropDownRegister setRole={setRole} />
+                  <p className="text-sm text-grey-300">
+                    Pilih Jenis kelamin Anda
+                  </p>
+                  <DropDownJenisKelamin
+                    setJenisKelamin={setJenisKelamin}
+                    selectedValue={jenisKelamin}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-sm text-grey-300">Pilih Role Anda</p>
+                  <DropDownRegister setRole={setRole} selectedValue={role} />
                 </div>
               </div>
             </form>

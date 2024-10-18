@@ -3,6 +3,7 @@
 import api from "@/app/(pages)/(auth)/login/api";
 import ProtectedRoute from "@/app/(pages)/(auth)/login/protectedRoute/ProtectedRoute";
 import DropDownRegister from "@/app/(pages)/(auth)/register/DropDownRegister";
+import DropDownJenisKelamin from "@/app/components/Fragments/register/DropDownJenisKelamin";
 import FieldRegister from "@/app/components/Fragments/register/FieldRegister";
 import InputRegister from "@/app/components/Fragments/register/InputRegister";
 import DashboardLayout from "@/app/components/Layouts/DashboardLayout";
@@ -27,7 +28,6 @@ const TambahUser = () => {
   const [selfiePhoto, setSefliePhoto] = useState<File>();
   const [message, setMessage] = useState<string | null>(null);
   const [status, setStatus] = useState<"success" | "error" | null>(null);
-  const [fieldNik, setFieldNik] = useState<string>(""); // State untuk menyimpan NIK
   const [nikError, setNikError] = useState<string | null>(null); // State untuk pesan error NIK
   const pathname = usePathname();
 
@@ -55,9 +55,6 @@ const TambahUser = () => {
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-  };
-  const handleJenisKelamin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setJenisKelamin(e.target.value);
   };
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -195,14 +192,6 @@ const TambahUser = () => {
                 )}
               </div>
               <FieldRegister
-                title="Jenis Kelamin"
-                name="jenisKelamin"
-                placeholder="Ketik Jenis Kelamin"
-                type="text"
-                lowerText="Jenis Kelamin Harus Sesuai KTP"
-                onChange={handleJenisKelamin}
-              />
-              <FieldRegister
                 title="Email"
                 name="email"
                 placeholder="Ketik Email"
@@ -254,7 +243,15 @@ const TambahUser = () => {
                   <p className="text-xs pt-0.5">Tampilkan Password</p>
                 </button>
 
-                <div className="pt-6">
+                <div className="pt-4">
+                  <p className="text-sm text-grey-300">
+                    Pilih Jenis kelamin Anda
+                  </p>
+                  <DropDownJenisKelamin setJenisKelamin={setJenisKelamin} />
+                </div>
+
+                <div className="pt-4">
+                  <p className="text-sm text-grey-300">Pilih Role Anda</p>
                   <DropDownRegister setRole={setRole} />
                 </div>
               </div>

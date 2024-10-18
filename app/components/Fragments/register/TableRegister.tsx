@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"; // Impor useState
 import ModalDeleteRegister from "./ModalDeleteRegister";
 import Pagination from "../Pagination";
-import DatePicker from "../../Elements/DatePicker";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 interface User {
   id: number;
@@ -39,8 +37,16 @@ const TableRegister = ({ search }: tableRegisterProps) => {
     setModalDelete(false); // Tutup modal setelah menghapus
   };
 
-  const handleEditAccount = (userId: number) => {
-    router.push(`/register/editUser/${userId}`);
+  const handleEditAccount = (user: User) => {
+    const queryString = new URLSearchParams({
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      nik: user.nik,
+      name: user.name,
+    }).toString();
+
+    router.push(`/register/editUser/${user.id}?${queryString}`);
   };
 
   const handleModalDelete = (userId: number) => {
@@ -51,32 +57,34 @@ const TableRegister = ({ search }: tableRegisterProps) => {
     setModalDelete(false);
   };
 
-  // Fetch users
-  const fetchUsers = async (page: number) => {
+  const fetchUsers = async (page: number, search: string) => {
     const accessToken = localStorage.getItem("accessToken");
     try {
-      const res = await api.get(`/users/list?size=${size}&current=${page}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const res = await api.get(
+        `/users/list?size=${size}&current=${page}&search=${search}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       const usersData = Array.isArray(res.data.data.users)
         ? res.data.data.users
         : [];
+      console.log(res.data);
       setUsers(usersData); // Simpan data pengguna ke state
       setSize(res.data.page.size);
       setTotalPage(res.data.page.totalPages); // Set total halaman
-      setTotal(res.data.page.total); // Atur halaman saat ini dari respons
+      setTotal(res.data.page.total); // Atur total user
     } catch (error) {
       console.log("error :", error);
     }
   };
 
   useEffect(() => {
-    fetchUsers(page);
-  }, [page, size]);
+    fetchUsers(page, search);
+  }, [page, search]);
 
-  // Pencarian
   useEffect(() => {
     if (search !== "") {
       setPage(1);
@@ -158,7 +166,7 @@ const TableRegister = ({ search }: tableRegisterProps) => {
                     )}
                   </td>
                   <td className="border-b">
-                    <button onClick={() => handleEditAccount(user.id)}>
+                    <button onClick={() => handleEditAccount(user)}>
                       <Image
                         src={"/assets/dashboard/register/edit-account.png"}
                         alt="edit"
