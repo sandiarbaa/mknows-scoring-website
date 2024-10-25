@@ -28,7 +28,8 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/authentication`,
+        `${process.env.NEXT_PUBLIC_API_URL_BE}/authentication`,
+        // `http://localhost:80/authentication`,
         {
           email,
           password,

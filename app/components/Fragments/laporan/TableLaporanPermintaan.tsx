@@ -171,7 +171,15 @@ const TableLaporanPermintaan = ({
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const pdfUrl = response.data.data.pdfUrl;
+      let pdfUrl = response.data.data.pdfUrl;
+
+      // Cek jika url dimulai dengan undefined
+      if (pdfUrl.startsWith("undefined")) {
+        pdfUrl = pdfUrl.replace(
+          "undefined",
+          `${process.env.NEXT_PUBLIC_API_URL_BE}`
+        );
+      }
 
       // Buka PDF di tab baru
       window.open(pdfUrl, "_blank");

@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Buat instance Axios
 const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL_BE}`,
+  // baseURL: `http://localhost:80`,
 });
 
 // Fungsi untuk merefresh access token
