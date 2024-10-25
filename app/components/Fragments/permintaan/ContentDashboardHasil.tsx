@@ -5,12 +5,20 @@ import SearchBox from "../../Elements/SearchBox";
 import Pagination from "../Pagination";
 import api from "@/app/(pages)/(auth)/login/api";
 
+interface dataPropsRequest {
+  id: string;
+  jenis_permintaan: string;
+  jumlah_customer: number;
+  created_at: string;
+  finished_at: string;
+}
+
 const ContentDashboardHasil: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [size] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<dataPropsRequest[]>([]);
   const [totalPage, setTotalPage] = useState();
   const [total, setTotal] = useState();
 
@@ -36,7 +44,6 @@ const ContentDashboardHasil: React.FC = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      // console.log("Fetched data:", response.data);
       setData(response.data.data.requests);
       setTotalPage(response.data.page.totalPages);
       setTotal(response.data.page.total);

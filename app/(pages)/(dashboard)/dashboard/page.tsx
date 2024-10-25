@@ -65,7 +65,7 @@ const DashboardPage: React.FC = () => {
             {dashboardCardData.map((dataCard, index) => (
               <div
                 key={index}
-                className="w-[100%] lg:w-[220px] border p-3 bg-white flex flex-col rounded-md shadow mt-3 carousel-item"
+                className="w-[100%] lg:w-[195px] border p-3 bg-white flex flex-col rounded-md shadow mt-3 carousel-item"
               >
                 <div className="flex justify-start space-x-3 mb-3 lg:space-x-0">
                   <div className={`${dataCard.bgIcon} p-1.5 rounded-md mr-3`}>

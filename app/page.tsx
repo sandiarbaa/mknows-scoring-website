@@ -1,9 +1,9 @@
-import Image from "next/image";
+import WelcomePage from "./(pages)/(welcomePage)/page";
 
 export default function Home() {
   return (
-    <div>
-      <h1>M-Knows AI Scoring Website</h1>
-    </div>
+    <>
+      <WelcomePage />
+    </>
   );
 }

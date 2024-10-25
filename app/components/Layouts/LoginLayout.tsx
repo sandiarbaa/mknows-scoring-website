@@ -15,6 +15,7 @@ const LoginLayout = ({ children, title }: Props) => {
           alt="mknows-logo"
           width={100}
           height={100}
+          priority
         />
       </div>
       <div className="container flex flex-col justify-center items-center h-full z-10">

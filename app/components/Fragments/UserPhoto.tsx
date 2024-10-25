@@ -4,7 +4,7 @@ import React from "react";
 type UserPhotoProps = {
   username: string;
   role: string;
-}
+};
 
 const UserPhoto = ({ username, role }: UserPhotoProps) => {
   return (
@@ -15,7 +15,7 @@ const UserPhoto = ({ username, role }: UserPhotoProps) => {
         width={30}
         height={30}
         className="mr-3 border-2 rounded-full border-ijoToska"
-      /> 
+      />
       <div>
         <h4 className="font-semibold text-sm italic">{username}</h4>
         <p className="text-xs italic">{role}</p>

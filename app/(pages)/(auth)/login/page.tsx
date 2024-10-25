@@ -14,6 +14,8 @@ const LoginPage: React.FC = () => {
   const [msg, setMsg] = useState<string>("");
   const [status, setStatus] = useState<"success" | "error">("error");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const router = useRouter();
 
   const handleCloseModal = () => {
@@ -22,25 +24,30 @@ const LoginPage: React.FC = () => {
 
   const auth = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
-      const response = await axios.post("http://13.210.185.89/authentication", {
-        email,
-        password,
-      });
-      console.log("console: ", response);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL_BE}/authentication`,
+        // `http://localhost:80/authentication`,
+        {
+          email,
+          password,
+        }
+      );
       setStatus("success");
       if (response.status === 201) {
         const { accessToken, refreshToken } = response.data.data;
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-        // document.cookie = `refreshToken=${refreshToken}; path=/; secure; samesite=strict; max-age=${
-        //   30 * 24 * 60 * 60
-        // }`;
         setTimeout(async () => {
           const newAccessToken = await refreshAccessToken();
           if (newAccessToken) {
-            console.log("Access token diperbarui setelah 30 detik:", newAccessToken);
+            console.log(
+              "Access token diperbarui setelah 30 detik:",
+              newAccessToken
+            );
           } else {
             console.log("Gagal memperbarui access token");
           }
@@ -51,6 +58,8 @@ const LoginPage: React.FC = () => {
       setMsg(error.response.data.message);
       setIsModalVisible(true);
       setStatus("error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,7 +101,10 @@ const LoginPage: React.FC = () => {
           </Link>
 
           <div>
-            <Button classStyle="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]">
+            <Button
+              classStyle="w-full bg-ijoToska text-white font-medium py-2 rounded-md mb-2 active:bg-[#E5E5E5] active:text-[#A3A3A3]"
+              isLoading={isLoading}
+            >
               Masuk
             </Button>
           </div>

@@ -29,49 +29,60 @@ interface expandedRowsDataProps {
 const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingShowPDF, setLoadingShowPDF] = useState<boolean>(false);
-  const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
-  const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  // const [dataTableExpanded, setDataTableExpanded] = useState<any>([]);
+  const [expandedRows, setExpandedRows] = useState<number[]>([]); // untuk menyimpan index dari table row yg di expand
   const [idDownload, setIdDownload] = useState<string[]>([]);
   const [checkboxListExpanded, setCheckboxListExpanded] = useState<{
     [key: number]: boolean[];
-  }>({});
+  }>({}); // menyimpan status checkbox dari table yg ter-expand
+
   const [selectAllExpanded, setSelectAllExpanded] = useState<{
     [key: number]: boolean;
-  }>({});
+  }>({}); // menyimpan status checkboxAll dari table yg di expand
 
   const [permintaanHasilDatas, setPermintaanHasilDatas] = useState<{
     [key: number]: expandedRowsDataProps[];
-  }>({});
+  }>({}); // menyimpan data yg akan di render di table yg ter-expand
+
   const [loadingRows, setLoadingRows] = useState<{
     [key: number]: boolean;
-  }>({});
+  }>({}); // menyimpan state loading ketika fetching data untuk table yg ter-expand
 
-  // Menyimpan status loading untuk setiap baris
   const [loadingDownloadPerRow, setLoadingDownloadPerRow] = useState<{
     [key: number]: boolean;
   }>({});
 
-  const handleCheckboxListExpanded = (index: number) => {
+  // Checkbox Select All
+  // untuk menangani logika ketika checkbox di dalam suatu row pada tabel di-expand (dipilih semua) atau di-unexpand (dilepas semua),
+  const handleCheckboxListExpandedAll = (index: number) => {
     const allChecked = !selectAllExpanded[index];
+    // state untuk checkbox all di indeks baris yg ter-expand
     setSelectAllExpanded({
       ...selectAllExpanded,
       [index]: allChecked,
     });
 
+    // Mengambil semua ID dari data di row yang sesuai dengan indeks index menggunakan map.
+    // idsForThisRow akan berisi array ID dari semua data di baris yg ter-expand ini.
     const idsForThisRow = permintaanHasilDatas[index].map((data) => data.id);
 
+    // state untuk individual checkbox
+    // meng-overwrite state checkbox list di indeks baris yg ter-expand, sesuai dengan status dari allChecked
     setCheckboxListExpanded({
       ...checkboxListExpanded,
       [index]: new Array(idsForThisRow.length).fill(allChecked),
     });
 
+    // ID Download
+    // Tambahkan semua ID ke dalam idDownload jika semua checkbox dipilih
     if (allChecked) {
-      // Tambahkan semua ID ke dalam idDownload jika semua checkbox dipilih
       setIdDownload((prevIdDownload) => [
         ...Array.from(
           new Set([...prevIdDownload, ...idsForThisRow.map(String)])
         ),
       ]);
+      // State checkboxListExpanded di-update dengan array baru yang panjangnya sama dengan jumlah data di row ini (idsForThisRow.length),
+      // yang isinya diisi dengan nilai allChecked (apakah semuanya dipilih atau tidak).
     } else {
       // Hapus semua ID dari idDownload jika semua checkbox di-uncheck
       setIdDownload((prevIdDownload) =>
@@ -80,21 +91,24 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
     }
   };
 
+  // handle perubahan individual checkbox di table yg ter-expand
   const handleCheckboxChangeExpanded = (
     index: number,
     expandedIndex: number,
     id: string
   ) => {
-    // console.log("ini clik");
+    // membuat salinan dari array checkboxListExpanded untuk row yang sesuai dengan index
     const newCheckboxList = [...(checkboxListExpanded[index] || [])];
-    newCheckboxList[expandedIndex] = !newCheckboxList[expandedIndex];
+    // mengubah checkbox tertentu sesuai dengan index checkboxnya
+    newCheckboxList[expandedIndex] = !newCheckboxList[expandedIndex]; // balik status checkbox yg sesuai expandedInde
     setCheckboxListExpanded({
       ...checkboxListExpanded,
-      [index]: newCheckboxList,
+      [index]: newCheckboxList, // newCheckboxList berisi kumpulan checkbox sesuai
     });
+
     setSelectAllExpanded({
       ...selectAllExpanded,
-      [index]: newCheckboxList.every((checkbox) => checkbox),
+      [index]: newCheckboxList.every((checkbox) => checkbox), // berniali true kalau semua checkbox true
     });
 
     setIdDownload((prevIdDownload) => {
@@ -108,12 +122,13 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
     });
   };
 
+  // expand table, ketika tabel utama salah satu barisnya di klik
   const toggleRow = async (index: number, nik: string) => {
     const accessToken = localStorage.getItem("accessToken");
     if (expandedRows.includes(index)) {
-      setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index));
+      setExpandedRows(expandedRows.filter((rowIndex) => rowIndex !== index)); // kalau sudah ada hapus dari state / close table expand
     } else {
-      setExpandedRows([...expandedRows, index]);
+      setExpandedRows([...expandedRows, index]); // masukan index baris yg di pilih, agar ter-expand, kalau index belum ada
       setLoadingRows({ ...loadingRows, [index]: true });
 
       try {
@@ -123,15 +138,18 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
           },
         });
         // console.log(data);
-        setDataTableExpanded(data.data.reports);
+        // setDataTableExpanded(data.data.reports);
+        // menyimpan data hasil fetching yg di fetch berdasarkan nik untuk di render di table yg ter-expand
         setPermintaanHasilDatas({
           ...permintaanHasilDatas,
           [index]: data.data.reports,
         });
+        // membuat status checkbox table yg ter-expand default nya false
         setCheckboxListExpanded({
           ...checkboxListExpanded,
           [index]: new Array(data.data.reports.length).fill(false),
         });
+        // menyimpan status dari checkboxALl
         setSelectAllExpanded({
           ...selectAllExpanded,
           [index]: false,
@@ -154,7 +172,15 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const pdfUrl = response.data.data.pdfUrl;
+      let pdfUrl = response.data.data.pdfUrl;
+
+      // Cek jika url dimulai dengan undefined
+      if (pdfUrl.startsWith("undefined")) {
+        pdfUrl = pdfUrl.replace(
+          "undefined",
+          `${process.env.NEXT_PUBLIC_API_URL_BE}`
+        );
+      }
 
       // Buka PDF di tab baru
       window.open(pdfUrl, "_blank");
@@ -168,13 +194,12 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
     }
   };
 
+  // API Download PDF/ZIP
   const downloadFiles = async (index: number) => {
     const accessToken = localStorage.getItem("accessToken");
     // kalau ada id yg di pilih
     if (idDownload.length > 0) {
       try {
-        // setLoadingShowPDF(true);
-
         setLoadingDownloadPerRow({
           ...loadingDownloadPerRow,
           [index]: true,
@@ -349,7 +374,7 @@ const TableLaporanUser = ({ userData }: { userData: userDataProps[] }) => {
                                   id={`selectAll-${index}`}
                                   className="hidden"
                                   onChange={() =>
-                                    handleCheckboxListExpanded(index)
+                                    handleCheckboxListExpandedAll(index)
                                   }
                                   checked={selectAllExpanded[index] || false}
                                 />

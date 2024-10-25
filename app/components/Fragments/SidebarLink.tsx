@@ -36,26 +36,29 @@ const dataSidebarLink: SidebarItem[] = [
     linkName: "Kuota",
   },
   {
-    href: "/inbox",
+    href: "/notifikasi",
     imageTrue: "/assets/dashboard/sidebarNavbar/inbox-active.png",
     imageFalse: "/assets/dashboard/sidebarNavbar/inbox.png",
-    linkName: "Inbox",
-  },
-  {
-    href: "/setting",
-    imageTrue: "/assets/dashboard/sidebarNavbar/settings.png",
-    imageFalse: "/assets/dashboard/sidebarNavbar/settings.png",
-    linkName: "Setting",
+    linkName: "Notifikasi",
   },
 ];
 
 interface SidebarLinkProps {
   hover: string;
-  role: string;
 }
 
-const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
+const SidebarLink: React.FC<SidebarLinkProps> = ({ hover }) => {
   const [isClicked, setIsClicked] = useState(false);
+  // const isRole = localStorage.getItem("role");
+  const [isRole, setIsRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Memastikan akses localStorage hanya di client-side
+    if (typeof window !== "undefined") {
+      const role = localStorage.getItem("role");
+      setIsRole(role);
+    }
+  }, []); // Hanya dijalankan sekali setelah komponen mount
 
   const handleClick = () => {
     setIsClicked(!isClicked);
@@ -72,6 +75,11 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
             imageSize = 25;
           } else {
             imageSize = 20;
+          }
+
+          if (index === 6 && hover === "admin") {
+            return null;
+          } else {
           }
 
           const isActive =
@@ -104,8 +112,8 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
         })}
       </div>
 
-      <div>
-        {role === "admin" ? (
+      {/* <div>
+        {isRole === "admin" || "superadmin" ? (
           <Link
             href="/register"
             onClick={handleClick}
@@ -128,6 +136,31 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ hover, role }) => {
           </Link>
         ) : (
           ""
+        )}
+      </div> */}
+
+      <div>
+        {(isRole === "admin" || isRole === "superadmin") && (
+          <Link
+            href="/register"
+            onClick={handleClick}
+            className={`flex items-center pl-5 p-2 rounded-md 
+        ${isClicked ? "bg-ijoToska text-white" : "bg-white text-tulisan"} 
+        transition-colors duration-300`}
+          >
+            <Image
+              src={
+                isClicked
+                  ? "/assets/dashboard/sidebarNavbar/register-active.png"
+                  : "/assets/dashboard/sidebarNavbar/register.png"
+              }
+              width={30}
+              height={30}
+              alt="icon"
+              className="w-6 h-6 mr-2"
+            />
+            <span>Register</span>
+          </Link>
         )}
       </div>
     </div>

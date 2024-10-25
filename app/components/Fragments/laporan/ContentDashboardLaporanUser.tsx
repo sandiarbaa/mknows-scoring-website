@@ -23,6 +23,8 @@ const ContentDashboardLaporanUser = () => {
     if (search !== "") {
       const results = datas.filter(
         (data: { person: { nik: string; nama: string } }) =>
+          // nik dan nama yg di cari di convert dulu ke huruf kecil lalu baru di filtering
+          // dan di filter nya juga di convert ke kecil dulu
           data.person.nik.toLowerCase().includes(search.toLowerCase()) ||
           data.person.nama.toLowerCase().includes(search.toLowerCase())
       );
@@ -112,9 +114,6 @@ const ContentDashboardLaporanUser = () => {
               className="absolute text-lg left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
             />
           </div>
-        </div>
-        <div className="pl-3">
-          <DatePicker />
         </div>
       </section>
 

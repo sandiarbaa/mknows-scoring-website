@@ -14,15 +14,15 @@ const InboxPage = () => {
   return (
     <ProtectedRoute>
       <DashboardLayout hover={pathname}>
-      {/* {inActive ? (
+        {/* {inActive ? (
         <ContentDashboardInbox data={inActive} />
       ) : (
         <EmpetyData onAddData={setInActive} />
       )} */}
-      <div className="flex justify-center items-center h-screen">
-        <EmpetyData props={true} href="/dashboard" label="+ Request Inbox" />
-      </div>
-    </DashboardLayout>
+        <div className="flex justify-center items-center h-screen">
+          <EmpetyData props={true} href="/dashboard" label="+ Request Inbox" />
+        </div>
+      </DashboardLayout>
     </ProtectedRoute>
   );
 };

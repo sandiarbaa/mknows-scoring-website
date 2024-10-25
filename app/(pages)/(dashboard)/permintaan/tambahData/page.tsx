@@ -123,7 +123,7 @@ const AddDataPage = () => {
             <form action="">
               <div className="flex flex-col items-center mt-10 mb-5 md:flex-row md:justify-between gap-y-3">
                 {/* Date */}
-                <DatePicker />
+                {/* <DatePicker /> */}
 
                 <div className="flex flex-col lg:flex-row">
                   {/* Search & Button Tambah */}

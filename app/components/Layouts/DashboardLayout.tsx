@@ -11,7 +11,7 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   hover?: string;
   alokasiKuota?: string;
-} 
+}
 interface UserData {
   id: number;
   username: string;
@@ -29,7 +29,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const navRef = useRef<HTMLDivElement | null>(null);
   const [username, setUsername] = useState<string>("None");
   const [role, setRole] = useState<string>("user");
-  
 
   const openNavHandler = () => setNav(true);
   const closeNavHandler = () => setNav(false);
@@ -59,22 +58,24 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const Auth = async () => {
     const accessToken = localStorage.getItem("accessToken");
 
-        try {
-            const response = await api.get('/users', {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            })
-            setRole(response.data.data.user.role)
-            setUsername(response.data.data.user.username)
-        } catch (error: any) {
-            console.log(error);
-        }
+    try {
+      const response = await api.get("/users", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setRole(response.data.data.user.role);
+      setUsername(response.data.data.user.username);
+      // localStorage.setItem("username", response.data.data.user.username);
+      localStorage.setItem("role", response.data.data.user.role);
+    } catch (error: any) {
+      console.log(error);
     }
+  };
 
-    useEffect(() => {
-      Auth();
-    }, []);
+  useEffect(() => {
+    Auth();
+  }, []);
 
   return (
     <main className="relative w-full h-screen bg-primary">
@@ -107,7 +108,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <hr className="my-5 border-b-2 rounded-full" />
 
           {/* Sidebar Link */}
-          <SidebarLink hover={hover} role={role} />
+          <SidebarLink hover={hover} />
           <button
             onClick={handleLogout}
             className="absolute flex space-x-3 bottom-5 left-10"
@@ -152,11 +153,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           />
 
           {/* Photo & Username */}
-          <UserPhoto username={username} role={role}/>
+          <UserPhoto username={username} role={role} />
           <hr className="my-5 border-b-2 rounded-full" />
 
           {/* Sidebar Link */}
-          <SidebarLink hover={hover} role={role} />
+          <SidebarLink hover={hover} />
           <button
             onClick={handleLogout}
             className="absolute flex space-x-3 bottom-5 left-10"

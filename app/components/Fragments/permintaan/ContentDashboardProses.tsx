@@ -23,6 +23,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
   const [totalPage, setTotalPage] = useState();
   const [total, setTotal] = useState();
 
+  // ini belum terpakai karena tidak butuh data dari fetching reports, hanya butuh data dari state prosesData
   const prevButton = (): void => {
     if (page <= 1) return;
     setPage(page - 1);
@@ -76,6 +77,7 @@ const ContentDashboardProses: React.FC<ContentDashboardProsesProps> = ({
     { length: lastVisiblePage },
     (_, index) => index + 1
   );
+  // sampai sini belum terpakai
 
   return (
     <section className="w-full px-3 py-5 my-5">
