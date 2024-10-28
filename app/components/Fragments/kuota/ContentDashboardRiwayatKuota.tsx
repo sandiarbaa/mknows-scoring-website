@@ -1,7 +1,6 @@
 // import RiwayatAlokasiKuota from "./RiwayatAlokasiKuota";
 import EmpetyData from "../../Elements/EmpetyData";
 import React, { useCallback, useEffect, useState } from "react";
-import DatePicker from "../../Elements/DatePicker";
 import Dropdown from "../../Elements/Dropdown";
 import SearchBox from "../../Elements/SearchBox";
 import TableRiwayatAlokasiKuota from "./TableRiwayatAlokasiKuota";
@@ -57,7 +56,6 @@ const ContentDashboardRiwayatKuota: React.FC = () => {
             Riwayat Alokasi Kuota
           </div>
           <div className="flex flex-col-reverse gap-2 md:flex-row md:gap-2 justify-between py-3">
-            <DatePicker />
             <div className="flex flex-col gap-2 md:flex-row md:gap-4">
               <Dropdown title="Semua" />
               <SearchBox />
